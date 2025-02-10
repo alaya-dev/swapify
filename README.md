@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 ## Requirements
@@ -34,3 +35,6 @@
 `php bin/console doctrine:schema:create`
 
 `symfony serve`
+=======
+# swapify-user
+>>>>>>> acf5e245fdd734a0908eb1e7de8d6d1be1de0903
