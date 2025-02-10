@@ -1,0 +1,82 @@
+{% extends 'include.html.twig' %}
+    {% block content %}
+        <div class="container-fluid">
+            <!-- Start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0 font-size-18">Liste des clients</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- End page title -->
+
+            <!-- Start table section -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <h4 class="card-title">Liste des clients</h4>
+
+                            <!-- Display success messages -->
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
+                            <!-- Table for listing admins -->
+                             
+                            <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Prénom</th>
+                                        <th>Date de naissance</th>
+                                        <th>Numéro de téléphone</th>
+                                        <th>Adresse</th>
+                                        <th>Email</th>
+                                        <th>Créé le</th>
+                                        <th>Dernière connexion</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for client in clients %}
+                                        <tr>
+                                            <td class="fw-medium">{{ client.id }}</td>
+                                            <td>{{ client.nom }}</td>
+                                            <td>{{ client.prenom }}</td>
+                                            <td>{{ client.dateNaissance ? client.dateNaissance|date('d-m-Y') : 'N/A' }}</td>
+                                            <td>{{ client.tel }}</td>
+                                            <td>{{ client.adresse }}</td>
+                                            <td>{{ client.email }}</td>
+                                            <td><div>{{ client.createdAt ? client.createdAt|date('d-m-Y H:i') : 'N/A' }}</div></td>
+                                            <td><div>{{ client.lastConnexion ? client.lastConnexion|date('d-m-Y H:i') : 'N/A' }}</div></td>
+                                            
+                                            <td>
+                                              
+                                                <a href="{{ path('client_delete', {id: client.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet client ?');">
+                                                    Supprimer
+                                                </a>
+                                            </td>
+                                         
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="9">Aucun client trouvé.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End table section -->
+        </div>
+    {% endblock %}

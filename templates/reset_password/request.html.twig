@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Swapify</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+            display: grid;
+            grid-template-columns: 35% 60% 5%;
+            align-self: center;
+            padding: 10px 20px;
+            z-index: 10;
+        }
+
+        .home {
+            text-decoration: none;
+            color: #88c858;
+            align-self: center;
+            padding-left: 15px;
+        }
+
+        .logo {
+            font-family: "Edu AU VIC WA NT Hand", serif; 
+            color: #88c858;
+            font-size: 30px;
+            font-weight: 500;
+            letter-spacing: .6em;
+        }
+
+        .container {
+            z-index: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            height: 100vh;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .left-section {
+            display: grid;
+            align-content: center;
+            background-color: white;
+            padding: 40px;
+            width: 80%;
+            overflow: hidden;
+        }
+
+        .left-section h3 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 30px;
+        }
+
+        .left-section h3 span {
+            font-family: "Edu AU VIC WA NT Hand", serif;
+        }
+
+        .input-group {
+            display: grid;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .input-field {
+            padding: 15px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .input-field.is-invalid {
+            border-color: red;
+            background-color: #f8d7da;
+        }
+
+        .btn-primary {
+            background-color: #88c858;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight:600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition-duration: 0.1s;
+        }
+
+        .btn-primary a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #6b9e43;
+            transition-duration: 0.1s;
+        }
+
+        .separator-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            color: #666;
+        }
+
+        .separator-line {
+            border-top: 1px solid #ccc;
+        }
+
+        .create-account {
+            background-color: #FAFBFC;
+            border: 1px solid rgba(27, 31, 35, 0.15);
+            border-radius: 6px;
+            box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+            transition-duration: 0.1s;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .create-account:hover {
+            background-color: #F3F4F6;
+            text-decoration: none;
+            transition-duration: 0.1s;
+        }
+
+        .create-account a {
+            color: #24292E;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .forgot-password {
+            margin-top: 15px;
+            text-decoration: none;
+        }
+
+        .forgot-password a {
+            text-decoration: none;
+            color: #666;
+        }
+
+        .custom-line {
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #888, transparent);
+            margin: 20px auto;
+        }
+
+        .right-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .column {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 20px;
+            animation: slide 8s linear infinite;
+        }
+
+        #col-2 {
+            animation-direction: reverse;
+        }
+
+        .item {
+            height: 220px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            font-size: 48px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .item:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes slide {
+            from { transform: translateY(0%); }
+            to { transform: translateY(-50%); }
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="home"><a href="#">⬅</a></div>
+        <div class="logo">Swapify</div>
+        <div class="logo-img">🚗</div>
+    </div>
+    
+    <br><br><br>
+
+    <div class="container">
+    <!-- Section à gauche pour le formulaire -->
+    <div class="left-section">
+        <h3>Réinitialiser votre mot de passe</h3>
+
+        <!-- Affichage des erreurs flash -->
+        {% for flash_error in app.flashes('reset_password_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+        
+        <!-- Formulaire de réinitialisation -->
+        {{ form_start(requestForm) }}
+            <div class="input-group">
+                <label for="email">Email</label>
+                {{ form_widget(requestForm.email, {'attr': {'class': 'input-field', 'required': true}}) }}
+            </div>
+
+            <button type="submit" class="btn-primary">
+                Envoyer le lien de réinitialisation
+            </button>
+        {{ form_end(requestForm) }}
+
+        <!-- Lien pour revenir à la page de connexion -->
+        <div class="custom-line"></div>
+        <div class="forgot-password">
+            <a href="{{ path('app_login') }}">Retour à la connexion</a>
+        </div>
+    </div>
+
+    <!-- Section à droite pour les images glissantes -->
+    <div class="right-section">
+        <div class="column" id="col-1">
+            <div class="item" style="background-color: #FFE4E1;">🚗</div>
+            <div class="item" style="background-color: #E0FFFF;">📱</div>
+            <div class="item" style="background-color: #F0FFF0;">📚</div>
+            <div class="item" style="background-color: #FFE4E1;">🚗</div>
+            <div class="item" style="background-color: #E0FFFF;">📱</div>
+            <div class="item" style="background-color: #F0FFF0;">📚</div>
+        </div>
+
+        <div class="column" id="col-2">
+            <div class="item" style="background-color: #F0FFF0;">👕</div>
+            <div class="item" style="background-color: #FFE4E1;">⛺</div>
+            <div class="item" style="background-color: #E0FFFF;">🪑</div>
+            <div class="item" style="background-color: #F0FFF0;">👕</div>
+            <div class="item" style="background-color: #FFE4E1;">⛺</div>
+            <div class="item" style="background-color: #E0FFFF;">🪑</div>
+        </div>
+
+        <div class="column" id="col-3">
+            <div class="item" style="background-color: #E0FFFF;">🚗</div>
+            <div class="item" style="background-color: #F0FFF0;">📱</div>
+            <div class="item" style="background-color: #FFE4E1;">🪑</div>
+            <div class="item" style="background-color: #E0FFFF;">🚗</div>
+            <div class="item" style="background-color: #F0FFF0;">📱</div>
+            <div class="item" style="background-color: #FFE4E1;">🪑</div>
+        </div>
+    </div>
+</div>

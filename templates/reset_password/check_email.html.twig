@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset Email Sent</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+            display: grid;
+            grid-template-columns: 35% 60% 5%;
+            align-items: center;
+            padding: 10px 20px;
+            z-index: 10;
+        }
+
+        .home {
+            text-decoration: none;
+            color: #88c858;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo {
+            font-family: "Edu AU VIC WA NT Hand", serif;
+            color: #88c858;
+            font-size: 30px;
+            font-weight: 500;
+            letter-spacing: .6em;
+            text-align: center;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            padding: 80px 20px 20px;
+            gap: 30px;
+            box-sizing: border-box;
+        }
+
+        .left-section {
+            display: grid;
+            align-content: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        }
+
+        .left-section h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .left-section p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .btn-primary {
+            background-color: #88c858;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: auto; /* Réduit la largeur à la taille de son contenu */
+            text-align: center;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block; /* Nécessaire pour le centrage dans text-align */
+            margin-top: 20px;
+        }
+
+
+        .btn-primary:hover {
+            background-color: #6b9e43;
+        }
+
+        .right-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .column {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 20px;
+            animation: slide 8s linear infinite;
+        }
+
+        #col-2 {
+            animation-direction: reverse;
+        }
+
+        .item {
+            height: 220px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            font-size: 48px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .item:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes slide {
+            from {
+                transform: translateY(0%);
+            }
+            to {
+                transform: translateY(-50%);
+            }
+        }
+
+        .custom-line {
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #888, transparent);
+            margin: 20px auto;
+        }
+
+        .forgot-password {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .forgot-password a {
+            text-decoration: none;
+            color: #88c858;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="home"><a href="#">⬅</a></div>
+        <div class="logo">Swapify</div>
+        <div class="logo-img">🚗</div>
+    </div>
+
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h2>Email de réinitialisation envoyé</h2>
+            <p>
+                Si un compte correspondant à votre adresse email existe, un email vient d'être envoyé avec un lien pour réinitialiser votre mot de passe. Ce lien expirera dans
+                <b>1 heure </b>.
+            </p>
+            <p>Si vous ne recevez pas d'email, vérifiez votre dossier de spam ou <a href="#">réessayez</a>.</p>
+            <a href="#" class="btn-primary">Retour à la connexion</a>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="column" id="col-1">
+                <div class="item" style="background-color: #FFE4E1;">🚗</div>
+                <div class="item" style="background-color: #E0FFFF;">📱</div>
+                <div class="item" style="background-color: #F0FFF0;">📚</div>
+                <div class="item" style="background-color: #FFE4E1;">🚗</div>
+                <div class="item" style="background-color: #E0FFFF;">📱</div>
+                <div class="item" style="background-color: #F0FFF0;">📚</div>
+            </div>
+
+            <div class="column" id="col-2">
+                <div class="item" style="background-color: #F0FFF0;">👕</div>
+                <div class="item" style="background-color: #FFE4E1;">⛺</div>
+                <div class="item" style="background-color: #E0FFFF;">🪑</div>
+                <div class="item" style="background-color: #F0FFF0;">👕</div>
+                <div class="item" style="background-color: #FFE4E1;">⛺</div>
+                <div class="item" style="background-color: #E0FFFF;">🪑</div>
+            </div>
+
+            <div class="column" id="col-3">
+                <div class="item" style="background-color: #E0FFFF;">🚗</div>
+                <div class="item" style="background-color: #F0FFF0;">📱</div>
+                <div class="item" style="background-color: #FFE4E1;">📚</div>
+                <div class="item" style="background-color: #E0FFFF;">🚗</div>
+                <div class="item" style="background-color: #F0FFF0;">📱</div>
+                <div class="item" style="background-color: #FFE4E1;">📚</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

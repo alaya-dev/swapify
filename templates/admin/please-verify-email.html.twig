@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Vérification de l'Email
+{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <div class="row justify-content">
+            <div class="col-md-6 ">
+                <div class="card shadow-lg text-center">
+                    <div class="card-header bg-success text-white">
+                        <h4>Vérification de votre email</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">
+                            Un email de vérification a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception (et éventuellement votre dossier spam) pour confirmer votre adresse email.
+                        </p>
+                       
+                        
+                        <a href="{{ path('app_login') }}" class="btn btn-success">Retour à l'accueil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

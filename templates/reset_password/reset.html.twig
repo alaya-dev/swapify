@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
+
+{% block body %}
+<body>
+    <div class="navbar">
+        <div class="home"><a href="#">⬅</a></div>
+        <div class="logo">Swapify</div>
+        <div class="logo-img">🚗</div>
+    </div>
+    <section class="background-radial-gradient overflow-hidden">
+        <style>
+            .background-radial-gradient {
+                background-color: #ffffff;
+                background-image: radial-gradient(650px circle at 0% 0%, #d4edda 15%, #c3e6cb 35%, #b2dfbb 75%, #a3d9a3 80%, transparent 100%), radial-gradient(1250px circle at 100% 100%, #d4edda 15%, #c3e6cb 35%, #b2dfbb 75%, #a3d9a3 80%, transparent 100%);
+            }
+
+            .logo {
+            font-family: "Edu AU VIC WA NT Hand", serif; 
+            color: #88c858;
+            font-size: 30px;
+            font-weight: 500;
+            letter-spacing: .6em;
+        }
+
+            .bg-glass {
+                background-color: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                padding: 30px;
+                text-align: center;
+            }
+
+            .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                padding: 0 50px;
+                flex-direction: column;
+            }
+
+            .card {
+                width: 50%;
+            }
+
+            h1, p {
+                color: black;
+            }
+
+            input[type="password"] {
+                background: rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                color: #388E3C;
+                font-size: 1rem;
+                padding: 15px;
+                border-radius: 8px;
+                width: 100%;
+            }
+
+            .btn-primary {
+                background: #4CAF50;
+                border: none;
+                padding: 12px 25px;
+                font-size: 1.2rem;
+                color: white;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .btn-primary:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
+            }
+        </style>
+
+        <div class="container text-center">
+            <h1>Réinitialiser votre mot de passe</h1>
+            <p>Revenez à votre compte !</p>
+            <p>Saisissez votre nouveau mot de passe ci-dessous pour retrouver l'accès à votre compte.</p>
+            <div class="card bg-glass">
+                <div class="card-body px-4 py-5 px-md-5">
+                    {{ form_start(resetForm) }}
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                {{ form_row(resetForm.plainPassword) }}
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-block mb-4">
+                            Réinitialiser le mot de passe
+                        </button>
+                    {{ form_end(resetForm) }}
+
+                    <div class="text-center mt-3">
+                        <p>Vous vous souvenez de votre mot de passe ? 
+                            <a href="{{ path('app_login') }}">Connectez-vous ici</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+{% endblock %}
