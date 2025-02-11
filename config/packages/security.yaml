@@ -47,7 +47,7 @@ security:
         - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        - { path: ^/dashboard_client, roles: ROLE_CLIENT }
+        - { path: ^/dashboard/client, roles: ROLE_CLIENT }
 
        
 
