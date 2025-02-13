@@ -33,7 +33,7 @@ Suivez ces étapes pour configurer et exécuter le projet :
 composer create-project symfony/skeleton symfony_login
 
 # Accéder au dossier du projet
-cd symfony_login
+cd swapify-main
 
 # Installer les dépendances essentielles
 composer require twig orm security mailer form validator maker \
