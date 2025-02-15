@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories - Liste{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-6">Liste des Catégories</h1>
+
+        <div class="flex justify-end mb-4">
+            <a href="{{ path('app_categorie_new') }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+                <i class="fas fa-plus mr-2"></i> Ajouter une catégorie
+            </a>
+        </div>
+
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left">ID</th>
+                    <th class="py-3 px-4 text-left">Libellé</th>
+                    <th class="py-3 px-4 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+            {% for categorie in categories %}
+                <tr class="hover:bg-gray-50">
+                    <td class="py-3 px-4">{{ categorie.id }}</td>
+                    <td class="py-3 px-4">{{ categorie.libelle }}</td>
+                    <td class="py-3 px-4 text-center">
+                        <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded inline-flex items-center mr-2">
+                            <i class="fas fa-eye mr-1"></i> Voir
+                        </a>
+                        <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded inline-flex items-center">
+                            <i class="fas fa-edit mr-1"></i> Modifier
+                        </a>
+                        
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="py-3 px-4 text-center text-gray-500">Aucune catégorie trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
