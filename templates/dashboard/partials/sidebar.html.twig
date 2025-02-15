@@ -1,0 +1,41 @@
+<aside class="relative bg-sidebar h-screen w-64 hidden sm:block shadow-xl">
+    <div class="p-6">
+        <a href="{{ path('app_dashboard_client') }}" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">weclcom</a>
+    </div>
+    <nav class="text-white text-base font-semibold pt-3">
+        <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fas fa-user mr-3"></i>
+            Profile
+        </a>
+
+        <a href="{{ path('souk') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'souk' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fas fa-store mr-3"></i>
+            Souk
+        </a>
+
+        <a href="{{ path('annonce') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'annonce' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fas fa-bullhorn mr-3"></i>
+            Annonce
+        </a>
+
+        <a href="{{ path('blog') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'blog' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fas fa-newspaper mr-3"></i>
+            Blog
+        </a>
+
+        <a href="{{ path('evenment') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'evenment' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fas fa-calendar-alt mr-3"></i>
+            Événement
+        </a>
+
+        <a href="{{ path('livraison') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fas fa-shipping-fast mr-3"></i>
+            Livraison
+        </a>
+
+        <a href="{{ path('conversation') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'conversation' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fa fa-comments mr-3" aria-hidden="true"></i>
+            conversation
+        </a>
+    </nav>
+</aside>

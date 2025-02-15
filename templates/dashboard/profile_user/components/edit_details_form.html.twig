@@ -1,0 +1,21 @@
+<div class="bg-white p-6 rounded-lg shadow-lg md:col-span-4">
+    <h2 class="text-xl font-bold mb-4">Modifier Détails</h2>
+    <form action="#" method="POST">
+        <!-- Form Fields -->
+        {% set formFields = [
+            { id: 'nom', label: 'Nom', type: 'text', value: 'charchour' },
+            { id: 'prenom', label: 'Prénom', type: 'text', value: 'charchour' },
+            { id: 'email', label: 'Email', type: 'email', value: 'test@salman.tn' },
+            { id: 'dob', label: 'Date de naissance', type: 'date', value: '2013-05-08' }
+        ] %}
+        {% for field in formFields %}
+            <label for="{{ field.id }}" class="block text-gray-700 font-semibold">{{ field.label }}</label>
+            <input type="{{ field.type }}" id="{{ field.id }}" name="{{ field.id }}" value="{{ field.value }}"
+                   class="w-full p-2 border border-gray-300 rounded-md mb-4">
+        {% endfor %}
+        <!-- Submit Button -->
+        <button type="submit" class="px-4 py-2 bg-black text-white font-semibold rounded-md border border-black">
+            Enregistrer
+        </button>
+    </form>
+</div>
