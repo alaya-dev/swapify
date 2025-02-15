@@ -23,8 +23,15 @@
     <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6 pr-1">
        {% if app.user %}
                      <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('mesAnnonces') }}">mes annonces </a>
-                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_logout') }}">Se déconnecter</a>
-                    <span  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</span>
+                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="/logout">Se déconnecter</a>
+
+                   {% if 'ROLE_CLIENT' in app.user.roles %}
+                    <a href="/dashboard/client"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
+                    {% else %}
+                    <a href="/dashboard"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
+                    {% endif %}
+
+
                 {% else %}
                   <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_login') }}">Se connecter</a>
                   <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_register') }}">S'inscrire</a>
@@ -53,7 +60,7 @@
     <div class="mt-6 border-t border-gray-300 pt-4">
        {% if app.user %}
                       <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('mesAnnonces') }}">mes annonces </a>
-                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_logout') }}">Se déconnecter</a>
+                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="/logout">Se déconnecter</a>
                     <span class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</span>
                 {% else %}
                     <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_login') }}">Se connecter</a>

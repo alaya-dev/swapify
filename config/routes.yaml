@@ -6,13 +6,10 @@ kernel:
     resource: ../src/Kernel.php
     type: annotation
 
-app_login:
-    path: /login
-    controller: App\Controller\SecurityController::login
 
-app_home:
-    path: / 
-    controller: App\Controller\HomeController::index
+
+
+
 
 2fa_login_check:
     path: /2fa_check

@@ -13,10 +13,10 @@ class DashboardClientController extends AbstractController
     public function index(Request $request): Response
     {
         // remove this line to it juste for check if teh sesstion is working wassim raged m3a raha <3 hh 
-        $session = $request->getSession();
+       /* $session = $request->getSession();
         $session->set('test_key', 'test_value');
         dd($session);
-        return new Response('Session test: ' . $session->get('test_key'));
+        return new Response('Session test: ' . $session->get('test_key'));*/
 
         return $this->render('dashboard/accueil_client.html.twig', [
             'controller_name' => 'DashboardClientController',
