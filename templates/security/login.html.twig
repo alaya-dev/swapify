@@ -1,12 +1,100 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Swapify</title>
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="grid grid-cols-1 md:grid-cols-2 h-screen p-4 gap-4 items-center mt-16 overflow-hidden ">
+        <div class="p-10 w-full max-w-lg mx-auto h-[100vh] ">
+            <h3 class="text-3xl font-semibold text-gray-800 mb-8">
+                Connectez-vous sur <span class="font-handwriting text-green-600">SWAPIFY</span>
+            </h3>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="mb-6">
+                <label for="email" class="block text-gray-700 font-bold mb-2">E-mail *</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="alouioussema697@salman.tn"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:outline-none"
+                />
+            </div>
+
+            <!-- Password Input -->
+            <div class="mb-6">
+                <label for="mdp" class="block text-gray-700 font-bold mb-2">Mot de passe *</label>
+                <input
+                    type="password"
+                    id="mdp"
+                    placeholder="***********"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:outline-none"
+                />
+            </div>
+
+            <!-- Login Button -->
+            <button class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-green-700 transition duration-200">
+                Se connecter
+            </button>
+
+            <!-- Forgot Password Link -->
+            <div class="mt-4 text-center">
+                <a href="#" class="text-gray-600 hover:underline">Mot de passe oublié ?</a>
+            </div>
+
+            <!-- Separator Line -->
+            <div class="my-6 w-full h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+
+            <!-- Create Account Button -->
+            <a href="{{path('app_register')}}" class="w-full block text-center bg-gray-50 border border-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Créez votre compte dès maintenant
+            </a>
+        </div>
+
+        <!-- Right Section -->
+        <div class="hidden md:grid grid-cols-3 gap-4 overflow-hidden h-[100vh]">
+            <!-- Column 1 -->
+            <div class="grid grid-rows-6 gap-4 animate-slide">
+                <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">🚗</div>
+                <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
+                <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📚</div>
+                <!-- Duplicate items -->
+                <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">🚗</div>
+                <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
+                <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📚</div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="grid grid-rows-6 gap-4 animate-slide-reverse">
+                <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">👕</div>
+                <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">⛺</div>
+                <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">🪑</div>
+                <!-- Duplicate items -->
+                <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">👕</div>
+                <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">⛺</div>
+                <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">🪑</div>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="grid grid-rows-6 gap-4 animate-slide">
+                <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">🚗</div>
+                <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
+                <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">🪑</div>
+                <!-- Duplicate items -->
+                <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">🚗</div>
+                <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
+                <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">🪑</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animation Styles -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
 
+<<<<<<< HEAD
         body {
             margin: 0;
             padding: 0;
@@ -209,27 +297,24 @@
             transform: scale(1.05);
         }
 
+=======
+>>>>>>> 3dc3f163037b9fd697baa4e9e8b2b2a8247db39c
         @keyframes slide {
             from { transform: translateY(0%); }
             to { transform: translateY(-50%); }
         }
 
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
+        .animate-slide {
+            animation: slide 8s linear infinite;
         }
 
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .animate-slide-reverse {
+            animation: slide 8s linear infinite reverse;
         }
 
 
     </style>
+<<<<<<< HEAD
 </head>
 <body>
     <div class="navbar">
@@ -308,3 +393,7 @@
     </div>
 </body>
 </html>
+=======
+
+{% endblock %}
+>>>>>>> 3dc3f163037b9fd697baa4e9e8b2b2a8247db39c

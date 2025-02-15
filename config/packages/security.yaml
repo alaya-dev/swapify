@@ -26,7 +26,14 @@ security:
             custom_authenticator: App\Security\AppAuthenticator  
             logout:
                 path: app_logout
+<<<<<<< HEAD
                 target: app_login
+=======
+                target: app_home
+                
+            
+                    
+>>>>>>> 3dc3f163037b9fd697baa4e9e8b2b2a8247db39c
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -40,12 +47,22 @@ security:
     # Note: Only the *first* access control that matches will be used
 
     access_control:
+<<<<<<< HEAD
     - { path: ^/dashboard/client, roles: ROLE_CLIENT }
     - { path: ^/dashboard, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
     - { path: ^/admin/liste, roles: ROLE_SUPER_ADMIN }
     - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
     - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
     - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+=======
+        - { path: ^/dashboard/client, roles: ROLE_CLIENT }
+        - { path: ^/dashboard, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/liste, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+        - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+
+>>>>>>> 3dc3f163037b9fd697baa4e9e8b2b2a8247db39c
 
        
 
