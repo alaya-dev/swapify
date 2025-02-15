@@ -1,0 +1,63 @@
+<header class="bg-white">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-2" aria-label="Global">
+    <div class="flex lg:flex-1">
+      <img class="h-12 w-auto object-contain pl-1" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
+    </div>
+    <div class="flex lg:hidden">
+      <button id="menu-toggle" type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+        <span class="sr-only">Open main menu</span>
+        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+    </div>
+    <div class="hidden lg:flex lg:gap-x-8">
+      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Acceuil</a>
+      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">À Propos</a>
+      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Annonces</a>
+      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Evenement</a>
+      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
+      <a href="{{ path('app_home') }}#contact" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
+    </div>
+    <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6 pr-1">
+      <a href="{{path('app_login')}}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Se Connecter</a>
+      <a href="{{path('app_register')}}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">S'inscrire</a>
+    </div>
+  </nav>
+  <div id="mobile-menu" class="hidden fixed inset-y-0 right-0 z-20 w-full bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+    <div class="flex items-center justify-between">
+      <img class="h-20 w-auto object-contain" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
+      <button id="menu-close" type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700">
+        <span class="sr-only">Close menu</span>
+        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="mt-6 space-y-4">
+      <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Acceuil</a>
+      <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">À Propos</a>
+      <a href="{{ path('app_home') }}#contact" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Contact</a>
+    </div>
+    <div class="mt-6 border-t border-gray-300 pt-4">
+      <a href="{{path('app_login')}}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Se Connecter</a>
+      <a href="{{path('app_register')}}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">S'Inscrire</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const menuToggle = document.getElementById("menu-toggle");
+    const menuClose = document.getElementById("menu-close");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    menuToggle.addEventListener("click", function () {
+      mobileMenu.classList.toggle("hidden");
+    });
+
+    menuClose.addEventListener("click", function () {
+      mobileMenu.classList.add("hidden");
+    });
+  });
+</script>

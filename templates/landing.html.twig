@@ -1,0 +1,314 @@
+{%  extends 'base.html.twig' %}
+
+{% block body %}
+{# Hero Section #}
+
+<section class="relative bg-gradient-to-b from-emerald-500 to-emerald-700 overflow-hidden min-h-[500px]">
+    <div class="grid max-w-screen-xl px-4 py-24 mx-auto gap-8 lg:grid-cols-12 grid-cols-1 text-center lg:text-left">
+      <div class="place-self-center lg:col-span-7">
+        <h1 class="max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-tight md:text-4xl xl:text-5xl text-white">
+          Swapify: Donnez une seconde vie à vos objets, échangez sans limites !
+        </h1>
+        <p class="max-w-2xl mb-6 font-light text-gray-200 lg:mb-8 md:text-lg lg:text-xl">
+          Trouvez ce dont vous avez besoin en échangeant ce que vous n’utilisez plus. Une plateforme simple, qui pense à tous !
+        </p>
+        <div class="flex flex-wrap justify-center lg:justify-start gap-4">
+          {% if not app.user%}
+          <a href="app_login" class="inline-flex items-center justify-center gap-3 px-6 py-3 text-lg font-medium text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300">
+            Déposez votre objet
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </a>
+          {% else  %}
+          <a href="#" class="inline-flex items-center justify-center gap-3 px-6 py-3 text-lg font-medium text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300">
+            Déposez votre objet
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </a>
+          {% endif %}
+          
+          <a href="#contact" class="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-white/20 rounded-lg shadow-lg hover:bg-white/30 focus:ring-4 focus:ring-white/40">
+            Contactez-nous
+          </a>
+        </div>
+      </div>
+      <!-- Image (Hidden on small screens) -->
+      <div class="relative hidden lg:block lg:col-span-5">
+        <img src="{{asset('assets/images/hero.png')}}" alt="mockup" class="absolute bottom-[-129px] left-1/2 -translate-x-1/2 max-w-none w-[118%] pl-3">
+      </div>
+    </div>
+  </section>
+  
+
+{# Add Section #}
+<div class="flex justify-center px-4 sm:px-8 mt-9">
+  <div class="relative bg-emerald-100 p-6 sm:p-8  rounded-lg w-full max-w-7xl overflow-hidden">
+    <img src="{{asset('assets/images/test.png')}}" class="absolute left-[-480px] bottom-[-50px] w-150 opacity-100 pointer-events-none hidden md:block" alt="abstract flower">
+    <img src="{{asset('assets/images/test.png')}}" class="absolute right-[-350px] top-[-80px] w-150 opacity-100 pointer-events-none hidden md:block" alt="abstract flower">
+    <div class="flex flex-col items-center justify-center space-y-6 relative z-10">
+      <h2 class="text-3xl font-bold text-gray-800 text-center">C'est le moment d'échange</h2>
+      {% if not app.user %}
+      <a href="{{path('app_login')}}"class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        <span>Ajouter une annonce</span>
+    </a>
+    {% else %}
+    <a href="#"class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        <span>Ajouter une annonce</span>
+    </a>
+    {% endif %}
+    </div>
+  </div>
+</div>
+
+{# Category Section #}
+<div class="flex justify-center px-4 sm:px-8 mt-9">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-7xl ">
+    {# Item 1 #}
+    <div class="bg-gradient-to-br from-emerald-100 to-green-300 border border-gray-200 shadow-sm relative p-8 rounded-lg min-h-[400px]">
+      <a href="#">
+        <h5 class="mb-2 text-3xl font-semibold tracking-tight text-gray-900">Les Tendances Dans Cette Instant </h5>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-8 text-emerald-600">
+            <path fill-rule="evenodd" d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+    {# Category Items #}
+    {% for category in ['cat1.jpg', 'tech.webp', 'cat3.jpg'] %}
+    <div class="relative bg-cover bg-center w-full max-w-7xl h-full overflow-hidden rounded-2xl shadow-2xl hover:shadow-3xl">
+      <img src="{{ asset('assets/images/' ~ category) }}" alt="Category Image" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+        <div class="absolute bottom-0 left-0 w-full p-4">
+          <h2 class="text-white font-semibold text-xl">
+            {% if loop.index == 1 %} Équipements sportifs {% elseif loop.index == 2 %} Technologie {% else %} Mode Et Vêtements {% endif %}
+          </h2>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{# Category Section #}
+
+{# all categories #}
+<section class="py-12 mt-9">
+    <div class="max-w-screen-xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-8 text-gray-800">Explore Toutes Les Categories</h2>
+      
+      <div class="relative">
+        <!-- Left Arrow -->
+        <button class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200 focus:outline-none" onclick="scrollCarousel(-1)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+  
+        <div class="carousel w-full space-x-4 overflow-x-auto scroll-smooth flex gap-6 p-4" id="categoryCarousel">
+            <!-- Category Card 1 -->
+             {#{% for cat in categories %}#}
+            <div class="carousel-item min-w-[150px] h-32 p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat1.jpg') }}'); background-size: cover; background-position: center;">
+              <h3 class="text-sm font-semibold text-white mb-2">category 1</h3>
+            </div>
+            {#{% endfor %}#}
+          
+            <!-- Category Card 2 -->
+            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/tech.webp') }}'); background-size: cover; background-position: center;">
+              <h3 class="text-sm font-semibold text-white mb-2">Category 2</h3>
+            </div>
+          
+            <!-- Category Card 3 -->
+            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat3.jpg') }}'); background-size: cover; background-position: center;">
+              <h3 class="text-sm font-semibold text-white mb-2">Category 3</h3>
+            </div>
+          
+            <!-- Category Card 4 -->
+            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat1.jpg') }}'); background-size: cover; background-position: center;">
+              <h3 class="text-sm font-semibold text-white mb-2">Category 4</h3>
+            </div>
+          
+            <!-- Category Card 5 -->
+            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat3.jpg') }}'); background-size: cover; background-position: center;">
+              <h3 class="text-sm font-semibold text-white mb-2">Category 5</h3>
+            </div>
+          
+            <!-- Category Card 6 -->
+            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/tech.webp') }}'); background-size: cover; background-position: center;">
+              <h3 class="text-sm font-semibold text-white mb-2">Category 6</h3>
+            </div>
+          
+            <!-- Category Card 7 -->
+            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat1.jpg') }}'); background-size: cover; background-position: center;">
+              <h3 class="text-sm font-semibold text-white mb-2">Category 7</h3>
+            </div>
+          </div>
+          
+          
+  
+        <!-- Right Arrow -->
+        <button class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200 focus:outline-none" onclick="scrollCarousel(1)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+{# all category #}  
+
+{# annonces section #}
+<section class="mt-9 px-4 sm:px-8 w-full">
+    <div class="relative p-4 sm:p-8 rounded-lg w-full overflow-hidden">
+        <h1 class="text-xl font-bold mb-6">En ce moment sur swapify</h1>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+            <!-- Product Card 1 -->
+            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                <div class="relative aspect-square">
+                    <img 
+                        src="{{asset('uploads/images/67a0ae941ea95.jpg')}}"
+                        alt="Product 1"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+                <div class="p-4">
+                    <h3 class="font-medium">produit 1</h3>
+                    <p class="text-gray-600 text-sm">description</p>
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                <div class="relative aspect-square">
+                    <img 
+                        src="{{asset('uploads/images/casqueB.jpg')}}"
+                        alt="Product 2"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+                <div class="p-4">
+                    <h3 class="font-medium">produit 2</h3>
+                    <p class="text-gray-600 text-sm">description</p>
+                </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                <div class="relative aspect-square">
+                    <img 
+                        src="{{asset('uploads/images/R.png')}}"
+                        alt="Product 3"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+                <div class="p-4">
+                    <h3 class="font-medium">produit 3</h3>
+                    <p class="text-gray-600 text-sm">description</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow overflow-hidden flex items-center justify-center border border-gray-200" >
+                <a href="#" class="text-center p-4">
+                    <div class="mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </div>
+                    <p class="font-medium text-gray-600 uppercase text-sm">Voir plus d'annonce</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{# annonce section #}
+
+{# about us  #}
+
+<section class="flex flex-col md:flex-row items-center justify-center p-6 md:p-10 border rounded-lg w-full mx-auto bg-gray-100">
+    <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-6 w-full">
+        <div class="relative w-full flex justify-center">
+            <img src="{{asset('assets/images/3dshop2.png')}}" alt="architecture du website" 
+                 class="min-w-[200px] min-h-[200px] md:w-96 md:h-96 max-w-full object-contain">
+        </div>
+        <!-- Left Side: Text -->
+        <div class="text-center md:text-left px-4">
+            <h2 class="text-xl md:text-2xl font-bold">À PROPOS NOUS</h2>
+            <p class="text-gray-600 mt-2 text-sm md:text-base text-left">
+                Swapify est une plateforme d’échange qui permet aux utilisateurs de proposer et de rechercher des offres avec ou sans gestion de transactions financières. 
+                Elle facilite la mise en relation entre particuliers pour l’échange de biens et de services tout en offrant une gestion efficace des annonces,des blogs ... 
+                Grâce à un système de catégories bien structuré et une interface intuitive, Swapify permet aux utilisateurs de publier, modifier et supprimer leurs offres en toute simplicité.
+                De plus, la plateforme intègre une gestion avancée des événements, incluant des sessions et un suivi des participants, garantissant ainsi une expérience interactive et engageante
+            </p>
+        </div>
+    </div>
+</section>
+
+  
+{# about us #}
+
+
+{# contact section #}
+<section class="relative text-white py-6 px-4 w-full mx-auto" id="contact" 
+         style="background-image: url('{{ asset('assets/images/contact.png') }}'); background-size: cover; background-position: center;">
+    
+    <!-- Green Overlay -->
+    <div class="absolute inset-0 bg-green-700/50"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-around gap-6">
+        <!-- Event Venue -->
+        <div class="flex items-center gap-4">
+            <div class="bg-white p-3 rounded-full">
+                <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-semibold">Notre Local</p>
+                <p class="text-lg font-bold">  Soghra ESPRIT, 2025</p>
+            </div>
+        </div>
+
+        <!-- Send Email -->
+        <div class="flex items-center gap-4">
+            <div class="bg-white p-3 rounded-full">
+                <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 13.07l-7.07-5.34 14.14 0-7.07 5.34zm7-7.07h-14c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-10c0-.55-.45-1-1-1z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-semibold">Envoyer Email</p>
+                <p class="text-lg font-bold">info@swapify.com</p>
+            </div>
+        </div>
+
+        <!-- Call Emergency -->
+        <div class="flex items-center gap-4">
+            <div class="bg-white p-3 rounded-full">
+                <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6.62 10.79a15.72 15.72 0 006.59 6.59l2.2-2.2a1 1 0 011.13-.24 11.36 11.36 0 004.45.9 1 1 0 011 1v3.5a1 1 0 01-1 1 19.93 19.93 0 01-20-20 1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.9 4.45 1 1 0 01-.24 1.13l-2.2 2.2z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-semibold">Appellez</p>
+                <p class="text-lg font-bold">+88 0123 654 99</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{# contact section #}
+<script>
+    function scrollCarousel(direction) {
+      const carousel = document.getElementById('categoryCarousel');
+      const scrollAmount = 150; // Adjust for smooth scrolling
+      carousel.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
+  </script>
+
+{% endblock %}
