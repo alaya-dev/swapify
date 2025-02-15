@@ -25,7 +25,7 @@ security:
             custom_authenticator: App\Security\AppAuthenticator  
             logout:
                 path: app_logout
-                target: app_login
+                target: app_home
                 
             
                     
@@ -48,8 +48,7 @@ security:
         - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
 
        
 
