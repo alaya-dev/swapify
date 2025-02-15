@@ -22,7 +22,7 @@ security:
                 always_remember_me: true
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppAuthenticator  # Changez ici
+            custom_authenticator: App\Security\AppAuthenticator  
             logout:
                 path: app_logout
                 target: app_login
@@ -48,6 +48,8 @@ security:
         - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
        
 
