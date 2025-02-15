@@ -7,6 +7,7 @@ use App\Entity\Blog;
 use App\Form\BlogType;
 use App\Repository\BlogRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Proxies\__CG__\App\Entity\Blog as EntityBlog;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,7 @@ final class BlogController extends AbstractController
         );
         
     
-        return $this->render('blog/index.html.twig', [
+        return $this->render('blog//index.html.twig', [
             'blogs' => $acceptedBlogs,
         ]);
     }

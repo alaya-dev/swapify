@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Blog;
+use App\Enum\EtatEnum;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,11 +15,7 @@ class DashboardClientController extends AbstractController
     #[Route('/dashboard/client', name: 'app_dashboard_client')]
     public function index(Request $request): Response
     {
-        // remove this line to it juste for check if teh sesstion is working wassim raged m3a raha <3 hh 
-        $session = $request->getSession();
-        $session->set('test_key', 'test_value');
-        dd($session);
-        return new Response('Session test: ' . $session->get('test_key'));
+
 
         return $this->render('dashboard/accueil_client.html.twig', [
             'controller_name' => 'DashboardClientController',
@@ -37,9 +36,15 @@ class DashboardClientController extends AbstractController
     }
 
     #[Route('/dashboard/client/blog', name: 'blog')]
-    public function blog(): Response
+    public function blog(EntityManagerInterface $entityManager): Response
     {
-        return $this->render('dashboard/blog.html.twig');
+        $acceptedBlogs = $entityManager->getRepository(Blog::class)->findBy(
+            ['statut' => EtatEnum::Acceptée],
+            ['id' => 'DESC'] // Order by id in descending order
+        );
+        return $this->render('dashboard/blog.html.twig', [
+            'blogs' => $acceptedBlogs,
+        ]);
     }
 
     #[Route('/dashboard/client/evenment', name: 'evenment')]

@@ -1,4 +1,4 @@
-{% extends 'layout/header.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Blog List{% endblock %}
 
@@ -274,23 +274,24 @@
                             No ratings yet.
                         {% endif %}
                     </div>
-                    {% if app.user and not blog.hasUserRated(app.user) %}
-                        <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
-                            <div class="rating">
-                                {% for i in 1..5 %}
-                                    <i class="far fa-star" data-value="{{ i }}"></i>
-                                {% endfor %}
-                            </div>
-                            <input type="hidden" name="rating" class="rating-value" required>
-                                                                    {# FAB for Rating Submission #}
-                                                                    <button class="fab" onclick="submitRating('{{ blog.id }}')">
-                                                                        <i class="fas fa-star"></i>
-                                                                    </button>
-                        </form>
-                        
-                    {% else %}
-                        <p class="text-muted">You have already rated this blog.</p>
-                    {% endif %}
+{% if app.user and not blog.hasUserRated(app.user) %}
+    <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
+        <div class="rating">
+            {% for i in 1..5 %}
+                <i class="far fa-star" data-value="{{ i }}"></i>
+            {% endfor %}
+        </div>
+        <input type="hidden" name="rating" class="rating-value" required>
+        {# FAB for Rating Submission #}
+        <button class="fab" onclick="submitRating('{{ blog.id }}')">
+            <i class="fas fa-star"></i>
+        </button>
+    </form>
+
+{% else %}
+    <p class="text-muted">You have already rated this blog.</p>
+{% endif %}
+
                 </div>
                         {# Display Number Comments #}
                         <div class="comment-section">
