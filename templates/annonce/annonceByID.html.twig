@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+
+<div class="layout h-[100vh] flex justify-between max-w-[1366px] mx-auto px-[20px]">
+  <!-- Left Section: Annonce Details -->
+  <div class="flex-3 overflow-y-auto md:flex-none md:h-max" style="flex:3;">
+    <div class="mt-12 pr-5">
+      <!-- Annonce Title and User Info -->
+      <div class="flex justify-between">
+        <div class="flex flex-col gap-5">
+          <h1 class="font-normal text-2xl">{{ annonce.titre }}</h1>
+          <div class="flex gap-1 items-center text-sm text-[#888]">
+            <img src="https://th.bing.com/th/id/OIP.-Zanaodp4hv0ry2WpuuPfgHaEf?w=313&h=189&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Location" class="w-4 h-4" />
+            <span>{{ annonce.region }}</span>
+          </div>
+          <div class="p-4 bg-[#f5fff5] rounded-md text-xl font-light w-fit">
+            {{ annonce.categorie.libelle }}
+          </div>
+        </div>
+        <div class="flex flex-col gap-5 bg-[#f5fff5] py-0 px-12 items-center justify-center rounded-xl font-semibold">
+          <img src="https://th.bing.com/th/id/OIP.-Zanaodp4hv0ry2WpuuPfgHaEf?w=313&h=189&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="User" class="w-12 h-12 rounded-full object-cover" />
+          <span>{{ annonce.user.nom }} {{ annonce.user.prenom }}</span>
+        </div>
+      </div>
+
+      <!-- Annonce Description -->
+      <div class="mt-12 text-[#555] leading-5">
+        {{ annonce.description }}
+      </div>
+
+      <!-- Annonce Images -->
+      <div class="mt-10">
+        <h1 class="font-normal mb-2">Images de l'annonce</h1>
+        <div class="flex row gap-4">
+          {% set nbImg = 0 %}
+          {% for image in images %}
+            {% if annonce.id == image.annonce.id %}
+              {% set nbImg = nbImg + 1 %}
+              <div class="max-w-sm w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+                <div class="relative">
+                  <img 
+                    src="{{ asset('uploads/images/' ~ image.imageName) }}"
+                    alt="Annonce Image"
+                    class="w-full h-52 object-cover"
+                  />
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Recent Annonces -->
+      <div class="mt-10">
+        <h1 class="font-normal mb-2">Annonces publiées récemment</h1>
+        <div class="flex row gap-4">
+          {% set anID = annonce.id %}
+          {% for annonce in annonces|slice(0,5) %}
+            {% if annonce.id != anID %}
+              <div class="max-w-sm w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+                <div class="relative">
+                  <img 
+                    src="{{ annonce.images is not empty ? asset('uploads/images/' ~ annonce.images.0.imageName) : asset('images/default.jpg') }}"
+                    alt="Annonce Image"
+                    class="w-full h-52 object-cover"
+                  />
+                </div>
+                <div class="p-5 space-y-4">
+                  <div>
+                    <h3 class="text-xl font-bold text-gray-900">{{ annonce.titre }}</h3>
+                    <p class="text-gray-500 mt-1">{{ annonce.description|slice(0, 100) }}...</p>
+                  </div>
+                  <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition-colors text-center block">
+                    Voir Détails
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Section: Map and Actions -->
+  <div class="flex-2 h-[calc(100%-200px)] overflow-y-auto bg-[#f5fff5] md:flex-none md:h-[calc(100%-50px)]">
+    <div class="px-5 flex flex-col gap-5">
+      <p class="font-bold text-xl mb-2">Location</p>
+      <div id="map" class="w-full h-48 bg-gray-200 rounded-lg"></div>
+      <div class="flex justify-between">
+        <button class="flex items-center gap-3 p-5 bg-white border border-[#fece51] rounded-lg cursor-pointer">
+          <img src="/chat.png" alt="Chat" class="w-6 h-6" />
+          Envoyer un message
+        </button>
+        <button class="flex items-center gap-3 p-5 bg-white border border-[#fece51] rounded-lg cursor-pointer">
+          <img src="/save.png" alt="Save" class="w-6 h-6" />
+          Sauvegarder
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var map = L.map('map').setView([36.8065, 10.1815], 12);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  var marker = L.marker([{{ annonce.x }}, {{ annonce.y }}])
+    .addTo(map)
+    .bindPopup("<b>{{ annonce.titre }}</b>")
+    .openPopup();
+});
+</script>
+
+<style>
+body {
+  background-color: #f0fff4;
+  font-family: 'Arial', sans-serif;
+}
+
+.star-rating {
+  --percent: calc(var(--rating) / 5 * 100%);
+  display: inline-block;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.star-rating::before {
+  content: '★★★★★';
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, 
+    gold var(--percent), 
+    lightgray var(--percent)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card {
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.shadow {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.img-thumbnail {
+  transition: transform 0.2s;
+}
+
+.img-thumbnail:hover {
+  transform: scale(1.05);
+}
+</style>
+{% endblock %}

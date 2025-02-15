@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -231,11 +236,8 @@
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div class="home"><a href="#">⬅</a></div>
-        <div class="logo">Swapify</div>
-        <div class="logo-img">🚗</div>
-    </div>
+ 
+
     
     <br><br><br>
     
@@ -274,7 +276,7 @@
             <div class="custom-line"></div>
             
             <button class="create-account">
-                <a href="/register">Créez votre compte dès maintenant</a>
+                <a  href="{{ path('app_register') }}">Créez votre compte dès maintenant</a>
             </button>
         </div>
 
@@ -309,3 +311,4 @@
     </div>
 </body>
 </html>
+{% endblock %}
