@@ -1,0 +1,50 @@
+<div class="bg-white p-6 rounded-lg shadow-lg md:col-span-3">
+    <h2 class="text-xl font-bold mb-4">My Offers</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Sent Offers -->
+        <div class="bg-gray-100 p-4 rounded-lg shadow">
+            <h3 class="text-lg font-semibold text-blue-600">Sent Offers</h3>
+            <p class="text-gray-600 mb-2">Here are the offers you have sent.</p>
+            <div class="h-64 overflow-y-auto">
+                {% set sentOffers = [
+                    { name: 'Oliver Jake', email: 'info@oliver.com', image: 'https://i.pravatar.cc/100?img=1' },
+                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' },
+                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' },
+                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' },
+                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' },
+                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' }
+                ] %}
+                {% for offer in sentOffers %}
+                    <div class="flex items-center space-x-4 mt-4">
+                        <img class="w-10 h-10 rounded-full" src="{{ offer.image }}" alt="Profile">
+                        <div>
+                            <h4 class="font-semibold">{{ offer.name }}</h4>
+                            <p class="text-gray-500 text-sm">{{ offer.email }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Received Offers -->
+        <div class="bg-gray-100 p-4 rounded-lg shadow">
+            <h3 class="text-lg font-semibold text-green-600">Received Offers</h3>
+            <p class="text-gray-600 mb-2">Here are the offers you have received.</p>
+            <div class="h-64 overflow-y-auto">
+                {% set receivedOffers = [
+                    { name: 'Harry Callum', email: 'info@harry.com', image: 'https://i.pravatar.cc/100?img=3' },
+                    { name: 'Jacob Reece', email: 'info@jacob.com', image: 'https://i.pravatar.cc/100?img=4' }
+                ] %}
+                {% for offer in receivedOffers %}
+                    <div class="flex items-center space-x-4 mt-4">
+                        <img class="w-10 h-10 rounded-full" src="{{ offer.image }}" alt="Profile">
+                        <div>
+                            <h4 class="font-semibold">{{ offer.name }}</h4>
+                            <p class="text-gray-500 text-sm">{{ offer.email }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
