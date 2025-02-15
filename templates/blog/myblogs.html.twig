@@ -1,0 +1,32 @@
+{% extends 'layout/header.html.twig' %}
+
+{% block title %}Mes Blogs{% endblock %}
+
+{% block body %}
+    <h1>Mes Blogs</h1>
+
+    <div class="filter">
+        <form method="get" action="{{ path('app_blog_my_blogs') }}">
+            <label for="status">Filtrer par statut: </label>
+            <select name="status" id="status" onchange="this.form.submit()">
+                <option value="" {% if not statusFilter %}selected{% endif %}>Tous les statuts</option>
+                <option value="{{ constant('App\\Enum\\EtatEnum::Acceptée') }}" {% if statusFilter == constant('App\\Enum\\EtatEnum::Acceptée') %}selected{% endif %}>Acceptée</option>
+                <option value="{{ constant('App\\Enum\\EtatEnum::enAttente') }}" {% if statusFilter == constant('App\\Enum\\EtatEnum::enAttente') %}selected{% endif %}>En Attente</option>
+                <option value="{{ constant('App\\Enum\\EtatEnum::Rejetée') }}" {% if statusFilter == constant('App\\Enum\\EtatEnum::Rejetée') %}selected{% endif %}>Rejetée</option>
+            </select>
+        </form>
+    </div>
+
+    <div class="blogs">
+        {% for blog in blogs %}
+            <div class="blog">
+                <h2>{{ blog.title }}</h2>
+                <p>{{ blog.content }}</p>
+                <p>Statut: {{ blog.statut }}</p>
+            </div>
+        {% else %}
+            <p>Aucun blog trouvé.</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

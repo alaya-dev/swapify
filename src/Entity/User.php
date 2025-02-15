@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -74,11 +76,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     private ?string $authCode = null; 
 
-    public function __construct()
-    {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->dateNaissance = new \DateTime(); // Exemple de valeur par défaut : la date actuelle
-    }
+        /**
+     * @var Collection<int, Blog>
+     */
+    #[ORM\OneToMany(targetEntity: Blog::class, mappedBy: 'user')]
+    private Collection $blogs;
+
+        /**
+     * @var Collection<int, Commentaire>
+     */
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'user')]
+    private Collection $commentaires;
+
+    #[ORM\ManyToMany(targetEntity: Blog::class, mappedBy: 'ratedByUsers')]
+private Collection $ratedBlogs;
+
+public function __construct()
+{
+    $this->blogs = new ArrayCollection();
+    $this->commentaires = new ArrayCollection();
+    $this->ratedBlogs = new ArrayCollection(); // Initialize the collection
+    $this->createdAt = new \DateTimeImmutable();
+    $this->dateNaissance = new \DateTime(); // Exemple de valeur par défaut : la date actuelle
+
+}
 
     public function getId(): ?int
     {
@@ -250,6 +271,67 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         $this->adresse = $adresse;
         return $this;
     }
+
+        /**
+     * @return Collection<int, Blog>
+     */
+    public function getBlogs(): Collection
+    {
+        return $this->blogs;
+    }
+
+    public function addBlog(Blog $blog): static
+    {
+        if (!$this->blogs->contains($blog)) {
+            $this->blogs->add($blog);
+            $blog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlog(Blog $blog): static
+    {
+        if ($this->blogs->removeElement($blog)) {
+            // set the owning side to null (unless already changed)
+            if ($blog->getUser() === $this) {
+                $blog->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getUser() === $this) {
+                $commentaire->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 
 
     
