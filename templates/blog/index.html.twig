@@ -239,8 +239,41 @@
                         <a href="{{ path('accept_blog', {'id': blog.id}) }}" class="btn btn-success">Accept</a>
                     {% endif %}
                 </div>
+                    
+                {# Rating Section #}
+
                 <div class="rating-section">
                     <h6>Rate this Blog</h6>
+                    {# Display Average Rating with Stars #}
+                    <div class="mt-3">
+                        <strong>Average Rating:</strong>
+                        {% if blog.getRate() > 0.0 %}
+                            <div class="rating">
+                                {% set fullStars = blog.getRate()|round(0, 'floor') %}
+                                {% set fractionalPart = blog.getRate() % 1 %}
+                                {% set halfStar = fractionalPart >= 0.25 and fractionalPart < 0.75 ? 1 : 0 %}
+                                {% set emptyStars = 5 - fullStars - halfStar %}
+                
+                                {% for i in 0..fullStars - 1 %}
+                                    <i class="fas fa-star"></i>
+                                {% endfor %}
+                
+                                {% if halfStar == 1 and fullStars < 5 %}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {% endif %}
+                
+                                {% if fullStars < 5 %}
+                                    {% for i in 0..emptyStars - 1 %}
+                                        <i class="far fa-star"></i>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                <span>{{ blog.getRate()|number_format(1) }} ★</span>
+                            </div>
+                        {% else %}
+                            No ratings yet.
+                        {% endif %}
+                    </div>
                     {% if app.user and not blog.hasUserRated(app.user) %}
                         <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
                             <div class="rating">
@@ -249,24 +282,25 @@
                                 {% endfor %}
                             </div>
                             <input type="hidden" name="rating" class="rating-value" required>
+                                                                    {# FAB for Rating Submission #}
+                                                                    <button class="fab" onclick="submitRating('{{ blog.id }}')">
+                                                                        <i class="fas fa-star"></i>
+                                                                    </button>
                         </form>
+                        
                     {% else %}
                         <p class="text-muted">You have already rated this blog.</p>
                     {% endif %}
                 </div>
-                <div class="comment-section">
+                        {# Display Number Comments #}
+                        <div class="comment-section">
                     <h6>Comments ({{ blog.listeCommentaires|length }})</h6>
                     {% if blog.listeCommentaires is empty %}
                         <p class="text-muted">No comments yet.</p>
-                    {% else %}
-                        {% for comment in blog.listeCommentaires %}
-                            <div class="list-group-item">
-                                <p><strong>{{ comment.user.prenom }} {{ comment.user.nom }}</strong> <small class="text-muted">({{ comment.createdAt|date('Y-m-d H:i:s') }})</small></p>
-                                <p>{{ comment.contenuCmt }}</p>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                        {% endif %}
+
                 </div>
+
             </div>
         {% endfor %}
     {% else %}

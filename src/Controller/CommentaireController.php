@@ -20,6 +20,7 @@ final class CommentaireController extends AbstractController
     {
         return $this->render('commentaire/index.html.twig', [
             'commentaires' => $commentaireRepository->findAll(),
+            
         ]);
     }
 
@@ -65,7 +66,7 @@ final class CommentaireController extends AbstractController
     
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_blog_index', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('commentaire/edit.html.twig', [
