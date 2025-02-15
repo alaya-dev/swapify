@@ -14,7 +14,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            access_denied_url: /error403
+            #access_denied_url: /error403
+            pattern: ^/
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 20  
@@ -26,9 +27,6 @@ security:
             logout:
                 path: app_logout
                 target: app_login
-                
-            
-                    
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -42,14 +40,12 @@ security:
     # Note: Only the *first* access control that matches will be used
 
     access_control:
-        - { path: ^/dashboard/client, roles: ROLE_CLIENT }
-        - { path: ^/dashboard, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        - { path: ^/admin/liste, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/dashboard/client, roles: ROLE_CLIENT }
+    - { path: ^/dashboard, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+    - { path: ^/admin/liste, roles: ROLE_SUPER_ADMIN }
+    - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
+    - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+    - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
 
        
 

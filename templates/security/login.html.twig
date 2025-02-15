@@ -9,7 +9,9 @@
 
         body {
             margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
+            position: relative;
         }
 
         .navbar {
@@ -231,7 +233,7 @@
 </head>
 <body>
     <div class="navbar">
-        <div class="home"><a href="#">⬅</a></div>
+        <div class="home"><a href="/register">⬅</a></div>
         <div class="logo">Swapify</div>
         <div class="logo-img">🚗</div>
     </div>
@@ -241,7 +243,6 @@
     <div class="container">
        <div class="left-section">
             <h3>Connectez-vous sur <span>SWAPIFY</span></h3>
-            
                       {% for label, messages in app.flashes %}
                             {% for message in messages %}
                                 <div class="alert alert-{{ label }}">
@@ -276,7 +277,6 @@
                 <a href="{{ path('app_register') }}">Créez votre compte dès maintenant</a>
             </button>
         </div>
-
         <div class="right-section">
             <div class="column" id="col-1">
                 <div class="item" style="background-color: #FFE4E1;">🚗</div>
