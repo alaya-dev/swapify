@@ -76,9 +76,10 @@ class RegistrationController extends AbstractController
             // Authentification automatique de l'utilisateur après son inscription
             return $this->redirectToRoute('please-verify-email');
         }
-
+        
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+
         ]);
     }
 

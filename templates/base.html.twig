@@ -8,6 +8,7 @@
 
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
+
         {% endblock %}
 
         {% block javascripts %}
@@ -16,12 +17,6 @@
         {% endblock %}
     </head>
     <body>
-        {% block navbar %}
-            {% include 'layout/navBar/main_nav.html.twig' %}
-        {% endblock %}
         {% block body %}{% endblock %}
-        {% block footer %}
-            {% include 'layout/footer/footer.html.twig' %}
-        {% endblock %}
     </body>
 </html>
