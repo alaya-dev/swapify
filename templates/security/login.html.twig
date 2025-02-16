@@ -242,6 +242,18 @@
     <div class="container">
        <div class="left-section">
             <h3>Connectez-vous sur <span>SWAPIFY</span></h3>
+
+                        {% for message in app.flashes('warning') %}
+                        <div class="alert alert-warning">
+                            {{ message }}
+                            {% if app.request.query.get('id') %}
+                                <a href="{{ path('app_resend_verification_email', {'id': app.request.query.get('id')}) }}" >
+                                    Renvoyer l'email de vérification
+                                </a>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
             
                       {% for label, messages in app.flashes %}
                             {% for message in messages %}

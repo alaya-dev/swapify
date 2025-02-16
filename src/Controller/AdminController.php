@@ -124,39 +124,6 @@ public function listAdmins(UserRepository $userRepository): Response
 
 
 
-    #[Route('/admin/edit/{id}', name: 'admin_edit')]
-    public function editAdmin(int $id, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
-    {
-    $admin = $userRepository->find($id);
-
-    $form = $this->createForm(UserType::class, $admin); // Utilise le formulaire existant ou un nouveau pour l'admin
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->flush(); // Enregistre les modifications dans la base de données
-        $this->addFlash('success', 'Admin modifié avec succès.');
-
-        return $this->redirectToRoute('admin_list'); // Redirection vers la liste ou une autre page
-    }
-
-    return $this->render('admin/edit.html.twig', [
-        'form' => $form->createView(),
-        'admin' => $admin,
-    ]);
-    }
-
-
-    #[Route('/profil', name: 'app_profile')]
-    public function profile(): Response
-    {
-    $user = $this->getUser(); // Récupérer l'utilisateur connecté
-    if (!$user) {
-        return $this->redirectToRoute('app_login'); // Rediriger vers login si non connecté
-    }
-
-    return $this->render('admin/edit.html.twig', [
-        'user' => $user,
-    ]);
-    }
+    
 
 }
