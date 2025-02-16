@@ -75,7 +75,10 @@ class RegistrationController extends AbstractController
             );
 
             // Authentification automatique de l'utilisateur après son inscription
-            return $this->redirectToRoute('please-verify-email');
+            $this->addFlash('success', 'Un email de vérification a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception (et éventuellement votre dossier spam) pour confirmer votre adresse email.');
+
+             // Redirection vers la page de connexion
+             return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [
