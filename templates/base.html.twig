@@ -10,8 +10,6 @@
             {{ encore_entry_link_tags('app') }}
 
         {% endblock %}
-       
-
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
             {{ encore_entry_script_tags('app') }}
@@ -34,6 +32,6 @@
         {% if not app.request.get('_route') == 'app_login' or not app.request.get('_route') == 'app_register' %}
             {% include 'layout/footer/footer.html.twig' %}
         {% endif %}
-        {%endblock%}
+        {% endblock %}
     </body>
 </html>
