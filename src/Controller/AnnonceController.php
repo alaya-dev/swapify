@@ -55,26 +55,23 @@ final class AnnonceController extends AbstractController
         ]);
     }
 
-
-
-#[Route('/mesAnnonces', name: 'mesAnnonces', methods: ['GET'])]
-public function mesAnnonces(AnnonceRepository $annonceRepository, ImageRepository $imageRepository): Response
-{
-        $annonces = $annonceRepository->findValideAnnoncesByUsrId($this->getUser());
-        $images = $imageRepository->findAll();
-
-
-    return $this->render('annonce/mesAnnonces.html.twig', [
-        'annonces' => $annonces,
-        'images' => $images
-
-    ]);
-
-
-
-
-} 
-
+    #[Route('/mesAnnonces', name: 'mesAnnonces', methods: ['GET', 'POST'])]
+    public function mesAnnonces(AnnonceRepository $annonceRepository, Request $request): Response
+    {
+        $filter = $request->query->get('filter', 'all');
+        
+        $annonces = match ($filter) {
+            'pending' => $annonceRepository->findBy(['statut' => 'En Attente', 'user' => $this->getUser()]),
+            'active' => $annonceRepository->findBy(['statut' => 'Acceptée', 'user' => $this->getUser()]),
+            'inactive' => $annonceRepository->findBy(['statut' => 'Rejetée', 'user' => $this->getUser()]),
+            default => $annonceRepository->findBy(['user' => $this->getUser()]),
+        };
+    
+        return $this->render('annonce/mesAnnonces.html.twig', [
+            'annonces' => $annonces,
+        ]);
+    }
+    
 
 
 
@@ -134,7 +131,7 @@ public function mesAnnonces(AnnonceRepository $annonceRepository, ImageRepositor
             $entityManager->persist($annonce);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_annonce_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('mesAnnonces', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('annonce/new.html.twig', [

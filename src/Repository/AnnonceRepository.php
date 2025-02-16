@@ -126,5 +126,16 @@ public function findValideAnnoncesByUsrId($idU): array
         ->getResult();
 }
 
+public function findAnnoncesByUsrId($idU): array
+{
+    return $this->createQueryBuilder('a')
+        ->andWhere('a.user = :userId') 
+        ->setParameter('userId', $idU)
+        ->orderBy('a.dateCreation', 'DESC') 
+        ->getQuery()
+        ->getResult();
+}
+
+
 
 }
