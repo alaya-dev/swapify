@@ -1,7 +1,7 @@
 <header class="bg-white">
   <nav class="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-2" aria-label="Global">
     <div class="flex lg:flex-1">
-      <img class="h-12 w-auto object-contain pl-1" src="{{ asset('images/logo.png') }}" alt="Logo">
+      <img class="h-12 w-auto object-contain pl-1" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
     </div>
     <div class="flex lg:hidden">
       <button id="menu-toggle" type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
@@ -49,25 +49,14 @@
       </button>
     </div>
     <div class="mt-6 space-y-4">
-      <a  href="{{ path('app_home') }}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Acceuil</a>
-     <a href="/annonce" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
+      <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Acceuil</a>
       <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">À Propos</a>
-      <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Contact</a>
+      <a href="{{ path('app_home') }}#contact" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Contact</a>
     </div>
-
-
     <div class="mt-6 border-t border-gray-300 pt-4">
-       {% if app.user %}
-                      <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('mesAnnonces') }}">mes annonces </a>
-                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="/logout">Se déconnecter</a>
-                    <span class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</span>
-                {% else %}
-                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_login') }}">Se connecter</a>
-                    <a class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_register') }}">S'inscrire</a>
-                {% endif %}
+      <a href="{{path('app_login')}}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Se Connecter</a>
+      <a href="{{path('app_register')}}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">S'Inscrire</a>
     </div>
-
-
   </div>
 </header>
 
