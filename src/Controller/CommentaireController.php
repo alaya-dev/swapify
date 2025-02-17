@@ -66,12 +66,16 @@ final class CommentaireController extends AbstractController
     
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('app_blog_index', [], Response::HTTP_SEE_OTHER);
+    
+            // Redirect to the blog show page after successful edit
+            return $this->redirectToRoute('app_blog_show', [
+                'id' => $commentaire->getBlog()->getId(), // Get the blog ID associated with the comment
+            ], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('commentaire/edit.html.twig', [
             'commentaire' => $commentaire,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

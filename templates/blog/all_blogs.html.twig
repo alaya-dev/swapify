@@ -241,6 +241,10 @@
                                     {{ blog.statut.value }}
                                 </span>
                             </div>
+                            <div class="rating-section">
+                                <h6>Ratings ({{ blog.rateCount }})</h6>
+                                <h6>Comments ({{ blog.listeCommentaires|length }})</h6>
+                            </div>
                             <div class="blog-actions">
                                 <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary">Read More</a>
                             </div>
