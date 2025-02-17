@@ -1,3 +1,32 @@
+
+<style>
+    .sub-item{
+        margin-left: 50px;
+    }
+    .side{
+        width: 300px;
+    }
+    .submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s ease-in-out;
+        opacity: 0;
+    }
+
+    .submenu.active {
+        max-height: 500px;
+        opacity: 1;
+    }
+
+    .chevron {
+        transition: transform 0.4s ease-in-out;
+    }
+
+    .rotate-chevron {
+        transform: rotate(180deg);
+    }
+</style>
+
 <aside class="relative bg-sidebar h-screen w-64 hidden sm:block shadow-xl">
     <div class="p-6">
         <a href="{{ path('app_dashboard_client') }}" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">weclcom</a>
@@ -23,10 +52,23 @@
             Blog
         </a>
 
-        <a href="{{ path('evenment') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'evenment' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
-            <i class="fas fa-calendar-alt mr-3"></i>
-            Événement
-        </a>
+        <div class="menu-item">
+            <button class="w-full flex items-center justify-between text-white opacity-75 hover:opacity-100 hover:bg-green-900 py-4 pl-6 transition-all duration-300">
+                <div class="flex items-center">
+                    <i class="fas fa-calendar-alt mr-3"></i>
+                    Événement
+                </div>
+                <i class="fas fa-chevron-down mr-4 chevron"></i>
+            </button>
+            <div class="submenu">
+                <a href="{{path('evenment')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+                    mes evenements
+                </a>
+                <a href="#" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+                    ajouter evenements
+                </a>
+            </div>
+        </div>
 
         <a href="{{ path('livraison') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
             <i class="fas fa-shipping-fast mr-3"></i>
@@ -39,3 +81,25 @@
         </a>
     </nav>
 </aside>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuItems = document.querySelectorAll('.menu-item');
+        
+        menuItems.forEach(item => {
+            const button = item.querySelector('button');
+            const submenu = item.querySelector('.submenu');
+            const chevron = item.querySelector('.chevron');
+            
+            button.addEventListener('click', () => {
+                submenu.classList.toggle('active');
+                chevron.classList.toggle('rotate-chevron');
+                menuItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.querySelector('.submenu').classList.remove('active');
+                        otherItem.querySelector('.chevron').classList.remove('rotate-chevron');
+                    }
+                });
+            });
+        });
+    });
+    </script>
