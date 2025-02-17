@@ -14,7 +14,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            access_denied_url: /error403
+            #access_denied_url: /error403
+            pattern: ^/
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 20  
@@ -22,10 +23,10 @@ security:
                 always_remember_me: true
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppAuthenticator  # Changez ici
+            custom_authenticator: App\Security\AppAuthenticator  
             logout:
                 path: app_logout
-                target: app_login
+                target: app_home
                 
             
                     
@@ -48,9 +49,7 @@ security:
         - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        - { path: ^/dashboard/client, roles: ROLE_CLIENT }
 
-       
 
     role_hierarchy:
         ROLE_SUPER_ADMIN: ROLE_SUPER_ADMIN

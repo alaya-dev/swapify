@@ -38,21 +38,19 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
-    // Si un utilisateur est déjà connecté, rediriger vers la page d'accueil
-		if ($this->getUser()) {
-			return $this->redirectToRoute('app_login');
-		}
+        // Si un utilisateur est déjà connecté, rediriger vers la page d'accueil
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
 
-		$user = new User();
-    // Création du formulaire d'inscription
+        $user = new User();
+        // Création du formulaire d'inscription
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            
             $user->setPassword(
-            $userPasswordHasher->hashPassword(
+                $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('password')->getData()
                 )
@@ -65,7 +63,9 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // Envoi d'un email de confirmation avec un lien pour vérifier l'email de l'utilisateur
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('mailer@mailer.de', 'swapy boot'))
                     ->to($user->getEmail())
@@ -75,11 +75,11 @@ class RegistrationController extends AbstractController
 
             // Authentification automatique de l'utilisateur après son inscription
             return $this->redirectToRoute('please-verify-email');
-            
         }
-
+        
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+
         ]);
     }
 
@@ -98,6 +98,6 @@ class RegistrationController extends AbstractController
 
         $this->addFlash('success', 'Votre adresse e-mail a été vérifiée.');
 
-		return $this->redirectToRoute( 'app_login' );
+        return $this->redirectToRoute('app_login');
     }
 }

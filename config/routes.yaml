@@ -6,10 +6,6 @@ kernel:
     resource: ../src/Kernel.php
     type: annotation
 
-app_login:
-    path: /
-    controller: App\Controller\SecurityController::login
-
 2fa_login_check:
     path: /2fa_check
     controller: Scheb\TwoFactorBundle\Controller\FormController::check
