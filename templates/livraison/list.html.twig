@@ -1,0 +1,96 @@
+<div class="max-w-5xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2 mb-6">
+        📦 Mes Livraisons
+    </h1>
+
+    {% if livraisons is empty %}
+        <p class="text-center text-gray-500 text-lg">Aucune livraison trouvée.</p>
+    {% else %}
+        <div class="overflow-hidden shadow-lg rounded-lg border border-gray-300">
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+                <thead>
+                    <tr class="bg-blue-600 text-white uppercase text-sm">
+                        <th class="py-3 px-6 border text-center">ID</th>
+                        <th class="py-3 px-6 border text-center">Destinataire</th>
+                        <th class="py-3 px-6 border text-center">Numéro</th>
+                        <th class="py-3 px-6 border text-center">Code Postal</th>
+                        <th class="py-3 px-6 border text-center">Statut</th>
+                        <th class="py-3 px-6 border text-center">Actions</th>
+                    <th class="py-3 px-6 border text-center">Code pour le Livreur</th>
+
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    {% for livraison in livraisons %}
+                        <tr class="border-b hover:bg-gray-100 transition">
+                            <td class="py-4 px-6 border text-center">{{ livraison.id }}</td>
+                            <td class="py-4 px-6 border text-center">
+                                {% if app.user == livraison.idExpediteur %}
+                                    {{ livraison.idDistinataire ? livraison.idDistinataire.email : 'Utilisateur inconnu' }}
+                                {% else %}
+                                    {{ livraison.idExpediteur ? livraison.idExpediteur.email : 'Utilisateur inconnu' }}
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 border text-center">
+                                {% if app.user == livraison.idExpediteur %}
+                                    {{ livraison.telephoneExpediteur }}
+                                {% else %}
+                                    {{ livraison.telephoneDestinataire }}
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 border text-center">
+                                {% if app.user == livraison.idExpediteur %}
+                                    {{ livraison.codePostalExpediteur }}
+                                {% else %}
+                                    {{ livraison.codePostalDestinataire }}
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 border text-center">
+                                {% if livraison.statut == 'En attente de localisation du destinataire' and app.user == livraison.idDistinataire %}
+                                    <a href="{{ path('livraison_edit_destinataire', {'id': livraison.id}) }}"
+                                       class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition">
+                                       🚨 Compléter vos informations
+                                    </a>
+                                {% else %}
+                                    <span class="px-3 py-1 rounded-lg text-white 
+                                        {% if livraison.statut == 'Livraison en cours' %} bg-yellow-500 {% elseif livraison.statut == 'Livré' %} bg-green-500 {% else %} bg-gray-500 {% endif %}">
+                                        {{ livraison.statut }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 border text-center flex justify-center gap-3">
+                                {% if app.user == livraison.idDistinataire and livraison.statut != 'En attente de localisation du destinataire' %}
+                                    <a href="{{ path('livraison_edit_destinataire', {'id': livraison.id}) }}"
+                                       class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
+                                       ✏ Modifier
+                                    </a>
+                                {% endif %}
+                                {% if app.user == livraison.idExpediteur %}
+                                    <a href="{{ path('livraison_edit_expediteur', {'id': livraison.id}) }}"
+                                       class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
+                                       ✏ Modifier
+                                    </a>
+                                {% endif %}
+                                {% if app.user == livraison.idExpediteur and livraison.paymentExp == 'non payé' %}
+                                    <a href="{{ path('payment_page', {'id': livraison.id}) }}"
+                                       class="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition">
+                                       💳 Payer
+                                    </a>
+                                {% elseif app.user == livraison.idDistinataire and livraison.paymentDist == 'non payé' and livraison.statut != 'En attente de localisation du destinataire' %}
+                                    <a href="{{ path('payment_page', {'id': livraison.id}) }}"
+                                       class="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition">
+                                       💳 Payer
+                                    </a>
+                                {% endif %}
+                            </td>
+                            {%if livraison.statut=='En cours de livraison' %}
+                        <td><img src="{{ path('livraison_qr', { id: livraison.id }) }}" alt="QR Code Livraison" class="w-20 h-20 object-contain"></td>
+
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>

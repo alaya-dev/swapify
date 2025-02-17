@@ -1,0 +1,40 @@
+{% extends 'include.html.twig' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">Détails du livreur</h1>
+
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Nom</th>
+                                    <td>{{ livreur.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Société</th>
+                                    <td>{{ livreur.societe }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Contact</th>
+                                    <td>{{ livreur.contact }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <a href="{{ path('app_livreur_index') }}" class="btn btn-secondary">Retour à la liste</a>
+                        <a href="{{ path('app_livreur_edit', {'id': livreur.id}) }}" class="btn btn-primary">Modifier</a>
+                        <a href="{{ path('app_livreur_delete', { 'id': livreur.id }) }}" class="btn btn-danger "
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livreur ?');">
+                                                Supprimer
+                                            </a>
+
+                    </div> <!-- end card-body -->
+                </div> <!-- end card -->
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div> <!-- end container-fluid -->
+{% endblock %}

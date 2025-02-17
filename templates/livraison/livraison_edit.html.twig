@@ -1,0 +1,114 @@
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<title>Compteter une Livraison</title>
+	<!-- Ajouter OpenLayers -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
+	<script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+
+
+</head>
+<style>
+	#map {
+		width: 100%;
+		height: 400px;
+	}
+</style>
+
+{% if livraison.idDistinataire == app.user and livraison.statut=='En attente de localisation du destinataire' %}
+
+	<form action="{{ path('livraison_create_dist', {'id': livraison.id}) }}" method="post">
+		<h2>Compléter la Livraison</h2>
+
+		<label for="telephone_destinataire">Téléphone :</label>
+
+		<input type="text" id="telephone_destinataire" name="telephone_destinataire">
+
+		<label for="code_postal_destinataire">Code Postal :</label>
+		<input type="text" id="code_postal_destinataire" name="code_postal_destinataire">
+
+		<input type="text" id="latitude_destinataire" name="localisation_destinataire_lat">
+
+		<input type="text" id="longitude_destinataire" name="localisation_destinataire_lng">
+
+		<button type="submit">Ajouter ma Position</button>
+	</form>
+
+	<div id="map" style="width: 100%; height: 400px;"></div>
+{% else %}
+	<form action="{{ path('livraison_edit_destinataire', {'id': livraison.id}) }}" method="post">
+		<h2>Compléter la Livraison</h2>
+
+		<label for="telephone_destinataire">Téléphone :</label>
+
+		<input type="text" id="telephone_destinataire" name="telephone_destinataire" value={{livraison.telephoneDestinataire}}>
+
+		<label for="code_postal_destinataire">Code Postal :</label>
+		<input type="text" id="code_postal_destinataire" name="code_postal_destinataire" value={{livraison.codePostalDestinataire}}>
+
+		<input type="text" id="localisation_destinataire_lat" name="localisation_destinataire_lat" value="{{ livraison.localisationDestinataireLat }}">
+		<input type="hidden" id="localisation_destinataire_lng" name="localisation_destinataire_lng" value="{{ livraison.localisationDestinataireLng }}">
+
+
+		<button type="submit">Modifier Mes coordonées</button>
+	</form>
+
+	<div id="map" style="width: 100%; height: 400px;"></div>
+{% endif %}
+
+
+<script>
+	var lat = {{ livraison.localisationDestinataireLat|default(36.8065) }};
+var lng = {{ livraison.localisationDestinataireLng|default(10.1815) }};
+
+var map = new ol.Map({
+target: 'map',
+layers: [new ol.layer.Tile(
+{source: new ol.source.OSM()}
+)],
+view: new ol.View(
+{
+center: ol.proj.fromLonLat(
+[lng, lat]
+),
+zoom: 12
+}
+)
+});
+
+var marker = new ol.Feature({
+geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat]))
+});
+
+var vectorSource = new ol.source.Vector({features: [marker]});
+
+var markerLayer = new ol.layer.Vector({
+source: vectorSource,
+style: new ol.style.Style(
+{
+image: new ol.style.Icon(
+{
+anchor: [
+0.5, 1
+],
+src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+}
+)
+}
+)
+});
+
+map.addLayer(markerLayer);
+
+map.on('click', function (event) {
+var coords = ol.proj.toLonLat(event.coordinate);
+var newLat = coords[1];
+var newLng = coords[0];
+
+marker.setGeometry(new ol.geom.Point(ol.proj.fromLonLat([newLng, newLat])));
+
+document.getElementById('localisation_destinataire_lat').value = newLat;
+document.getElementById('localisation_destinataire_lng').value = newLng;
+});
+</script>
