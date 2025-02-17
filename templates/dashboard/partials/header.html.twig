@@ -1,6 +1,7 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
     <div class="w-1/2"></div>
+<<<<<<< HEAD
     <div x-data="{ isOpen: false }" class="relative w-1/2 flex justify-end">
         <button @click="isOpen = !isOpen" class="relative z-10 w-12 h-12 rounded-full border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
             <img src="#" alt="avatar">
@@ -8,6 +9,15 @@
         <button x-show="isOpen" @click="isOpen = false" class="h-full w-full fixed inset-0 cursor-default"></button>
         <div x-show="isOpen" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
             <a href="/" class="block px-4 py-2 account-link hover:text-white">Home</a>
+=======
+    <div class="relative w-1/2 flex justify-end">
+        <button id="avatar-btn" class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
+            <img src="https://via.placeholder.com/150" alt='avatar'>
+        </button>
+        <button id="close-btn" class="h-full w-full fixed inset-0 cursor-default" style="display: none;"></button>
+        <div id="dropdown" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16" style="display: none;">
+            <a href="/" class="block px-4 py-2 account-link hover:text-white">home</a>
+>>>>>>> 109f8603fa9a03f020331b9603a24954cdc26d61
             <a href="#" class="block px-4 py-2 account-link hover:text-white">Support</a>
             <a href="/logout" class="block px-4 py-2 account-link hover:text-white">Sign Out</a>
         </div>
@@ -15,17 +25,16 @@
 </header>
 
 <!-- Mobile Header & Nav -->
-<header x-data="{ isOpen: false }" class="w-full bg-sidebar py-5 px-6 sm:hidden">
+<header class="w-full bg-sidebar py-5 px-6 sm:hidden">
     <div class="flex items-center justify-between">
-        <a href="index.html" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">User</a>
-        <button @click="isOpen = !isOpen" class="text-white text-3xl focus:outline-none">
-            <i x-show="!isOpen" class="fas fa-bars"></i>
-            <i x-show="isOpen" class="fas fa-times"></i>
+        <a href="index.html" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">user</a>
+        <button id="menu-btn" class="text-white text-3xl focus:outline-none">
+            <i id="menu-icon" class="fas fa-bars"></i>
         </button>
     </div>
 
     <!-- Dropdown Nav -->
-    <nav :class="isOpen ? 'flex' : 'hidden'" class="flex flex-col pt-4">
+    <nav id="nav-menu" class="flex flex-col pt-4 hidden">
         <a href="{{ path('app_dashboard_client') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-tachometer-alt mr-3"></i>
             Profile
@@ -52,3 +61,33 @@
         </a>
     </nav>
 </header>
+
+<script>
+    // Avatar dropdown toggle
+    const avatarBtn = document.getElementById('avatar-btn');
+    const dropdown = document.getElementById('dropdown');
+    const closeBtn = document.getElementById('close-btn');
+
+    avatarBtn.addEventListener('click', function() {
+        const isOpen = dropdown.style.display === 'block';
+        dropdown.style.display = isOpen ? 'none' : 'block';
+        closeBtn.style.display = isOpen ? 'none' : 'block';
+    });
+
+    closeBtn.addEventListener('click', function() {
+        dropdown.style.display = 'none';
+        closeBtn.style.display = 'none';
+    });
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const menuIcon = document.getElementById('menu-icon');
+    const navMenu = document.getElementById('nav-menu');
+
+    menuBtn.addEventListener('click', function() {
+        const isOpen = navMenu.style.display === 'flex';
+        navMenu.style.display = isOpen ? 'none' : 'flex';
+        menuIcon.classList.toggle('fa-bars', isOpen);
+        menuIcon.classList.toggle('fa-times', !isOpen);
+    });
+</script>

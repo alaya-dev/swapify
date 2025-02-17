@@ -23,7 +23,7 @@ module.exports = {
       animation: {
         pulse: "pulse 1.5s ease-in-out infinite",
         glow: "glow 1.5s ease-in-out infinite",
-        "spin-slow": "spin 3s linear infinite", // Custom slow spin animation
+        "spin-slow": "spin 3s linear infinite",
       },
     },
   },
