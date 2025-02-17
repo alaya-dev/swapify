@@ -2,10 +2,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <div class="form-container p-4 shadow rounded bg-white">
-    <h1 class="title text-center mb-4">Ajouter une nouvelle catégorie</h1>
 
 
-    {{ form_start(form) }}
+ {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }} 
         <div class="mb-3">
             {{ form_label(form.libelle, 'Libellé de la catégorie', {'label_attr': {'class': 'form-label'}}) }}
             {{ form_widget(form.libelle, {'attr': {'class': 'form-control'}}) }}
@@ -14,7 +13,14 @@
 
         <div class="d-flex justify-content-between">
             <button type="submit" class="btn btn-primary btn-lg px-4">{{ button_label|default('Enregistrer') }}</button>
-            <a href="{{ path('app_annonce_new') }}" class="btn btn-outline-secondary btn-lg px-4">Annuler</a>
+
+                     {% if 'ROLE_ADMIN' in app.user.getRoles() or 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
+                            <a href="/categorie" class="btn btn-outline-secondary btn-lg px-4">Annuler</a>
+                         {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
+                            <a href="{{ path('app_annonce_new')}}" class="btn btn-outline-secondary btn-lg px-4">Annuler</a>
+                        {% endif %}
+
+
         </div>
     {{ form_end(form) }}
 </div>

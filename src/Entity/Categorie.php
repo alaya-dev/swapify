@@ -6,6 +6,8 @@ use App\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;  
+
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
 class Categorie
@@ -15,6 +17,12 @@ class Categorie
     #[ORM\Column]
     private ?int $id = null;
 
+
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
+    #[Assert\Regex(
+        pattern: "/[a-zA-Z]/", 
+        message: "Le champ doit contenir au moins une lettre."
+    )]
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 

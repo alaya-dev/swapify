@@ -185,8 +185,29 @@ public function listAdmins(UserRepository $userRepository): Response
         $entityManager->flush();
 
         $this->addFlash('success', 'Annonce rejected successfully!');
-        return $this->redirectToRoute('admin_annonces');
+        return $this->redirectToRoute('app_admin_annonces');
     }
+
+
+    #[Route('/admin/historique/annonces', name: 'app_admin_annonces_history')]
+    public function histAnnonces(AnnonceRepository $annonceRepository, Request $request): Response
+    {
+
+    $filter = $request->query->get('filter', 'all');
+
+    $annonces = match ($filter) {
+        'pending' => $annonceRepository->findBy(['statut' => 'En Attente']),
+        'active' => $annonceRepository->findBy(['statut' => 'Acceptée']),
+        'inactive' => $annonceRepository->findBy(['statut' => 'Rejetée']),
+        default => $annonceRepository->findAll(),
+    };
+
+    return $this->render('validationAnnonce/historiqueAnnonces.html.twig', [
+        'annonces' => $annonces,
+    ]);
+    }
+
+
 
 
 }

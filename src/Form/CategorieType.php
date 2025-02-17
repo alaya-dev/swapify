@@ -14,14 +14,7 @@ class CategorieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('libelle',null, [
-            'constraints' => [
-                new Regex([
-                    'pattern' => '/[a-zA-Z]/',
-                    'message' => 'The field must contain at least one letter (a-z, A-Z).',
-                ]),
-            ],
-        ]);
+        ->add('libelle',null);
         ;
     }
 

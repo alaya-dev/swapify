@@ -28,30 +28,27 @@ final class AnnonceController extends AbstractController
 
 
     #[Route(name: 'app_annonce_index', methods: ['GET','POST'])]
-    public function index(Request $request, AnnonceRepository $annonceRepository,ImageRepository $imageRepository)
+    public function index(Request $request, AnnonceRepository $annonceRepository, ImageRepository $imageRepository)
     {
         $form = $this->createForm(AnnoncesFilterType::class);
         $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) {
-            $titre = $form->get('titre')->getData();
-            $cat = $form->get('categorie')->getData();
-            $region = $form->get('Region')->getData();
-            $date = $form->get('dateCreation')->getData();
     
-            $annonces = $annonceRepository->findFilteredAnnonces($titre, $cat, $region, $date);
-        } else {
-            $annonces = $annonceRepository->findValiderAnnonces();
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->redirectToRoute('app_annonce_index', [
+                'titre' => $form->get('titre')->getData(),
+                'categorie' => $form->get('categorie')->getData(),
+                'Region' => $form->get('Region')->getData(),
+                'dateCreation' => $form->get('dateCreation')->getData(),
+            ]);
         }
-
+    
+        $annonces = $this->handleFilter($request, $annonceRepository);
         $images = $imageRepository->findAll();
-
     
         return $this->render('annonce/listAnnonces.html.twig', [
             'form' => $form->createView(),
             'annonces' => $annonces,
-            'images' => $images
-
+            'images' => $images,
         ]);
     }
 
@@ -73,6 +70,20 @@ final class AnnonceController extends AbstractController
     }
     
 
+    private function handleFilter(Request $request, AnnonceRepository $annonceRepository)
+    {
+        $titre = $request->query->get('titre');
+        $cat = $request->query->get('categorie');
+        $region = $request->query->get('Region');
+        $date = $request->query->get('dateCreation');
+    
+        if ($titre || $cat || $region || $date) {
+            return $annonceRepository->findFilteredAnnonces($titre, $cat, $region, $date);
+        }
+    
+        return $annonceRepository->findValiderAnnonces();
+    }
+    
 
 
     #[Route('/new', name: 'app_annonce_new', methods: ['GET', 'POST'])]
@@ -82,17 +93,12 @@ final class AnnonceController extends AbstractController
         $form = $this->createForm(AnnonceType::class, $annonce);
         $form->handleRequest($request);
 
-
-
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-
-                
-             
-        if (!preg_match('/[a-zA-Z]/', $annonce->getTitre())) {
-            $this->addFlash('danger', 'Veuillez entrer un titre valide contenant des lettres.');
-            return $this->redirectToRoute('app_annonce_new');
+        if($form->isSubmitted() && !$form->isValid() ){
+            $this->addFlash('error', 'Le champ titre est obligatoire !');
+            return $this->redirectToRoute('app_annonce_new', [], Response::HTTP_SEE_OTHER);
         }
+
+        if ($form->isSubmitted() &&  $form->isValid()) {
 
               /** @var UploadedFile[] $imageFiles */
               $imageFiles = $form->get('imageFile')->getData();
@@ -111,7 +117,7 @@ final class AnnonceController extends AbstractController
  
 
 
-       
+
             // Get localisation values
             $localisationX = $form->get('localisation_x')->getData();
             $localisationY = $form->get('localisation_y')->getData();
@@ -124,12 +130,13 @@ final class AnnonceController extends AbstractController
             
 
            
-            //set id de userrr symfony stocke par défaut les données de user connecter pas besoin de local Storage
             $annonce->setUser($this->getUser());
 
     
             $entityManager->persist($annonce);
             $entityManager->flush();
+            $this->addFlash('success', 'Demande d\'annonce envoyée !');
+
     
             return $this->redirectToRoute('mesAnnonces', [], Response::HTTP_SEE_OTHER);
         }
@@ -164,7 +171,7 @@ final class AnnonceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_annonce_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('mesAnnonces', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('annonce/edit.html.twig', [
@@ -181,6 +188,6 @@ final class AnnonceController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_annonce_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('mesAnnonces', [], Response::HTTP_SEE_OTHER);
     }
 }

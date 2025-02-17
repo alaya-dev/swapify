@@ -256,6 +256,9 @@
                                     <span >Catégories</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
+
+
+                                   <li><a href="{{ path('app_categorie_new') }}">Ajouter une catégorie</a></li>
                                     <li><a href="/categorie" >La liste des catégories</a></li>
                                    
                                 </ul></li>
@@ -268,7 +271,8 @@
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="/admin/annonces" >Les demandes des annonces</a></li>
-                                   
+                                     <li><a  href="{{ path('app_admin_annonces_history') }}">Historique des demandes des annonces</a></li>
+
                                 </ul></li>
                                 <li>
 
@@ -312,8 +316,7 @@
                             
 
                                 <li>
-                                    <a href="#" 
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <a href="/logout">
                                         Se déconnecter
                                     </a>
 

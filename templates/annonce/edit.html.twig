@@ -1,11 +1,65 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashBord_user.html.twig' %}
 
-{% block title %}Edit Annonce{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .fade-out {
+            animation: fadeOut 5s forwards; /* 5 seconds duration */
+        }
 
-{% block body %}
-    <h1>Edit Annonce</h1>
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Modifier Annonce</h1>
+
+    {% for type, messages in app.flashes %}
+        {% if type == 'success' %}
+            {% for message in messages %}
+                <div class="alert alert-success fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'warning' %}
+            {% for message in messages %}
+                <div class="alert alert-warning fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'error' %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
 
     {{ include('annonce/_form.html.twig', {'button_label': 'Update'}) }}
 
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    // Check if position.coords exists before accessing it
+                    if (position.coords && position.coords.latitude && position.coords.longitude) {
+                        console.log("position", position.coords.latitude, position.coords.longitude);
+                        document.getElementById("annonce_localisation_x").value = position.coords.latitude;
+                        document.getElementById("annonce_localisation_y").value = position.coords.longitude;
+                    } else {
+                        console.error("Geolocation failed, no coordinates available.");
+                    }
+                }, function(error) {
+                    console.error("Geolocation error:", error);
+                });
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        });
+    </script>
 {% endblock %}

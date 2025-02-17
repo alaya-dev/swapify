@@ -1,6 +1,6 @@
-{% extends 'dashBord_user.html.twig' %}
+{% extends 'include.html.twig' %}
 
-{% block title %}Mes Annonces{% endblock %}
+{% block title %}Historique des annonces{% endblock %}
 
 
 {% block stylesheets %}
@@ -87,18 +87,20 @@
             position: relative;
             padding-bottom: 10px;
         ">
-            Mes Annonces
+            Historique des annonces 
             <span style="content: ''; position: absolute; left: 50%; bottom: 0; width: 80px; height: 4px; background: linear-gradient(90deg, rgb(1, 27, 13), rgb(5, 145, 87)); transform: translateX(-50%); border-radius: 2px;"></span>
         </h1>
 
         <div class="filter-section">
             <div class="btn-group" role="group" aria-label="Filter annonces">
-                <a href="{{ path('mesAnnonces', {'filter': 'all'}) }}" class="btn btn-outline-primary">Toutes</a>
-                <a href="{{ path('mesAnnonces', {'filter': 'pending'}) }}" class="btn btn-outline-warning">En attente</a>
-                <a href="{{ path('mesAnnonces', {'filter': 'active'}) }}" class="btn btn-outline-success">Acceptées</a>
-                <a href="{{ path('mesAnnonces', {'filter': 'inactive'}) }}" class="btn btn-outline-danger">Rejetées</a>
+                <a href="{{ path('app_admin_annonces_history', {'filter': 'all'}) }}" class="btn btn-outline-primary">Toutes</a>
+                <a href="{{ path('app_admin_annonces_history', {'filter': 'pending'}) }}" class="btn btn-outline-warning">En attente</a>
+                <a href="{{ path('app_admin_annonces_history', {'filter': 'active'}) }}" class="btn btn-outline-success">Acceptées</a>
+                <a href="{{ path('app_admin_annonces_history', {'filter': 'inactive'}) }}" class="btn btn-outline-danger">Rejetées</a>
             </div>
         </div>
+
+
 
         {% if annonces is empty %}
             <div class="alert alert-info text-center" role="alert">

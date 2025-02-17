@@ -1,46 +1,109 @@
 {% extends 'include.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .fade-out {
+            animation: fadeOut 5s forwards; /* 5 seconds duration */
+        }
 
-{% block title %}Catégories - Liste{% endblock %}
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+{% endblock %}
 
-{% block body %}
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mb-6">Liste des Catégories</h1>
-
-        <div class="flex justify-end mb-4">
-            <a href="{{ path('app_categorie_new') }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                <i class="fas fa-plus mr-2"></i> Ajouter une catégorie
-            </a>
-        </div>
-
-        <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
-            <thead class="bg-gray-800 text-white">
-                <tr>
-                    <th class="py-3 px-4 text-left">ID</th>
-                    <th class="py-3 px-4 text-left">Libellé</th>
-                    <th class="py-3 px-4 text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-            {% for categorie in categories %}
-                <tr class="hover:bg-gray-50">
-                    <td class="py-3 px-4">{{ categorie.id }}</td>
-                    <td class="py-3 px-4">{{ categorie.libelle }}</td>
-                    <td class="py-3 px-4 text-center">
-                        <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded inline-flex items-center mr-2">
-                            <i class="fas fa-eye mr-1"></i> Voir
-                        </a>
-                        <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded inline-flex items-center">
-                            <i class="fas fa-edit mr-1"></i> Modifier
-                        </a>
-                        
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="3" class="py-3 px-4 text-center text-gray-500">Aucune catégorie trouvée</td>
-                </tr>
+    
+{% block content %}
+    {% for type, messages in app.flashes %}
+        {% if type == 'success' %}
+            {% for message in messages %}
+                <div class="alert alert-success fade-out">
+                    {{ message }}
+                </div>
             {% endfor %}
-            </tbody>
-        </table>
+        {% elseif type == 'warning' %}
+            {% for message in messages %}
+                <div class="alert alert-warning fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'error' %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="container-fluid">
+        <!-- Start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0 font-size-18">Liste des Catégories</h4>
+                </div>
+            </div>
+        </div>
+        <!-- End page title -->
+
+        <!-- Start table section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="card-title">Liste des Catégories</h4>
+
+                        <!-- Display success messages -->
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                     
+                        <!-- Table for listing categories -->
+                        <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Libellé</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for categorie in categories %}
+                                    <tr>
+                                        <td class="fw-medium">{{ categorie.id }}</td>
+                                        <td>{{ categorie.libelle }}</td>
+                                        <td>
+                                     
+                            <div class="d-flex align-items-center gap-2">
+                            <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i> Voir
+                            </a>
+                            <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit me-1"></i> Modifier
+                            </a>
+                            {{ include('categorie/_delete_form.html.twig') }}
+                        </div>
+
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3" class="text-center">Aucune catégorie trouvée</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End table section -->
     </div>
 {% endblock %}

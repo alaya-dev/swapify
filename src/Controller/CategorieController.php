@@ -24,52 +24,47 @@ final class CategorieController extends AbstractController
 
     #[Route('/new', name: 'app_categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
-       {
-
-        $user= $this->getUser();
-
+    {
+        $user = $this->getUser();
         $categorie = new Categorie();
         $form = $this->createForm(CategorieType::class, $categorie);
         $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
 
+        if ($form->isSubmitted() && $form->isValid()) {
             $libelle = $categorie->getLibelle();
-        
-            if (!preg_match('/[a-zA-Z]/', $libelle)) {
-                $this->addFlash('warning', 'Veuillez entrer une catégorie valide contenant des lettres.');
-                return $this->redirectToRoute('app_annonce_new');
-            }
-        
+
+  
             $existingCategorie = $entityManager->getRepository(Categorie::class)
                 ->findOneBy(['libelle' => $libelle]);
-     
+
             if ($existingCategorie) {
-                if(in_array('ROLE_ADMIN', $user->getRoles())){
-                    return $this->redirectToRoute('app_admin_categories');
-                }
                 $this->addFlash('warning', 'Categorie existante !');
+                if($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')){
+                return $this->redirectToRoute('app_admin_categories');
+                }
                 return $this->redirectToRoute('app_annonce_new');
+
             }
-        
-            $this->addFlash('success', 'Categorie ajoutée !');
+
+            // Save the new category
             $entityManager->persist($categorie);
             $entityManager->flush();
+            $this->addFlash('success', 'Categorie ajoutée !');
 
-            if(in_array('ROLE_ADMIN', $user->getRoles())){
+            // Redirect based on user role
+            if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')) {
                 return $this->redirectToRoute('app_admin_categories');
             }
 
-        
             return $this->redirectToRoute('app_annonce_new', [], Response::HTTP_SEE_OTHER);
         }
-    
+
         return $this->render('categorie/new.html.twig', [
             'categorie' => $categorie,
             'form' => $form,
         ]);
     }
-    
+
     #[Route('/{id}', name: 'app_categorie_show', methods: ['GET'])]
     public function show(Categorie $categorie): Response
     {
@@ -86,7 +81,6 @@ final class CategorieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
             return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -96,12 +90,17 @@ final class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_categorie_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_categorie_delete', methods: ['POST'])]
     public function delete(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$categorie->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($categorie);
             $entityManager->flush();
+        }
+
+        // Redirect based on user role
+        if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->redirectToRoute('app_admin_categories');
         }
 
         return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
