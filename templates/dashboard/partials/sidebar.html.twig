@@ -1,11 +1,4 @@
-
 <style>
-    .sub-item{
-        margin-left: 50px;
-    }
-    .side{
-        width: 300px;
-    }
     .submenu {
         max-height: 0;
         overflow: hidden;
@@ -25,11 +18,45 @@
     .rotate-chevron {
         transform: rotate(180deg);
     }
+
+    .bg-sidebar {
+        background-color: #2d3748; /* Dark gray background */
+    }
+
+    .nav-item {
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .nav-item:hover,
+    .active-nav-link {
+        background-color: #38a169; /* Green background on hover or active */
+        color: #fff; /* White text when active or hovered */
+    }
+
+    .submenu a:hover {
+        background-color: #38a169; /* Green background for sub-menu items on hover */
+    }
+
+    .menu-item button:hover {
+        background-color: #2f855a; /* Slightly darker green on button hover */
+    }
+
+    .menu-item button {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    .text-white {
+        color: #fff;
+    }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+
 
 <aside class="relative bg-sidebar h-screen w-64 hidden sm:block shadow-xl">
     <div class="p-6">
-        <a href="{{ path('app_dashboard_client') }}" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">weclcom</a>
+        <a href="{{ path('app_dashboard_client') }}" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">WELCOME</a>
     </div>
     <nav class="text-white text-base font-semibold pt-3">
         <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
@@ -37,15 +64,28 @@
             Profile
         </a>
 
-        <a href="{{ path('souk') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'souk' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+        <a href="#" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'souk' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
             <i class="fas fa-store mr-3"></i>
             Souk
         </a>
 
-        <a href="{{ path('annonce') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'annonce' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
-            <i class="fas fa-bullhorn mr-3"></i>
-            Annonce
-        </a>
+        <div class="menu-item">
+            <button class="w-full flex items-center justify-between text-white opacity-75 hover:opacity-100 hover:bg-green-900 py-4 pl-6 transition-all duration-300">
+                <div class="flex items-center">
+                    <i class="fas fa-calendar-alt mr-3"></i>
+                    Annonce
+                </div>
+                <i class="fas fa-chevron-down mr-4 chevron"></i>
+            </button>
+            <div class="submenu">
+                <a href="{{path('mesAnnonces')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+                    mes annonces
+                </a>
+                <a href="{{path('app_annonce_new')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+                    ajouter annonce
+                </a>
+            </div>
+        </div>
 
         <a href="{{ path('blog') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'blog' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
             <i class="fas fa-newspaper mr-3"></i>
@@ -77,19 +117,19 @@
 
         <a href="{{ path('conversation') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'conversation' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
             <i class="fa fa-comments mr-3" aria-hidden="true"></i>
-            conversation
+            Conversation
         </a>
     </nav>
 </aside>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const menuItems = document.querySelectorAll('.menu-item');
-        
+
         menuItems.forEach(item => {
             const button = item.querySelector('button');
             const submenu = item.querySelector('.submenu');
             const chevron = item.querySelector('.chevron');
-            
             button.addEventListener('click', () => {
                 submenu.classList.toggle('active');
                 chevron.classList.toggle('rotate-chevron');
@@ -102,4 +142,4 @@
             });
         });
     });
-    </script>
+</script>

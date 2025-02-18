@@ -1,5 +1,3 @@
-
-
 <nav class="bg-white">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
   <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -18,10 +16,18 @@
         </div>
         <ul class="py-2" aria-labelledby="user-menu-button">
           <li>
-            <a href="{{path('app_dashboard_client')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+
+    {% if 'ROLE_ADMIN' in app.user.getRoles() %}
+    <a href="{{ path('app_dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+    {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
+    <a href="{{ path('app_dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+    {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
+    <a href="{{ path('app_dashboard_client') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+     {% endif %}
+
           </li>
           <li>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
+            <a href="annonce/mesAnnonces" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
           </li>
           <li>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Evenements</a>
@@ -41,13 +47,13 @@
   <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
     <ul class="flex flex-col font-medium  md:p-0 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
       <li>
-        <a href="#" class="block py-2 px-3 text-gray-900  rounded-sm md:bg-transparent md:p-0" aria-current="page">Acceuil</a>
+        <a href="/" class="block py-2 px-3 text-gray-900  rounded-sm md:bg-transparent md:p-0" aria-current="page">Acceuil</a>
       </li>
       <li>
         <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">A propos</a>
       </li>
       <li>
-        <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Annonces</a>
+        <a href="/annonce" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Annonces</a>
       </li>
       <li>
         <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Evenements</a>
@@ -67,10 +73,12 @@
   </div>
   </div>
 </nav>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const userMenuButton = document.getElementById("user-menu-button");
     const userDropdown = document.getElementById("user-dropdown");
+    userDropdown.classList.add("hidden");
 
     userMenuButton.addEventListener("click", function () {
         userDropdown.classList.toggle("hidden");
@@ -81,5 +89,11 @@
             userDropdown.classList.add("hidden");
         }
     });
-});
+
+    window.addEventListener('popstate', function () {
+        userDropdown.classList.add("hidden");
+    });
+  });
 </script>
+
+

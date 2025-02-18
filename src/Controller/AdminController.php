@@ -1,8 +1,12 @@
 <?php
 namespace App\Controller;
+
+use App\Entity\Annonce;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Form\RegistrationFormType;
+use App\Repository\AnnonceRepository;
+use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\Connection;
-
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AdminController extends AbstractController
 {
@@ -122,6 +126,88 @@ public function listAdmins(UserRepository $userRepository): Response
         $this->addFlash('success', 'Le client est supprimé avec succès.');
         return $this->redirectToRoute('client_list');
     }
+
+
+
+    //gestion des annonces et catégories
+
+
+    //#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+
+    #[Route('/admin/annonces', name: 'app_admin_annonces')]
+    public function index(AnnonceRepository $annonceRepository): Response
+    {
+
+        $annonces = $annonceRepository->findEnAttAnnonces();
+      
+
+        return $this->render('validationAnnonce/index.html.twig', [
+            'annonces' => $annonces
+        ]);
+    }
+
+
+    //#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    #[Route('/admin/categories', name: 'app_admin_categories')]
+    public function listCats(CategorieRepository $catRepository): Response
+    {
+
+        $cats = $catRepository->findAll();
+      
+
+        return $this->render('categorie/index.html.twig', [
+            'categories' => $cats
+        ]);
+    }
+
+
+    #[Route('/admin/annonce/{id}/validate', name: 'admin_annonce_validate')]
+     //#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function validate(Annonce $annonce, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $annonce->setStatut('Acceptee');
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Annonce validated successfully!');
+        return $this->redirectToRoute('app_admin_annonces');
+    }
+
+
+    #[Route('/admin/annonce/{id}/reject', name: 'admin_annonce_reject')]
+    //#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function reject(Annonce $annonce, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $annonce->setStatut('Rejetee');
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Annonce rejected successfully!');
+        return $this->redirectToRoute('app_admin_annonces');
+    }
+
+
+    #[Route('/admin/historique/annonces', name: 'app_admin_annonces_history')]
+    public function histAnnonces(AnnonceRepository $annonceRepository, Request $request): Response
+    {
+
+    $filter = $request->query->get('filter', 'all');
+
+    $annonces = match ($filter) {
+        'pending' => $annonceRepository->findBy(['statut' => 'En Attente']),
+        'active' => $annonceRepository->findBy(['statut' => 'Acceptée']),
+        'inactive' => $annonceRepository->findBy(['statut' => 'Rejetée']),
+        default => $annonceRepository->findAll(),
+    };
+
+    return $this->render('validationAnnonce/historiqueAnnonces.html.twig', [
+        'annonces' => $annonces,
+    ]);
+    }
+
+
 
 
 }

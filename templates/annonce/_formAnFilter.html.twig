@@ -1,0 +1,122 @@
+{{ form_start(form, {'attr': {'class': 'my-form-class'}}) }}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Title Input -->
+            <div class="form-group mb-4">
+                {{ form_row(form.titre, {
+                    'attr': {
+                        'class': 'form-control form-control-lg',
+                        'placeholder': 'Rechercher...',
+                        'aria-label': 'Search title'
+                    }
+                }) }}
+            </div>
+
+            <div class="row g-3 align-items-end">
+                <!-- Category Input -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_row(form.categorie, {
+                            'attr': {
+                                'class': 'form-control',
+                                'aria-label': 'Category'
+                            }
+                        }) }}
+                    </div>
+                </div>
+                <!-- Region Input -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_row(form.Region, {
+                            'attr': {
+                                'class': 'form-control',
+                                'aria-label': 'Region'
+                            }
+                        }) }}
+                    </div>
+                </div>
+                <!-- Date Input -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ form_row(form.dateCreation, {
+                            'attr': {
+                                'class': 'form-control',
+                                'aria-label': 'Creation Date'
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="submit" class="btn btn-lg text-white fw-bold"
+                        style="background: linear-gradient(90deg, rgb(9, 99, 45), rgb(0, 212, 127)); border: none; border-radius: 10px; padding: 10px 20px; transition: all 0.3s ease;">
+                        <i class="fas fa-search me-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ form_end(form) }}
+
+<style>
+    .my-form-class {
+        background-color: #f8f9fa;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control-lg {
+        font-size: 1.25rem;
+        padding: 15px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 12px 24px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 12px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    }
+
+    .form-control::placeholder {
+        color: #888;
+    }
+
+    .form-control:focus::placeholder {
+        color: transparent;
+    }
+</style>
