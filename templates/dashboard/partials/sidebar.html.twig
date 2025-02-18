@@ -72,60 +72,59 @@
                 </div>
             </div>
 
-            <div class="menu-item">
-                <button class="w-full flex items-center justify-between text-white opacity-75 hover:opacity-100 hover:bg-green-900 py-4 pl-6 transition-all duration-300">
-                    <div class="flex items-center">
-                        <i class="fas fa-calendar-alt mr-3"></i>
-                        Blogs
-                    </div>
-                    <i class="fas fa-chevron-down mr-4 chevron"></i>
-                </button>
-                <div class="submenu">
-                    <a href="{{path('app_blog_index')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
-                        Voir Blogs
-                    </a>
-                    <a href="{{path('app_blog_new')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
-                       Créer Blog
-                    </a>
+        <div class="menu-item">
+            <button class="w-full flex items-center justify-between text-white opacity-75 hover:opacity-100 hover:bg-green-900 py-4 pl-6 transition-all duration-300">
+                <div class="flex items-center">
+                    <i class="fas fa-calendar-alt mr-3"></i>
+                    Blogs
                 </div>
+                <i class="fas fa-chevron-down mr-4 chevron"></i>
+            </button>
+            <div class="submenu">
+                <a href="{{path('app_blog_all')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+                    Mes Blogs
+                </a>
+                <a href="{{path('app_blog_new')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+                    Créer Blog
+                </a>
             </div>
-    
-            <a href="{{ path('evenment') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'evenment' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
-                <i class="fas fa-calendar-alt mr-3"></i>
-                Événement
-            </a>
-    
-            <a href="{{ path('livraison') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
-                <i class="fas fa-shipping-fast mr-3"></i>
-                Livraison
-            </a>
-    
-            <a href="{{ path('conversation') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'conversation' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
-                <i class="fa fa-comments mr-3" aria-hidden="true"></i>
-                conversation
-            </a>
-        </nav>
-    </aside>
-    
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuItems = document.querySelectorAll('.menu-item');
-    
-            menuItems.forEach(item => {
-                const button = item.querySelector('button');
-                const submenu = item.querySelector('.submenu');
-                const chevron = item.querySelector('.chevron');
-    
-                button.addEventListener('click', () => {
-                    submenu.classList.toggle('active');
-                    chevron.classList.toggle('rotate-chevron');
-                    menuItems.forEach(otherItem => {
-                        if (otherItem !== item) {
-                            otherItem.querySelector('.submenu').classList.remove('active');
-                            otherItem.querySelector('.chevron').classList.remove('rotate-chevron');
-                        }
-                    });
+        </div>
+
+        <a href="{{ path('evenment') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'evenment' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fas fa-calendar-alt mr-3"></i>
+            Événement
+        </a>
+
+        <a href="{{ path('livraison') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fas fa-shipping-fast mr-3"></i>
+            Livraison
+        </a>
+
+        <a href="{{ path('conversation') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'conversation' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+            <i class="fa fa-comments mr-3" aria-hidden="true"></i>
+            Conversation
+        </a>
+    </nav>
+</aside>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        menuItems.forEach(item => {
+            const button = item.querySelector('button');
+            const submenu = item.querySelector('.submenu');
+            const chevron = item.querySelector('.chevron');
+
+            button.addEventListener('click', () => {
+                submenu.classList.toggle('active');
+                chevron.classList.toggle('rotate-chevron');
+                menuItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.querySelector('.submenu').classList.remove('active');
+                        otherItem.querySelector('.chevron').classList.remove('rotate-chevron');
+                    }
+                });
                 });
             });
         });

@@ -7,8 +7,8 @@ use App\Entity\Blog;
 use App\Form\BlogType;
 use App\Repository\BlogRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Proxies\__CG__\App\Entity\Blog as EntityBlog;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,36 +29,55 @@ final class BlogController extends AbstractController
         );
         
     
-        return $this->render('blog//index.html.twig', [
+        return $this->render('blog/index.html.twig', [
             'blogs' => $acceptedBlogs,
         ]);
     }
     #[Route('/all', name: 'app_blog_all', methods: ['GET'])]
-    public function display(EntityManagerInterface $entityManager): Response
+    public function display(EntityManagerInterface $entityManager, Security $security): Response
     {
-        // Fetch the blogs sorted by their status (accepted, pending, rejected)
-        $acceptedBlogs = $entityManager->getRepository(Blog::class)->findBy(
-            ['statut' => 'Acceptée'], // Filter for accepted blogs
-            ['id' => 'DESC'] // You can change this to the field you want to sort by
-        );
-        
-        $pendingBlogs = $entityManager->getRepository(Blog::class)->findBy(
-            ['statut' => 'enAttente'], // Filter for pending blogs
-            ['id' => 'DESC']
-        );
-        
-        $rejectedBlogs = $entityManager->getRepository(Blog::class)->findBy(
-            ['statut' => 'Rejetée'], // Filter for rejected blogs
-            ['id' => 'DESC']
-        );
+        $user = $security->getUser();
     
-        // Combine the blogs into one array, maintaining the order: Accepted, Pending, Rejected
-        $allBlogs = array_merge($acceptedBlogs, $pendingBlogs, $rejectedBlogs);
+        if ($this->isGranted('ROLE_ADMIN')) {
+            // Fetch all blogs for admin
+            $acceptedBlogs = $entityManager->getRepository(Blog::class)->findBy(
+                ['statut' => 'Acceptée'],
+                ['id' => 'DESC']
+            );
     
-        return $this->render('blog/all_blogs.html.twig', [
-            'blogs' => $allBlogs,
-        ]);
+            $pendingBlogs = $entityManager->getRepository(Blog::class)->findBy(
+                ['statut' => 'enAttente'],
+                ['id' => 'DESC']
+            );
+    
+            $rejectedBlogs = $entityManager->getRepository(Blog::class)->findBy(
+                ['statut' => 'Rejetée'],
+                ['id' => 'DESC']
+            );
+    
+            $blogs = array_merge($acceptedBlogs, $pendingBlogs, $rejectedBlogs);
+    
+            // Redirect to the admin Twig file
+            return $this->render('blog/all_blogs.html.twig', [
+                'blogs' => $blogs,
+            ]);
+        } elseif ($this->isGranted('ROLE_CLIENT')) {
+            // Fetch only the client's blogs
+            $blogs = $entityManager->getRepository(Blog::class)->findBy(
+                ['user' => $user],
+                ['id' => 'DESC']
+            );
+    
+            // Redirect to the client Twig file
+            return $this->render('blog/myblogs.html.twig', [
+                'blogs' => $blogs,
+            ]);
+        }
+    
+        // Optionally, handle other roles or redirect to an error page
+        return $this->redirectToRoute('app_home');
     }
+    
     
     
     #[Route('/new', name: 'app_blog_new', methods: ['GET', 'POST'])]
@@ -68,12 +87,7 @@ final class BlogController extends AbstractController
         
         $blog = new Blog();
         $blog->setUser($this->getUser());
-        
-        // If the logged-in user is an admin, set the blog's status to accepted right away
-        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            $blog->setStatut(EtatEnum::Acceptée); // Automatically set the status to "accepted"
-        }
-        
+           
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
         
@@ -108,12 +122,38 @@ final class BlogController extends AbstractController
     
 
     #[Route('/{id}', name: 'app_blog_show', methods: ['GET'])]
-    public function show(Blog $blog): Response
+    public function show(Blog $blog, Security $security): Response
     {
+        $user = $security->getUser();
+    
+        // Check if the user is an admin or super admin
+        if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->render('blog/show_admin.html.twig', [
+                'blog' => $blog,
+            ]);
+        }
+    
+        // Check if the user is a client
+        if ($this->isGranted('ROLE_CLIENT')) {
+            // If the client is viewing their own blog
+            if ($blog->getUser() === $user) {
+                return $this->render('blog/show_my_blog.html.twig', [
+                    'blog' => $blog,
+                ]);
+            }
+    
+            // If the client is viewing another user's blog
+            return $this->render('blog/show.html.twig', [
+                'blog' => $blog,
+            ]);
+        }
+    
+        // Redirect if the user is not authorized
         return $this->render('blog/show.html.twig', [
             'blog' => $blog,
         ]);
     }
+    
 
     #[Route('/{id}/edit', name: 'app_blog_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Blog $blog, EntityManagerInterface $entityManager): Response
@@ -195,13 +235,13 @@ final class BlogController extends AbstractController
         if (!$blog) {
             // If the blog is not found, show an error message
             $this->addFlash('error', 'Blog not found!');
-            return $this->redirectToRoute('app_blog_index');
+            return $this->redirectToRoute('admin_pending_blogs');
         }
         
         // Check if the blog is already accepted
         if ($blog->getStatut() === EtatEnum::Acceptée) {
             $this->addFlash('info', 'This blog is already accepted.');
-            return $this->redirectToRoute('app_blog_index'); // Redirect to index to show flash message
+            return $this->redirectToRoute('admin_pending_blogs'); // Redirect to index to show flash message
         }
         
         // Update the blog's statut to 'Acceptée'
@@ -212,7 +252,7 @@ final class BlogController extends AbstractController
         $this->addFlash('success', 'Blog accepted successfully!');
         
         // Redirect back to the index page
-        return $this->redirectToRoute('app_blog_index');
+        return $this->redirectToRoute('admin_pending_blogs');
     }
     #[Route('/reject/{id}', name: 'reject_blog', methods: ['GET'])]
 public function rejectBlog(int $id, EntityManagerInterface $entityManager): RedirectResponse
@@ -223,13 +263,13 @@ public function rejectBlog(int $id, EntityManagerInterface $entityManager): Redi
     if (!$blog) {
         // If the blog is not found, show an error message
         $this->addFlash('error', 'Blog not found!');
-        return $this->redirectToRoute('app_blog_index');
+        return $this->redirectToRoute('admin_pending_blogs');
     }
     
     // Check if the blog is already rejected
     if ($blog->getStatut() === EtatEnum::Rejetée) {
         $this->addFlash('info', 'This blog is already rejected.');
-        return $this->redirectToRoute('app_blog_index'); // Redirect to index to show flash message
+        return $this->redirectToRoute('admin_pending_blogs'); // Redirect to index to show flash message
     }
     
     // Update the blog's statut to 'Rejetée'
@@ -240,7 +280,7 @@ public function rejectBlog(int $id, EntityManagerInterface $entityManager): Redi
     $this->addFlash('success', 'Blog rejected successfully!');
     
     // Redirect back to the index page
-    return $this->redirectToRoute('app_blog_index');
+    return $this->redirectToRoute('admin_pending_blogs');
 }
 
 #[Route('/rate/{id}', name: 'app_blog_rate', methods: ['POST'])]

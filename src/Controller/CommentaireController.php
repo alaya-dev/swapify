@@ -20,7 +20,6 @@ final class CommentaireController extends AbstractController
     {
         return $this->render('commentaire/index.html.twig', [
             'commentaires' => $commentaireRepository->findAll(),
-            
         ]);
     }
 
@@ -61,21 +60,29 @@ final class CommentaireController extends AbstractController
             throw $this->createAccessDeniedException('You are not allowed to edit this comment.');
         }
     
+        if ($request->isXmlHttpRequest()) {
+            // Handle AJAX request
+            $newContent = $request->request->get('contenu');
+            $commentaire->setContenuCmt($newContent);
+            $entityManager->flush();
+    
+            return $this->json([
+                'success' => true,
+                'newContent' => $newContent,
+            ]);
+        }
+    
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-    
-            // Redirect to the blog show page after successful edit
-            return $this->redirectToRoute('app_blog_show', [
-                'id' => $commentaire->getBlog()->getId(), // Get the blog ID associated with the comment
-            ], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('commentaire/edit.html.twig', [
             'commentaire' => $commentaire,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 

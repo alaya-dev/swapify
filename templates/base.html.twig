@@ -17,6 +17,22 @@
         {% endblock %}
     </head>
     <body>
+        {% block navbar %}
+            {% if  not app.user%}
+                {% if app.request.get('_route') == 'app_login' or  app.request.get('_route') == 'app_register'  %}
+                    {% include 'layout/navBar/auth_nav.html.twig' %}
+                {% else %}
+                    {% include 'layout/navBar/main_nav.html.twig' %}
+                {% endif %}
+            {% else %}
+                {% include 'layout/navBar/user_nav.html.twig' %}
+            {% endif %}
+        {% endblock %}
         {% block body %}{% endblock %}
+        {% block footer %}
+        {% if not app.request.get('_route') == 'app_login' or not app.request.get('_route') == 'app_register' %}
+            {% include 'layout/footer/footer.html.twig' %}
+        {% endif %}
+        {% endblock %}
     </body>
 </html>
