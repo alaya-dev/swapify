@@ -1,145 +1,103 @@
-<style>
-    .submenu {
-        max-height: 0;
-        overflow: hidden;
-        transition: all 0.5s ease-in-out;
-        opacity: 0;
-    }
-
-    .submenu.active {
-        max-height: 500px;
-        opacity: 1;
-    }
-
-    .chevron {
-        transition: transform 0.4s ease-in-out;
-    }
-
-    .rotate-chevron {
-        transform: rotate(180deg);
-    }
-
-    .bg-sidebar {
-        background-color: #2d3748; /* Dark gray background */
-    }
-
-    .nav-item {
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .nav-item:hover,
-    .active-nav-link {
-        background-color: #38a169; /* Green background on hover or active */
-        color: #fff; /* White text when active or hovered */
-    }
-
-    .submenu a:hover {
-        background-color: #38a169; /* Green background for sub-menu items on hover */
-    }
-
-    .menu-item button:hover {
-        background-color: #2f855a; /* Slightly darker green on button hover */
-    }
-
-    .menu-item button {
-        background-color: transparent;
-        border: none;
-        padding: 0;
-    }
-
-    .text-white {
-        color: #fff;
-    }
-</style>
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
-
-
-<aside class="relative bg-sidebar h-screen w-64 hidden sm:block shadow-xl">
+<aside class="relative bg-gray-800 h-screen w-[350px] hidden sm:block shadow-xl">
     <div class="p-6">
         <a href="{{ path('app_dashboard_client') }}" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">WELCOME</a>
     </div>
     <nav class="text-white text-base font-semibold pt-3">
-        <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+        <!-- Dashboard Link -->
+        <a href="{{ path('app_dashboard_client') }}" data-turbo="false" 
+           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
             <i class="fas fa-user mr-3"></i>
             Profile
         </a>
 
-        <a href="#" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'souk' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+        <!-- Souk Link -->
+        <a href="#" data-turbo="false" 
+           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'souk' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
             <i class="fas fa-store mr-3"></i>
             Souk
         </a>
 
-        <div class="menu-item">
-            <button class="w-full flex items-center justify-between text-white opacity-75 hover:opacity-100 hover:bg-green-900 py-4 pl-6 transition-all duration-300">
+        <!-- Annonce Dropdown -->
+        <div x-data="{ isOpen: false }" class="w-full">
+            <button @click="isOpen = !isOpen" 
+                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
                 <div class="flex items-center">
                     <i class="fas fa-calendar-alt mr-3"></i>
                     Annonce
                 </div>
-                <i class="fas fa-chevron-down mr-4 chevron"></i>
+                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+                   :class="{'rotate-180': isOpen}"></i>
             </button>
-            <div class="submenu">
-                <a href="{{path('mesAnnonces')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+            <div x-show="isOpen" 
+                 x-transition:enter="transition ease-out duration-200" 
+                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
+                 x-transition:enter-end="opacity-100 transform translate-y-0" 
+                 x-transition:leave="transition ease-in duration-200" 
+                 x-transition:leave-start="opacity-100 transform translate-y-0" 
+                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
+                 class="bg-gray-700">
+                <a href="{{path('mesAnnonces')}}" 
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     mes annonces
                 </a>
-                <a href="{{path('app_annonce_new')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+                <a href="{{path('app_annonce_new')}}" 
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     ajouter annonce
                 </a>
             </div>
         </div>
 
-        <a href="{{ path('blog') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'blog' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+        <!-- Blog Link -->
+        <a href="{{ path('blog') }}" data-turbo="false" 
+           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'blog' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
             <i class="fas fa-newspaper mr-3"></i>
             Blog
         </a>
 
-        <div class="menu-item">
-            <button class="w-full flex items-center justify-between text-white opacity-75 hover:opacity-100 hover:bg-green-900 py-4 pl-6 transition-all duration-300">
+        <!-- Event Dropdown -->
+        <div x-data="{ isOpen: false }" class="w-full">
+            <button @click="isOpen = !isOpen" 
+                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169] transition-colors duration-200">
                 <div class="flex items-center">
                     <i class="fas fa-calendar-alt mr-3"></i>
                     Événement
                 </div>
-                <i class="fas fa-chevron-down mr-4 chevron"></i>
+                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+                   :class="{'rotate-180': isOpen}"></i>
             </button>
-            <div class="submenu">
-                <a href="{{path('evenment')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+            <div x-show="isOpen" 
+                 x-transition:enter="transition ease-out duration-200" 
+                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
+                 x-transition:enter-end="opacity-100 transform translate-y-0" 
+                 x-transition:leave="transition ease-in duration-200" 
+                 x-transition:leave-start="opacity-100 transform translate-y-0" 
+                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
+                 class="bg-gray-700">
+                <a href="{{path('evenment')}}" 
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     mes evenements
                 </a>
-                <a href="#" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
+                <a href="#" 
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 ">
                     ajouter evenements
                 </a>
             </div>
         </div>
 
-        <a href="{{ path('livraison') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+        <!-- Livraison Link -->
+        <a href="{{ path('livraison') }}" data-turbo="false" 
+           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'livraison' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
             <i class="fas fa-shipping-fast mr-3"></i>
             Livraison
         </a>
 
-        <a href="{{ path('conversation') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'conversation' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-4 pl-6 nav-item">
+        <!-- Conversation Link -->
+        <a href="{{ path('conversation') }}" data-turbo="false" 
+           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'conversation' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
             <i class="fa fa-comments mr-3" aria-hidden="true"></i>
             Conversation
         </a>
     </nav>
 </aside>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const menuItems = document.querySelectorAll('.menu-item');
-
-        menuItems.forEach(item => {
-            const button = item.querySelector('button');
-            const submenu = item.querySelector('.submenu');
-            const chevron = item.querySelector('.chevron');
-            button.addEventListener('click', () => {
-                submenu.classList.toggle('active');
-                chevron.classList.toggle('rotate-chevron');
-                menuItems.forEach(otherItem => {
-                    if (otherItem !== item) {
-                        otherItem.querySelector('.submenu').classList.remove('active');
-                        otherItem.querySelector('.chevron').classList.remove('rotate-chevron');
-                    }
-                });
-            });
-        });
-    });
-</script>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
