@@ -1,0 +1,157 @@
+{% extends 'include.html.twig' %}
+
+{% block title %}Blog List{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom styles for the table */
+    .table thead th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+    .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.75em;
+    }
+    .badge-success {
+        background-color: #28a745;
+    }
+    .badge-warning {
+        background-color: #ffc107;
+    }
+    .badge-danger {
+        background-color: #dc3545;
+    }
+    .img-thumbnail {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Blog List</h1>
+
+    {# Flash messages #}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }} text-center">
+            {% for message in messages %}
+                <p class="mb-0">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    {# Combined Table for All Blogs #}
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th>Posted By</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# Accepted Blogs #}
+                    {% set acceptedBlogs = blogs|filter(blog => blog.statut.value == 'Acceptée') %}
+                    {% for blog in acceptedBlogs %}
+                        <tr>
+                            <td>
+                                {% if blog.image %}
+                                    <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}" class="img-thumbnail">
+                                {% else %}
+                                    <img src="{{ asset('uploads/images/blog.jpg') }}" alt="{{ blog.Titre }}" class="img-thumbnail">
+                                {% endif %}
+                            </td>
+                            <td>{{ blog.titre }}</td>
+                            <td>{{ blog.contenu|slice(0, 100) ~ '...' }}</td>
+                            <td>{{ blog.user.prenom }} {{ blog.user.nom }}</td>
+                            <td>
+                                <span class="badge badge-success">
+                                    {{ blog.statut.value }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-muted text-center">No accepted blogs found.</td>
+                        </tr>
+                    {% endfor %}
+
+                    {# Pending Blogs #}
+                    {% set pendingBlogs = blogs|filter(blog => blog.statut.value == 'enAttente') %}
+                    {% for blog in pendingBlogs %}
+                        <tr>
+                            <td>
+                                {% if blog.image %}
+                                    <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}" class="img-thumbnail">
+                                {% else %}
+                                    <img src="{{ asset('uploads/images/blog.jpg') }}" alt="{{ blog.Titre }}" class="img-thumbnail">
+                                {% endif %}
+                            </td>
+                            <td>{{ blog.titre }}</td>
+                            <td>{{ blog.contenu|slice(0, 100) ~ '...' }}</td>
+                            <td>{{ blog.user.prenom }} {{ blog.user.nom }}</td>
+                            <td>
+                                <span class="badge badge-warning">
+                                    {{ blog.statut.value }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('accept_blog', {'id': blog.id}) }}" class="btn btn-success btn-sm">Accept</a>
+                                    <a href="{{ path('reject_blog', {'id': blog.id}) }}" class="btn btn-danger btn-sm">Reject</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-muted text-center">No pending blogs found.</td>
+                        </tr>
+                    {% endfor %}
+
+                    {# Rejected Blogs #}
+                    {% set rejectedBlogs = blogs|filter(blog => blog.statut.value == 'Rejetée') %}
+                    {% for blog in rejectedBlogs %}
+                        <tr>
+                            <td>
+                                {% if blog.image %}
+                                    <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}" class="img-thumbnail">
+                                {% else %}
+                                    <img src="{{ asset('uploads/images/blog.jpg') }}" alt="{{ blog.Titre }}" class="img-thumbnail">
+                                {% endif %}
+                            </td>
+                            <td>{{ blog.titre }}</td>
+                            <td>{{ blog.contenu|slice(0, 100) ~ '...' }}</td>
+                            <td>{{ blog.user.prenom }} {{ blog.user.nom }}</td>
+                            <td>
+                                <span class="badge badge-danger">
+                                    {{ blog.statut.value }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-muted text-center">No rejected blogs found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
