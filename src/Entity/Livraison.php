@@ -54,7 +54,7 @@ class Livraison
 
     #[ORM\Column]
     #[Assert\Length(min: 4, max: 10, minMessage: "Le code postal doit contenir au moins 4 caractères.")]
-    #[Assert\NotBlank(message: "La societe ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "La code postal ne peut pas être vide.")]
     private ?int $CodePostalExpediteur = null;
 
     #[ORM\Column(nullable: true)]

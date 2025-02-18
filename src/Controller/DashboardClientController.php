@@ -12,9 +12,7 @@ class DashboardClientController extends AbstractController
     #[Route('/dashboard/client', name: 'app_dashboard_client')]
     public function index(Request $request): Response
     {
-        return $this->render('dashboard/accueil_client.html.twig', [
-            'controller_name' => 'DashboardClientController',
-        ]);
+        return $this->render('dashboard/accueil_client.html.twig');
     }
 
 

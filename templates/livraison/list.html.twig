@@ -47,7 +47,7 @@
                             </td>
                             <td class="py-4 px-6 border text-center">
                                 {% if livraison.statut == 'En attente de localisation du destinataire' and app.user == livraison.idDistinataire %}
-                                    <a href="{{ path('livraison_edit_destinataire', {'id': livraison.id}) }}"
+                                    <a href="{{ path('livraison_dist', {'id': livraison.id}) }}"
                                        class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition">
                                        🚨 Compléter vos informations
                                     </a>
@@ -60,13 +60,13 @@
                             </td>
                             <td class="py-4 px-6 border text-center flex justify-center gap-3">
                                 {% if app.user == livraison.idDistinataire and livraison.statut != 'En attente de localisation du destinataire' %}
-                                    <a href="{{ path('livraison_edit_destinataire', {'id': livraison.id}) }}"
+                                    <a href="{{ path('edit_livraison_dist', {'id': livraison.id}) }}"
                                        class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
                                        ✏ Modifier
                                     </a>
                                 {% endif %}
                                 {% if app.user == livraison.idExpediteur %}
-                                    <a href="{{ path('livraison_edit_expediteur', {'id': livraison.id}) }}"
+                                    <a href="{{ path('livraison_edit_expidataire', {'id': livraison.id}) }}"
                                        class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
                                        ✏ Modifier
                                     </a>

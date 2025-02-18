@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Livraison;
 use App\Entity\User;
+use App\Form\LivraisonType;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
@@ -20,43 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class LivraisonController extends AbstractController
 {
-    #[Route('/livraison/create', name: 'livraison_create', methods: ['GET', 'POST'])]
-    public function createLivraison(Request $request, EntityManagerInterface $em, UserRepository $userRepository, ValidatorInterface $validator): Response
-    {
-        $expediteur = $this->getUser();
-        if (!$expediteur) {
-            return $this->redirectToRoute('app_login');
-        }
-        $emailDestinataire = $request->request->get('email_destinataire');
-        $destinataire = $userRepository->findOneBy(['email' => $emailDestinataire]);
-        if (!$destinataire) {
-            $this->addFlash('error', 'Destinataire introuvable.');
-            return $this->redirectToRoute('livraison_form');
-        }
-
-
-
-        $livraison = new Livraison();
-        $livraison->setIdExpediteur($expediteur);
-        $livraison->setIdDistinataire($destinataire);
-
-        $livraison->setTelephoneExpediteur($request->request->get('telephone_expediteur'));
-        $livraison->setCodePostalExpediteur($request->request->get('code_postal_expediteur'));
-
-        $livraison->setLocalisationExpediteurLat($request->request->get('localisation_expediteur_lat'));
-        $livraison->setLocalisationExpediteurLng($request->request->get('localisation_expediteur_lng'));
-        $livraison->setStatut('En attente de localisation du destinataire');
-        $livraison->setPaymentExp('non payé');
-        $livraison->setDate(new \DateTime());
-
-
-        $em->persist($livraison);
-        $em->flush();
-
-        $this->addFlash('success', 'Livraison créée. En attente de localisation du destinataire.');
-        return $this->redirectToRoute('payment_page', ['id' => $livraison->getId()]);
-    }
-
+   
 
 
     #[Route('/livraison/success', name: 'livraison_success')]
@@ -65,90 +30,7 @@ class LivraisonController extends AbstractController
         return new Response("<h1>Livraison créée avec succès !</h1>");
     }
 
-    #[Route('/livraison/CreateLivDist/{id}', name: 'livraison_create_dist')]
-    public function LivraisonExp(Livraison $livraison, Request $request, EntityManagerInterface $em): Response
-    {
-
-
-
-        if ($request->isMethod('POST')) {
-            $livraison->setTelephoneDestinataire($request->request->get('telephone_destinataire'));
-            $livraison->setCodePostalDestinataire($request->request->get('code_postal_destinataire'));
-            $livraison->setLocalisationDestinataireLat($request->request->get('localisation_destinataire_lat'));
-            $livraison->setLocalisationDestinataireLng($request->request->get('localisation_destinataire_lng'));
-            $livraison->setPaymentDist('non payé');
-            $livraison->setStatut('En cours de traitement');
-
-            $em->flush();
-
-            $this->addFlash('success', 'Localisation ajoutée avec succès.');
-            return $this->redirectToRoute('payment_page', ['id' => $livraison->getId()]);
-        }
-
-        return $this->render('livraison/livraison_edit.html.twig', [
-            'livraison' => $livraison
-        ]);
-    }
-
-    #[Route('/livraison/editLivDes/{id}', name: 'livraison_edit_destinataire')]
-    public function editLivraison(Livraison $livraison, Request $request, EntityManagerInterface $em): Response
-    {
-        // Vérifier si l'objet livraison existe
-        if (!$livraison) {
-            throw $this->createNotFoundException("La livraison demandée n'existe pas.");
-        }
-
-        if ($request->isMethod('POST')) {
-            $livraison->setCodePostalDestinataire($request->request->get('code_postal_destinataire'));
-            $livraison->setTelephoneDestinataire($request->request->get('telephone_destinataire'));
-            $livraison->setLocalisationDestinataireLat($request->request->get('localisation_destinataire_lat'));
-            $livraison->setLocalisationDestinataireLng($request->request->get('localisation_destinataire_lng'));
-
-            $em->flush();
-
-            $this->addFlash('success', 'Localisation mise à jour avec succès.');
-
-            // Rediriger vers la liste des livraisons (assure-toi que cette route existe)
-            return $this->redirectToRoute('livraison_list');
-        }
-
-        return $this->render('livraison/livraison_edit.html.twig', [
-            'livraison' => $livraison
-        ]);
-    }
-    #[Route('/livraison/editLivExp/{id}', name: 'livraison_edit_expediteur')]
-    public function editLivraisonExpediteur(Livraison $livraison, Request $request, EntityManagerInterface $em): Response
-    {
-        // Vérifier si l'objet livraison existe
-        if (!$livraison) {
-            throw $this->createNotFoundException("La livraison demandée n'existe pas.");
-        }
-
-        if ($request->isMethod('POST')) {
-            $livraison->setCodePostalExpediteur($request->request->get('code_postal_expediteur'));
-            $livraison->setTelephoneExpediteur($request->request->get('telephone_expediteur'));
-            $livraison->setLocalisationExpediteurLat($request->request->get('localisation_expediteur_lat'));
-            $livraison->setLocalisationExpediteurLng($request->request->get('localisation_expediteur_lng'));
-
-            $em->flush();
-
-            $this->addFlash('success', 'Localisation mise à jour avec succès.');
-
-            // Rediriger vers la liste des livraisons (assure-toi que cette route existe)
-            return $this->redirectToRoute('livraison_list');
-        }
-
-        return $this->render('livraison/edit_exp_livraison.html.twig', [
-            'livraison' => $livraison
-        ]);
-    }
-
-
-    #[Route('/livraison/new', name: 'livraison_form')]
-    public function showForm(): Response
-    {
-        return $this->render('livraison/livraison_form.html.twig');
-    }
+    
 
     #[Route('/livraisons', name: 'livraison_list')]
     public function listLivraisons(LivraisonRepository $livraisonRepository): Response
@@ -238,5 +120,144 @@ class LivraisonController extends AbstractController
         $entityManager->flush();
 
         return new JsonResponse(['success' => true]);
+    }
+    #[Route('/livraison/new2', name: 'livraison_create')]
+    public function create(Request $request, EntityManagerInterface $em): Response
+    {
+        $livraison = new Livraison();
+        $livraison->setIdExpediteur($this->getUser()); // Associer l'expéditeur connecté
+        $livraison->setStatut('En attente de localisation du destinataire');
+        $livraison->setDate(new \DateTime());
+        $livraison->setPaymentExp('non payé');
+        $form = $this->createForm(LivraisonType::class, $livraison);
+
+        // Supprimer les champs inutiles pour l'expéditeur
+        $form->remove('livreur');
+        $form->remove('localisation_destinataire_lat');
+        $form->remove('localisation_destinataire_lng');
+        $form->remove('TelephoneDestinataire');
+        $form->remove('CodePostalDestinataire');
+        $form->remove('payment_exp');
+        $form->remove('payment_dist');
+        $form->remove('statut');
+        $form->remove('date');
+
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em->persist($livraison);
+            $em->flush();
+
+            return $this->redirectToRoute('payment_page', ['id' => $livraison->getId()]);
+        }
+
+        return $this->render('livraison/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+    #[Route('/livraison/LivDestinataire/{id}', name: 'livraison_dist')]
+    public function createLivDestinataire(Request $request, EntityManagerInterface $em, Livraison $livraison): Response
+    {
+        // Vérifier si l'utilisateur est bien le destinataire
+        
+
+        $form = $this->createForm(LivraisonType::class, $livraison);
+
+        // Supprimer les champs inutiles pour le destinataire
+        $form->remove('id_expediteur');
+        $form->remove('id_distinataire');
+        $form->remove('livreur');
+        $form->remove('localisation_expediteur_lat');
+        $form->remove('localisation_expediteur_lng');
+        $form->remove('TelephoneExpediteur');
+        $form->remove('CodePostalExpediteur');
+        $form->remove('payment_exp');
+        $form->remove('payment_dist');
+        $form->remove('statut');
+        $form->remove('date');
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $livraison->setStatut('En cours de traitement');
+            $livraison->setPaymentDist('non payé');
+            $em->flush();
+            return $this->redirectToRoute('payment_page', ['id' => $livraison->getId()]);
+        }
+
+        return $this->render('livraison/form_destinataire.html.twig', [
+            'form' => $form->createView(),
+            'livraison' => $livraison
+        ]);
+    }
+    #[Route('/livraison/editLivDestinataire/{id}', name: 'edit_livraison_dist')]
+    public function editLivDestinataire(Request $request, EntityManagerInterface $em, Livraison $livraison): Response
+    {
+        // Vérifier si l'utilisateur est bien le destinataire
+        
+
+        $form = $this->createForm(LivraisonType::class, $livraison);
+
+        // Supprimer les champs inutiles pour le destinataire
+        $form->remove('id_expediteur');
+        $form->remove('id_distinataire');
+        $form->remove('livreur');
+        $form->remove('localisation_expediteur_lat');
+        $form->remove('localisation_expediteur_lng');
+        $form->remove('TelephoneExpediteur');
+        $form->remove('CodePostalExpediteur');
+        $form->remove('payment_exp');
+        $form->remove('payment_dist');
+        $form->remove('statut');
+        $form->remove('date');
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            return $this->redirectToRoute('livraison_list');
+        }
+
+        return $this->render('livraison/edit_destinataire_livraison.html.twig', [
+            'form' => $form->createView(),
+            'livraison' => $livraison
+        ]);
+    }
+    
+    #[Route('/livraison/editLivExpidataire/{id}', name: 'livraison_edit_expidataire')]
+    public function updateLivDestinataire(Request $request, EntityManagerInterface $em, Livraison $livraison): Response
+    {
+        // Vérifier si l'utilisateur est bien le destinataire
+       
+        $form = $this->createForm(LivraisonType::class, $livraison);
+
+        // Supprimer les champs inutiles pour le destinataire
+        $form->remove('id_expediteur');
+        $form->remove('id_distinataire');
+        $form->remove('livreur');
+        $form->remove('localisation_destinataire_lat');
+        $form->remove('localisation_destinataire_lng');
+        $form->remove('TelephoneDestinataire');
+        $form->remove('CodePostalDestinataire');
+        $form->remove('payment_exp');
+        $form->remove('payment_dist');
+        $form->remove('statut');
+        $form->remove('date');
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+           
+            $em->flush();
+            return $this->redirectToRoute('livraison_list');
+        }
+
+        return $this->render('livraison/edit_expiditeur_livraison.html.twig', [
+            'form' => $form->createView(),
+            'livraison' => $livraison
+        ]);
     }
 }
