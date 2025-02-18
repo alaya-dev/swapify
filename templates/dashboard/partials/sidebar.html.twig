@@ -22,6 +22,21 @@
         .submenu {
             max-height: 0;
             overflow: hidden;
+            transition: all 0.5s ease-in-out;
+            opacity: 0;
+        }
+    
+        .submenu.active {
+            max-height: 500px;
+            opacity: 1;
+        }
+    
+        .chevron {
+            transition: transform 0.4s ease-in-out;
+        }
+    
+        .rotate-chevron {
+            transform: rotate(180deg);
         }
     </style>
     
@@ -70,7 +85,7 @@
                         Voir Blogs
                     </a>
                     <a href="{{path('app_blog_new')}}" class="block py-3 pl-16 ml-6 text-white opacity-75 hover:opacity-100 hover:bg-green-900 transition-all duration-300 sub-item">
-                        Créer Blog
+                       Créer Blog
                     </a>
                 </div>
             </div>
