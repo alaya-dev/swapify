@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
-use Symfony\Component\Validator\Constraints as Assert;  
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 //#[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -26,13 +26,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(message: "L'email ne peut pas être vide.")]
     #[Assert\Email(message: "L'adresse e-mail '{{ value }}' n'est pas valide.")]
-    private ?string $email ;
+    private ?string $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column]
-    private ?string $password = null;   
+    private ?string $password = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
@@ -46,8 +46,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
 
     #[ORM\Column(type: 'date')]
-    private ?\DateTimeInterface $dateNaissance ;
-    
+    private ?\DateTimeInterface $dateNaissance;
+
 
 
     #[ORM\Column(type: 'string', length: 8, unique: true)]
@@ -57,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         message: "Le numéro de téléphone doit comporter exactement 8 chiffres."
     )]
 
-    
+
     private ?string $tel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -72,12 +72,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $lastConnexion;
 
-    private ?string $authCode = null; 
+    private ?string $authCode = null;
+
+    /**
+     * @var Collection<int, Offre>
+     */
+    #[ORM\OneToMany(mappedBy: 'annonceOwner', targetEntity: Offre::class, orphanRemoval: true)]
+    private Collection $offres;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->dateNaissance = new \DateTime(); // Exemple de valeur par défaut : la date actuelle
+        $this->offres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,7 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER'; 
+        $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
 
@@ -214,11 +221,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     }
 
     public function getDateNaissance(): \DateTimeInterface
-{
-    // Si la date n'est pas définie, tu pourrais vouloir lever une exception ou la créer automatiquement
-    
-    return $this->dateNaissance;
-}
+    {
+        // Si la date n'est pas définie, tu pourrais vouloir lever une exception ou la créer automatiquement
+
+        return $this->dateNaissance;
+    }
 
 
     public function setDateNaissance(\DateTimeInterface $dateNaissance): static
@@ -251,7 +258,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this;
     }
 
+    /**
+     * @return Collection<int, Offre>
+     */
+    public function getOffres(): Collection
+    {
+        return $this->offres;
+    }
 
-    
-    
+    public function addOffre(Offre $offre): static
+    {
+        if (!$this->offres->contains($offre)) {
+            $this->offres->add($offre);
+            $offre->setAnnonceOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffre(Offre $offre): static
+    {
+        if ($this->offres->removeElement($offre)) {
+            // set the owning side to null (unless already changed)
+            if ($offre->getAnnonceOwner() === $this) {
+                $offre->setAnnonceOwner(null);
+            }
+        }
+
+        return $this;
+    }
 }

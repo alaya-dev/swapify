@@ -1,0 +1,71 @@
+{% extends 'souk_base.html.twig' %}
+
+{% block body %}
+    {{ include('layout/navBar/auth_nav.html.twig') }}
+    <div class="w-full overflow-hidden border-t flex flex-col">
+        <main class="w-full flex-grow p-6">
+            <div class="w-full bg-white rounded-xl shadow-lg overflow-hidden mx-auto mb-6">
+                <div class="md:flex">
+                    <div class="md:shrink-0">
+                        <img 
+                            class="h-48 w-full object-cover md:h-full md:w-48" 
+                            src="https://loremflickr.com/g/320/240/market" 
+                            alt="Souk Image"
+                        />
+                    </div>
+                    <div class="flex items-center justify-between p-6 flex-1">
+                        <div class="flex-1">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-3">
+                                <span id="soukName">Local Market</span>
+                            </h2>
+                            <p class="text-lg text-gray-600 flex items-center">
+                                <span id="timeIcon" class="inline-block animate-spin-slow">⏳</span>
+                                <span id="timeRemaining" class="font-semibold ml-2">Calculating...</span>
+                            </p>
+                        </div>
+
+                        <!-- Right Section: Buttons -->
+                        <div class="flex items-center gap-2 ml-6">
+                            <button class="w-32 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300">
+                                Join
+                            </button>
+                            <button class="w-32 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">
+                                Edit
+                            </button>
+                            <button class="w-32 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        const startTime = new Date("2025-10-16T09:00:00"); 
+        const endTime = new Date("2025-10-16T18:00:00");   
+        function updateCountdown() {
+            const now = new Date();
+            let timeRemaining;
+            if (now < startTime) {
+                const diff = startTime - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                timeRemaining = `End in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else if (now >= startTime && now <= endTime) {
+                const diff = endTime - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                timeRemaining = `Ends in: ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                timeRemaining = "The souk has ended.";
+            }
+            document.getElementById("timeRemaining").textContent = timeRemaining;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+{% endblock %}
