@@ -1,8 +1,87 @@
 {% extends 'base.html.twig' %}
+
+
 {% block body %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Swapify</title>
+   <style>
+        @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
+
+ body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    display: grid;
+    grid-template-columns: 35% 60% 5%;
+    align-self: center;
+    padding: 10px 20px;
+    z-index: 10; /* Ensures navbar is always on top */
+}
+        .home{
+            text-decoration: none;
+            color: #88c858;
+            align-self: center;
+            padding-left: 15px;
+        }
+        .logo{
+
+            font-family: "Edu AU VIC WA NT Hand", serif; 
+            color: #88c858;
+            font-size: 30px;
+            font-weight: 500;
+            letter-spacing: .6em;
+        }
+        .container {
+            z-index: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            height: 100vh;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+              @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
+        
+        .font-handwriting {
+            font-family: "Edu AU VIC WA NT Hand", serif;
+        }
+        @keyframes slide {
+            from { transform: translateY(0%); }
+            to { transform: translateY(-50%); }
+        }
+
+        .animate-slide {
+            animation: slide 8s linear infinite;
+        }
+
+        .animate-slide-reverse {
+            animation: slide 8s linear infinite reverse;
+        }
 
 
-     <div class="grid grid-cols-1 md:grid-cols-2 h-screen p-4 gap-4 items-center mt-16 overflow-hidden ">
+        .left-section::-webkit-scrollbar {
+            display: none;
+        }
+
+        .left-section {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+</style>
+
+     <div class="grid grid-cols-1 md:grid-cols-2 h-screen  gap-4 items-center  overflow-hidden ">
 
         <div class="left-section p-8 w-full max-w-2xl mx-auto overflow-y-auto h-[80vh] mt-1">
             <h3 class="text-3xl font-semibold text-gray-800 mb-8">
@@ -76,34 +155,6 @@
         </div>
     </div>
 
-        <style>
-           @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
-        
-        .font-handwriting {
-            font-family: "Edu AU VIC WA NT Hand", serif;
-        }
-        @keyframes slide {
-            from { transform: translateY(0%); }
-            to { transform: translateY(-50%); }
-        }
-
-        .animate-slide {
-            animation: slide 8s linear infinite;
-        }
-
-        .animate-slide-reverse {
-            animation: slide 8s linear infinite reverse;
-        }
 
 
-        .left-section::-webkit-scrollbar {
-            display: none;
-        }
-
-        .left-section {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-    </style>
 {% endblock %}

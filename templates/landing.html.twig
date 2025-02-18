@@ -47,14 +47,14 @@
     <div class="flex flex-col items-center justify-center space-y-6 relative z-10">
       <h2 class="text-3xl font-bold text-gray-800 text-center">C'est le moment d'échange</h2>
       {% if not app.user %}
-      <a href="{{path('app_login')}}"class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
+      <a href="/login"class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
         <span>Ajouter une annonce</span>
     </a>
     {% else %}
-    <a href="#"class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
+    <a href="/annonce/new"class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>

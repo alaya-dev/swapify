@@ -9,3 +9,4 @@ kernel:
 2fa_login_check:
     path: /2fa_check
     controller: Scheb\TwoFactorBundle\Controller\FormController::check
+

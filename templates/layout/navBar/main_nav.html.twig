@@ -12,21 +12,35 @@
       </button>
     </div>
     <div class="hidden lg:flex lg:gap-x-8">
-      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Acceuil</a>
+      <a href="{{ path('app_home') }}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Acceuil</a>
+       <a href="/annonce" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
       <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">À Propos</a>
-      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Annonces</a>
-      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Evenement</a>
       <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
-      <a href="{{ path('app_home') }}#contact" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
+      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
     </div>
+
+
     <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6 pr-1">
-      <a href="{{path('app_login')}}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Se Connecter</a>
-      <a href="{{path('app_register')}}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">S'inscrire</a>
+       {% if app.user %}
+                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="/logout">Se déconnecter</a>
+
+                   {% if 'ROLE_CLIENT' in app.user.roles %}
+                    <a href="/dashboard/client"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
+                    {% else %}
+                    <a href="/dashboard"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
+                    {% endif %}
+
+
+                {% else %}
+                  <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_login') }}">Se connecter</a>
+                  <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_register') }}">S'inscrire</a>
+                {% endif %}
     </div>
+
   </nav>
   <div id="mobile-menu" class="hidden fixed inset-y-0 right-0 z-20 w-full bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
     <div class="flex items-center justify-between">
-      <img class="h-20 w-auto object-contain" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
+      <img class="h-20 w-auto object-contain" src="{{ asset('images/logo.png') }}" alt="Logo">
       <button id="menu-close" type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700">
         <span class="sr-only">Close menu</span>
         <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
