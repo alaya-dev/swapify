@@ -18,9 +18,9 @@
           <li>
 
     {% if 'ROLE_ADMIN' in app.user.getRoles() %}
-    <a href="{{ path('app_dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+    <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
     {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
-    <a href="{{ path('app_dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+    <a href="{{ path('app_dashboard') }}"  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
     {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
     <a href="{{ path('app_dashboard_client') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
      {% endif %}
@@ -59,7 +59,7 @@
         <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Evenements</a>
       </li>
       <li>
-        <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Blog</a>
+        <a href="{{ path('app_blog_index') }}" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Blog</a>
       </li>
       <li>
         <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Contact</a>

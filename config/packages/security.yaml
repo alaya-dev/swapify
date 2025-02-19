@@ -44,11 +44,14 @@ security:
 
     access_control:
         - { path: ^/dashboard/client, roles: ROLE_CLIENT }
+        - { path: ^/blog/new, roles: ROLE_CLIENT }
+        - { path: ^/blog/\d+/edit, roles: ROLE_CLIENT }
         - { path: ^/dashboard, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: ^/admin/liste, roles: ROLE_SUPER_ADMIN }
         - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+        - { path: ^/blog/admin/pending-blogs, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
 
 
     role_hierarchy:
