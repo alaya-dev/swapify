@@ -32,7 +32,8 @@
         "symfonycasts/verify-email-bundle": "^1.10",
         "twbs/bootstrap": "*",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "victor-prdh/recaptcha-bundle": "^2.0"
     },
     "config": {
         "allow-plugins": {

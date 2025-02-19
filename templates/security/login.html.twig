@@ -238,7 +238,7 @@
     </div>
     
     <br><br><br>
-    
+
     <div class="container">
        <div class="left-section">
             <h3>Connectez-vous sur <span>SWAPIFY</span></h3>
@@ -276,8 +276,20 @@
                             <input type="password" id="password" name="password" class="input-field" required>
                         </div>
 
+
+
+                            <div class="form-group">
+                                {{ form_row(form.recaptcha) }}
+                                <div class="text-danger">
+                                    {{ form_errors(form.recaptcha) }} 
+                                </div>
+                            </div>
+
+
+
                         <button type="submit" class="btn-primary">Se connecter</button>
                     </form>
+     
 
             <div class="forgot-password">
                 <a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié ?</a>
