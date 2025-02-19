@@ -50,20 +50,40 @@
             padding: 15px;
             box-sizing: border-box;
         }
+           @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
+        
+        .font-handwriting {
+            font-family: "Edu AU VIC WA NT Hand", serif;
+        }
+        @keyframes slide {
+            from { transform: translateY(0%); }
+            to { transform: translateY(-50%); }
+        }
+
+        .animate-slide {
+            animation: slide 8s linear infinite;
+        }
+
+        .animate-slide-reverse {
+            animation: slide 8s linear infinite reverse;
+        }
+
+
+        .left-section::-webkit-scrollbar {
+            display: none;
+        }
+
         .left-section {
-            display: grid;
-            align-content: center;
-            background-color: white;
-            padding: 40px;
-            width: 80%;
-            margin-top: 5vh;  /* Un peu d'espace en haut */
-            max-height: 70vh; /* Hauteur maximale pour éviter de surcharger l'écran */
-            overflow-y: auto; /* Permet le défilement vertical */
-            box-sizing: border-box;
-            }
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
 
-     <div class="grid grid-cols-1 md:grid-cols-2 h-screen p-4 gap-4 items-center mt-16 overflow-hidden ">
+
+   </style>
+
+
+     <div class="grid grid-cols-1 md:grid-cols-2 h-screen  gap-4 items-center  overflow-hidden ">
 
         <div class="left-section p-8 w-full max-w-2xl mx-auto overflow-y-auto h-[80vh] mt-1">
             <h3 class="text-3xl font-semibold text-gray-800 mb-8">
@@ -137,137 +157,7 @@
         </div>
     </div>
 
-        <style>
-           @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
-        
-        .font-handwriting {
-            font-family: "Edu AU VIC WA NT Hand", serif;
-        }
-        @keyframes slide {
-            from { transform: translateY(0%); }
-            to { transform: translateY(-50%); }
-        }
+ 
 
-        .animate-slide {
-            animation: slide 8s linear infinite;
-        }
-
-        .animate-slide-reverse {
-            animation: slide 8s linear infinite reverse;
-        }
-
-
-        .left-section::-webkit-scrollbar {
-            display: none;
-        }
-
-        .left-section {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-    </style>
-</head>
-<body>
-<br><br><br><br><br><br><br>
-    <div class="container">
-        <div class="left-section">
-            <h2>Inscrivez-vous sur <span>SWAPIFY</span></h2>
-            <br><br><br><br><br><br><br><br>
-            <br><br><br><br><br><br><br><br>
-            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }} <!-- Formulaire sans validation HTML -->
-
-            
-            <div class="input-group">
-                {{ form_label(registrationForm.nom) }}
-                {{ form_widget(registrationForm.nom, {'attr': {'class': 'input-field'}}) }}
-                <div class="form-text">{{ form_errors(registrationForm.nom) }}</div>
-            </div>
-
-            <div class="input-group">
-                {{ form_label(registrationForm.prenom) }}
-                {{ form_widget(registrationForm.prenom, {'attr': {'class': 'input-field'}}) }}
-                <div class="form-text">{{ form_errors(registrationForm.prenom) }}</div>
-            </div>
-
-
-              <div class="input-group">
-                {{ form_label(registrationForm.email) }}
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'input-field'}}) }}
-                <div class="form-text">{{ form_errors(registrationForm.email) }}</div>
-            </div>
-
-            <div class="input-group">
-                {{ form_label(registrationForm.dateNaissance) }}
-                {{ form_widget(registrationForm.dateNaissance, {'attr': {'class': 'input-field'}}) }}
-                <div class="form-text">{{ form_errors(registrationForm.dateNaissance) }}</div>
-            </div>
-
-            <div class="input-group">
-                {{ form_label(registrationForm.tel) }}
-                {{ form_widget(registrationForm.tel, {'attr': {'class': 'input-field'}}) }}
-                <div class="form-text">{{ form_errors(registrationForm.tel) }}</div>
-            </div>
-
-            <div class="input-group">
-                {{ form_label(registrationForm.adresse) }}
-                {{ form_widget(registrationForm.adresse, {'attr': {'class': 'input-field'}}) }}
-                <div class="form-text">{{ form_errors(registrationForm.adresse) }}</div>
-            </div>
-
-            <div class="input-group">
-                {{ form_label(registrationForm.password.first) }}
-                {{ form_widget(registrationForm.password.first, {'attr': {'class': 'input-field'}}) }}
-                <div class="form-text">{{ form_errors(registrationForm.password.first) }}</div>
-            </div>
-
-            <div class="input-group">
-                {{ form_label(registrationForm.password.second) }}
-                {{ form_widget(registrationForm.password.second, {'attr': {'class': 'input-field'}}) }}
-                <div class="form-text">{{ form_errors(registrationForm.password.second) }}</div>
-            </div>
-
-            <div class="input-group">
-                {{ form_label(registrationForm.consent) }}
-                {{ form_widget(registrationForm.consent, {'attr': {'class': 'input-field'}}) }}
-            <div class="form-text">{{ form_errors(registrationForm.consent) }}</div>
-            </div>
-
-
-            <button class="btn-primary">S'inscrire</button>
-            {{ form_end(registrationForm) }}
-
-        </div>
-
-        <div class="right-section">
-            <div class="column" id="col-1">
-                <div class="item" style="background-color: #FFE4E1;">🚗</div>
-                <div class="item" style="background-color: #E0FFFF;">📱</div>
-                <div class="item" style="background-color: #F0FFF0;">📚</div>
-                <div class="item" style="background-color: #FFE4E1;">🚗</div>
-                <div class="item" style="background-color: #E0FFFF;">📱</div>
-                <div class="item" style="background-color: #F0FFF0;">📚</div>
-            </div>
-
-            <div class="column" id="col-2">
-                <div class="item" style="background-color: #F0FFF0;">👕</div>
-                <div class="item" style="background-color: #FFE4E1;">⛺</div>
-                <div class="item" style="background-color: #E0FFFF;">🪑</div>
-                <div class="item" style="background-color: #F0FFF0;">👕</div>
-                <div class="item" style="background-color: #FFE4E1;">⛺</div>
-                <div class="item" style="background-color: #E0FFFF;">🪑</div>
-            </div>
-
-            <div class="column" id="col-3">
-                <div class="item" style="background-color: #E0FFFF;">🚗</div>
-                <div class="item" style="background-color: #F0FFF0;">📱</div>
-                <div class="item" style="background-color: #FFE4E1;">📚</div>
-                <div class="item" style="background-color: #E0FFFF;">🚗</div>
-                <div class="item" style="background-color: #F0FFF0;">📱</div>
-                <div class="item" style="background-color: #FFE4E1;">📚</div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+    
 {% endblock %}
