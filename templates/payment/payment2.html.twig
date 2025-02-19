@@ -1,67 +1,44 @@
-<!DOCTYPE html>
-<html lang="fr">
+{% extends 'dashBord_user.html.twig' %}
+{% block sidebar %}{% endblock %}
+{% block header %}{% endblock %}
 
-	<head>
-		<title>Paiement</title>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="https://js.stripe.com/v2/"></script>
-		<style>
-			.card-input {
-				position: relative;
-				display: flex;
-				align-items: center;
-			}
+{% block content %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://js.stripe.com/v2/"></script>
 
-			.card-number {
-				padding-right: 50px; /* Laisser de l'espace pour l'icône */
-			}
-
-			#card-logo {
-				position: absolute;
-				right: 15px;
-				top: 50%;
-				transform: translateY(-50%);
-				width: 45px; /* Ajuste la taille */
-				height: auto;
-				display: none;
-			}
-		</style>
-	</head>
-
-	<body>
-		<div class="container">
-			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
-					<h1>Effectuer Votre Paiement</h1>
-
-					<div class="panel panel-default credit-card-box">
-						<div class="panel-heading">
-							<h3 class="panel-title">Détails de paiement</h3>
-						</div>
-						<div class="panel-body">
+	<div class="w-full overflow-hidden border-t flex flex-col">
+		<main class="w-full flex-grow p-6 flex justify-center">
+			<div class="max-w-lg w-full bg-white p-6 rounded shadow-md">
+				<p class="text-xl pb-6 flex items-center">
+					<i class="fas fa-credit-card mr-3"></i>
+					Effectuer Votre Paiement
+				</p>
+				<div
+					class="flex flex-col space-y-6">
+					<!-- Form -->
+					<div class="w-full">
+						<div class="leading-loose">
+							<p class="text-lg text-gray-800 font-medium pb-4">Détails de paiement</p>
 							<form role="form" action="{{ path('payment_process', {'id': livraison.id}) }}" method="post" class="require-validation" data-stripe-publishable-key="{{ stripe_public_key }}" id="payment-form">
-								<div class='form-row row'>
-									<div class='col-xs-12 form-group required'>
-										<label class='control-label'>Adresse Email</label>
-										<input class='form-control' type='email' name="email" placeholder="Votre adresse email" value={{app.user.email}}>
-										<small class="text-danger error-message" style="display: none;">Veuillez entrer une adresse email valide.</small>
-									</div>
+
+								<div class="">
+									<label class="block text-sm text-gray-600" for="cus_email">Adresse Email</label>
+									<input class="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded" id="cus_email" name="email" type="email" required placeholder="Votre adresse email" value="{{ app.user.email }}" aria-label="Email">
+									<small class="text-danger error-message" style="display: none;">Veuillez entrer une adresse email valide.</small>
 								</div>
 
-								<div class='form-row row'>
-									<div class='col-xs-12 form-group card required card-input'>
-										<label class='control-label'>Numéro de carte</label>
-										<input autocomplete='off' class='form-control card-number' type='text' placeholder="Numéro de carte">
-										<img id="card-logo" src="" alt="Card Logo">
-										<small class="text-danger error-message" style="display: none;">Veuillez entrer un numéro de carte valide.</small>
-									</div>
+								<div class="mt-2">
+									<label class="block text-sm text-gray-600" for="card_number">Numéro de carte</label>
+									<input autocomplete='off' class="w-full px-2 py-2 text-gray-700 bg-gray-200 rounded card-number" id="card_number" name="card_number" type="text"  placeholder="Numéro de carte" aria-label="Numéro de carte">
+
+									<small class="text-danger error-message" style="display: none;">Veuillez entrer un numéro de carte valide.</small>
+
 								</div>
 
-								<div class='form-row row'>
-									<div class='col-xs-6 form-group expiration required'>
-										<label class='control-label'>Mois d'expiration</label>
-										<select class='form-control card-expiry-month' name="exp_month">
+								<div class="mt-2 flex space-x-2">
+									<div class="w-1/2">
+										<label class="block text-sm text-gray-600" for="exp_month">Mois d'expiration</label>
+										<select class="w-full px-2 py-2 text-gray-700 bg-gray-200 rounded card-expiry-month" id="exp_month" name="exp_month" >
 											<option value="">Mois</option>
 											{% for month in 1..12 %}
 												<option value="{{ month }}">{{ month }}</option>
@@ -69,9 +46,10 @@
 										</select>
 										<small class="text-danger error-message" style="display: none;">Veuillez sélectionner le mois.</small>
 									</div>
-									<div class='col-xs-6 form-group expiration required'>
-										<label class='control-label'>Année d'expiration</label>
-										<select class='form-control card-expiry-year' name="exp_year">
+
+									<div class="w-1/2">
+										<label class="block text-sm text-gray-600" for="exp_year">Année d'expiration</label>
+										<select class="w-full px-2 py-2 text-gray-700 bg-gray-200 rounded card-expiry-year" id="exp_year" name="exp_year" >
 											<option value="">Année</option>
 											{% for year in range("now"|date("Y"), "now"|date("Y") + 10) %}
 												<option value="{{ year }}">{{ year }}</option>
@@ -81,46 +59,41 @@
 									</div>
 								</div>
 
-								<div class='form-row row'>
-									<div class='col-xs-12 form-group cvc required'>
-										<label class='control-label'>CVC</label>
-										<input autocomplete='off' class='form-control card-cvc' placeholder='ex. 311' type='text'>
-										<small class="text-danger error-message" style="display: none;">Veuillez entrer un CVC valide.</small>
-									</div>
+								<div class="mt-2">
+									<label class="block text-sm text-gray-600" for="cvc">CVC</label>
+									<input autocomplete='off' class="w-full px-2 py-2 text-gray-700 bg-gray-200 rounded card-cvc" id="cvc" name="cvc" type="text"  placeholder="ex. 311" aria-label="CVC">
+									<small class="text-danger error-message" style="display: none;">Veuillez entrer un CVC valide.</small>
 								</div>
 
-								<div class='form-row row'>
-									<div class='col-xs-12 form-group required'>
-										<label class='control-label'>Montant (TND)</label>
-										<input class='form-control' name="montant" type='text' placeholder="Montant à payer" value="10" readonly>
-									</div>
+								<div class="mt-2">
+									<label class="block text-sm text-gray-600" for="montant">Montant (TND)</label>
+									<input class="w-full px-2 py-2 text-gray-700 bg-gray-200 rounded" id="montant" name="montant" type="text"  value="10" readonly>
 								</div>
 
-
-								<div class="row">
-
-
-									{% if livraison.paymentExp == 'non payé' and app.user.id == livraison.idExpediteur.id %}
-										<button class="btn btn-primary btn-lg btn-block" type="submit">Payer</button>
-										
-									{% elseif livraison.paymentDist == 'non payé' and app.user.id == livraison.idDistinataire.id %}
-										<button class="btn btn-primary btn-lg btn-block" type="submit">Payer</button>
-
+								<div class="mt-6">
+									{% if (livraison.paymentExp == 'non payé' and app.user.id == livraison.idExpediteur.id) or 
+                                (livraison.paymentDist == 'non payé' and app.user.id == livraison.idDistinataire.id) %}
+										<button class="px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded w-full" type="submit">Payer</button>
+										<a href="{{ path('livraison_list') }}" class="mt-2 px-4 py-1 text-white font-light tracking-wider bg-gray-500 rounded w-full text-center block">
+											Payer plus tard
+										</a>
 									{% else %}
-										<a href="{{ path('livraison_list') }}" class="btn btn-success btn-lg btn-block">Voir mes livraisons</a>
+										<a href="{{ path('livraison_list') }}" class="px-4 py-1 text-white font-light tracking-wider bg-green-600 rounded w-full text-center">Voir mes livraisons</a>
 									{% endif %}
-
-
 								</div>
+
 							</form>
+
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</main>
+	</div>
 
-		<script>
-			$(function () {
+
+	<script>
+		$(function () {
 var $form = $(".require-validation");
 
 $form.bind('submit', function (e) {
@@ -209,9 +182,9 @@ cardLogo.style.display = "block";
 cardLogo.style.display = "none";
 }
 });
-		</script>
-		<script>
-			document.addEventListener("DOMContentLoaded", function () {
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
 const form = document.getElementById("payment-form");
 
 form.addEventListener("submit", function (e) {
@@ -238,8 +211,5 @@ location.reload(); // Recharge la page après OK
 }, 1000);
 });
 });
-		</script>
-
-	</body>
-
-</html>
+	</script>
+{% endblock %}

@@ -32,7 +32,7 @@ class LivraisonController extends AbstractController
 
     
 
-    #[Route('/livraisons', name: 'livraison_list')]
+    #[Route('/dashboard/client/livraison', name: 'livraison_list')]
     public function listLivraisons(LivraisonRepository $livraisonRepository): Response
     {
         $user = $this->getUser();
@@ -43,7 +43,7 @@ class LivraisonController extends AbstractController
 
         $livraisons = $livraisonRepository->findByUser($user);
 
-        return $this->render('livraison/list.html.twig', [
+        return $this->render('dashboard/livraison.html.twig', [
             'livraisons' => $livraisons,
         ]);
     }
@@ -259,5 +259,18 @@ class LivraisonController extends AbstractController
             'form' => $form->createView(),
             'livraison' => $livraison
         ]);
+    }
+    #[Route('/livraison/annuler/{id}', name: 'livraison_annuler')]
+    public function AnnulerLiv(int $id, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer l'utilisateur
+        $livraison = $entityManager->getRepository(Livraison::class)->find($id);
+
+        // Supprimer l'utilisateur
+        $entityManager->remove($livraison);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'livraison annulé.');
+        return $this->redirectToRoute('livraison_list');
     }
 }

@@ -50,6 +50,7 @@ class Livraison
 
     #[ORM\Column]
     #[Assert\NotBlank(message: "Le téléphone est obligatoire.")]
+    #[Assert\Length(min: 8, max: 8, minMessage: "numero de telephone contient 8 caractères.")]
     private ?int $TelephoneExpediteur = null;
 
     #[ORM\Column]
@@ -60,6 +61,7 @@ class Livraison
     #[ORM\Column(nullable: true)]
     private ?int $TelephoneDestinataire = null;
 
+   
     #[ORM\Column(nullable: true)]
     private ?int $CodePostalDestinataire = null;
 

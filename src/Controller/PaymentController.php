@@ -54,7 +54,7 @@ class PaymentController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Paiement effectué avec succès !');
-            return $this->redirectToRoute('livraison_details', ['id' => $livraison->getId()]);
+            return $this->redirectToRoute('livraison_list');
         } catch (\Exception $e) {
             $this->addFlash('error', 'Erreur : ' . $e->getMessage());
             return $this->redirectToRoute('payment_page', ['id' => $livraison->getId()]);
@@ -65,9 +65,11 @@ class PaymentController extends AbstractController
     #[Route('/payment/{id}', name: 'payment_page')]
     public function paymentPage(Livraison $livraison): Response
     {
-        return $this->render('payment/payment.html.twig', [
+        return $this->render('payment/payment2.html.twig', [
             'livraison' => $livraison, // ✅ Ajout de la variable
             'stripe_public_key' => $_ENV['STRIPE_PUBLIC_KEY'],
         ]);
     }
+   
+    
 }
