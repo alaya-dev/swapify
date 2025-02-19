@@ -18,7 +18,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            #access_denied_url: /error403
+            access_denied_url: /error403
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 20  
@@ -26,7 +26,7 @@ security:
                 always_remember_me: true
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppAuthenticator  # Changez ici
+            custom_authenticator: App\Security\AppAuthenticator  
             logout:
                 path: app_logout
                 target: app_login
@@ -46,14 +46,16 @@ security:
     # Note: Only the *first* access control that matches will be used
 
     access_control:
+        - { path: ^/dashboard/client, roles: ROLE_CLIENT }
+        - { path: ^/blog/new, roles: ROLE_CLIENT }
+        - { path: ^/blog/\d+/edit, roles: ROLE_CLIENT }
         - { path: ^/dashboard, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: ^/admin/liste, roles: ROLE_SUPER_ADMIN }
         - { path: ^/admin/add_admin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/client/liste, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: ^/client/supprimer, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
-        - { path: ^/dashboard/client, roles: ROLE_CLIENT }
+        - { path: ^/blog/admin/pending-blogs, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
 
-       
 
     role_hierarchy:
         ROLE_SUPER_ADMIN: ROLE_SUPER_ADMIN

@@ -33,4 +33,3 @@ class ErrorController extends AbstractController
         return $this->render('bundles/TwigBundle/Exception/error500.html.twig');
     }
 }
-

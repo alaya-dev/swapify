@@ -27,7 +27,7 @@ Suivez ces étapes pour configurer et exécuter le projet :
      ```
 
 3. **Installer les dépendances**  
-   ```bash
+   ```
    composer install
 # Création du projet Symfony
 composer create-project symfony/skeleton symfony_login

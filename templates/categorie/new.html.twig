@@ -1,0 +1,32 @@
+{% if 'ROLE_ADMIN' in app.user.getRoles() %}
+    {% set template_to_extend = 'include.html.twig ' %}
+    {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
+    {% set template_to_extend = 'include.html.twig' %}
+ 
+{% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
+    {% set template_to_extend = 'dashBord_user.html.twig' %}
+{% endif %}
+
+{% extends template_to_extend %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0 font-size-18">Nouvelle Catégorie</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('categorie/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
