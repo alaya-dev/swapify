@@ -1,0 +1,270 @@
+[33mcommit c2a9cf26808ff9aabea6b497c7006151ed327c03[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mUserManagement[m[33m, [m[1;31morigin/UserManagement[m[33m)[m
+Merge: c5d67e4 a6441a4
+Author: 3leya <119708088+3leya@users.noreply.github.com>
+Date:   Wed Feb 19 17:17:46 2025 +0100
+
+    UserManagement|MERGING
+
+[33mcommit c5d67e42e72cae83b128203f20c7307f78a4056f[m[33m ([m[1;31morigin/ancienne-version-user[m[33m, [m[1;32mancienne-version-user[m[33m)[m
+Author: 3leya <119708088+3leya@users.noreply.github.com>
+Date:   Wed Feb 19 16:59:58 2025 +0100
+
+    recaptcha
+
+[33mcommit a6441a453823ce667a773e37d9a04ddaf88fa187[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: iyed <iyed.mohamed@isimg.tn>
+Date:   Wed Feb 19 16:39:18 2025 +0100
+
+    Blog Work (2.0)
+
+[33mcommit 93aafa065ac0a55f121714c6f44761b653155f4f[m
+Author: iyed <iyed.mohamed@isimg.tn>
+Date:   Wed Feb 19 12:00:34 2025 +0100
+
+    Blog Work (2.0)
+
+[33mcommit a4964cf39be1d8697e2aacee16c0937326015597[m
+Author: iyed <iyed.mohamed@isimg.tn>
+Date:   Tue Feb 18 23:57:54 2025 +0100
+
+    Update Blog With last push main Oussema
+
+[33mcommit a60974948c52b49aa21f6d1be6db19f7d95cc8b2[m
+Merge: 351fb59 ab0a2b4
+Author: aloui_oussema <108595232+alouiOussema@users.noreply.github.com>
+Date:   Tue Feb 18 15:48:09 2025 +0100
+
+    Merge pull request #10 from alaya-dev/events
+    
+    Events
+
+[33mcommit ab0a2b40ecaf7314dfe6b0e2e64f1a206b76686c[m
+Merge: 5f573ad 7664c12
+Author: oussema <alouioussema697@gmail.com>
+Date:   Tue Feb 18 15:46:55 2025 +0100
+
+    fix register
+
+[33mcommit 5f573ad1de845e2b3433c253a0cb8d7ea41486f0[m
+Author: oussema <alouioussema697@gmail.com>
+Date:   Tue Feb 18 13:50:33 2025 +0100
+
+    fix navigation bug
+
+[33mcommit f6c0c3173613576fd8d5f12a6718653259ec964f[m
+Merge: af7c254 351fb59
+Author: oussema <alouioussema697@gmail.com>
+Date:   Tue Feb 18 12:31:04 2025 +0100
+
+    karim work
+
+[33mcommit 7664c120899e346793c9c17a3ff038c3e7026af3[m
+Author: oussema <alouioussema697@gmail.com>
+Date:   Tue Feb 18 12:23:40 2025 +0100
+
+     fix .env migrations
+
+[33mcommit 6d2bfb646186ae4780ca956f7901d90d8c800587[m
+Author: oussema <alouioussema697@gmail.com>
+Date:   Tue Feb 18 12:20:35 2025 +0100
+
+     fix margin on register / login
+
+[33mcommit 351fb59c80ed5c1d1d0225c47a25abae8a76feb5[m
+Merge: f2353b5 109f860
+Author: Mokaddem_Karim <mokaddemkarim89@gmail.com>
+Date:   Mon Feb 17 21:52:34 2025 +0100
+
+    Merge branch 'main' of github.com:alaya-dev/swapify into moduleGestionAnnonces
+
+[33mcommit 109f8603fa9a03f020331b9603a24954cdc26d61[m
+Merge: a8406ba f77ccd8
+Author: dali-97 <121346716+dali-97@users.noreply.github.com>
+Date:   Mon Feb 17 21:26:04 2025 +0100
+
+    Merge pull request #9 from alaya-dev/feature/dashbor_user
+    
+    fix some problem
+
+[33mcommit f77ccd89aaa2e0214b8233321b59deb282c41b14[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Mon Feb 17 21:25:04 2025 +0100
+
+    fix some problem
+
+[33mcommit f2353b569e7e944cfa5a79d64cac4488d19ebdfd[m
+Author: Mokaddem_Karim <mokaddemkarim89@gmail.com>
+Date:   Mon Feb 17 17:35:43 2025 +0100
+
+    dashboard admin coté gestion annonces fixed /
+    controle de saisi gestionAnnonces fixed/
+    historique annonces pour admin added/
+    all works.
+
+[33mcommit af7c254e33847b3032bc96a35fa553f4f4eca814[m
+Author: oussema <alouioussema697@gmail.com>
+Date:   Mon Feb 17 12:53:37 2025 +0100
+
+    hello
+
+[33mcommit cce6b4f94ca834e48a230b2882978ae797634d31[m
+Author: 3leya <119708088+3leya@users.noreply.github.com>
+Date:   Sun Feb 16 17:52:47 2025 +0100
+
+    Initialisation du mot de passe
+
+[33mcommit 433df1c870ebb10f9cd5aa27a1d1992f3385d2ca[m
+Merge: e69610e a8406ba
+Author: Mokaddem_Karim <mokaddemkarim89@gmail.com>
+Date:   Sun Feb 16 14:23:55 2025 +0100
+
+    Merge remote-tracking branch 'origin/main' into moduleGestionAnnonces
+
+[33mcommit e69610ee1cd0b120b5e1449525a7fce6642840bc[m
+Author: Mokaddem_Karim <mokaddemkarim89@gmail.com>
+Date:   Sun Feb 16 13:58:21 2025 +0100
+
+    my profile section changed, mes annonces eliminated from navBAr
+
+[33mcommit a8406bad7de726b550cb4379ea70d537dd77d3c2[m
+Merge: 69723be f0883c5
+Author: dali-97 <121346716+dali-97@users.noreply.github.com>
+Date:   Sun Feb 16 03:55:12 2025 +0100
+
+    Merge pull request #8 from alaya-dev/feature/dashbor_user
+    
+    add frontend  souk and livraison
+
+[33mcommit f0883c56cccb959bd1ebe5f0f9d389639f9d6536[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sun Feb 16 03:54:39 2025 +0100
+
+    add frontend  souk and livraison
+
+[33mcommit 6ac68281a8c4a86f63e8393f73da4b04b0fb0c3e[m
+Author: 3leya <119708088+3leya@users.noreply.github.com>
+Date:   Sun Feb 16 01:36:44 2025 +0100
+
+    first commit in my bransh
+
+[33mcommit 69723be5f24dd50a0f2906b90e9bce1112ead5cb[m
+Merge: e243779 7e4d751
+Author: dali-97 <121346716+dali-97@users.noreply.github.com>
+Date:   Sat Feb 15 18:52:38 2025 +0100
+
+    Merge pull request #7 from alaya-dev/feature/dashbor_user
+    
+    Feature/dashbor user
+
+[33mcommit 7e4d7513d21e6378cef44f7c5ddfbb08e2a91517[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 18:47:50 2025 +0100
+
+    nothing
+
+[33mcommit c181e16678f93ac9c84fde007b10604193156d4b[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 18:39:30 2025 +0100
+
+    logout
+
+[33mcommit 96113a3067d136f94901619dbfb457f3ba1ed7f8[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 18:37:13 2025 +0100
+
+    logout
+
+[33mcommit d5f7b97cb452086c42551fff07d4c4e65f66cf78[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 18:32:47 2025 +0100
+
+    fix essus nadbar and dynmique user data after loggin
+
+[33mcommit e243779a524663b36fe57716a9eacb43abe70655[m
+Merge: ad8af8a 70d502f
+Author: dali-97 <121346716+dali-97@users.noreply.github.com>
+Date:   Sat Feb 15 17:50:56 2025 +0100
+
+    Merge pull request #6 from alaya-dev/feature/dashbor_user
+    
+    fix login
+
+[33mcommit 70d502f07aadcac44c5af8424b23f4a6070aa869[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 17:50:09 2025 +0100
+
+    fix login
+
+[33mcommit ad8af8a93c4014f74e416d02ea8b69f0513f8dea[m
+Merge: 3dc3f16 53ec7f7
+Author: dali-97 <121346716+dali-97@users.noreply.github.com>
+Date:   Sat Feb 15 16:50:44 2025 +0100
+
+    Merge pull request #5 from alaya-dev/feature/dashbor_user
+    
+    fix some problem
+
+[33mcommit 53ec7f718297a2d1e364694b445a2ae121879225[m
+Merge: 10860d1 3dc3f16
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 16:49:57 2025 +0100
+
+    every thing is up to date
+
+[33mcommit 10860d1ba854a6c5957bf60369115bf7e6333b35[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 16:41:53 2025 +0100
+
+    fix some problem
+
+[33mcommit 3dc3f163037b9fd697baa4e9e8b2b2a8247db39c[m
+Merge: b436482 b13aae0
+Author: aloui_oussema <108595232+alouiOussema@users.noreply.github.com>
+Date:   Sat Feb 15 16:37:39 2025 +0100
+
+    Merge pull request #4 from alaya-dev/events
+    
+    gloabal design
+
+[33mcommit b13aae0590d4af8f23a1e7e57b0812197a89cdcb[m
+Author: oussema <alouioussema697@gmail.com>
+Date:   Sat Feb 15 16:34:53 2025 +0100
+
+    gloabal design
+
+[33mcommit 4ae192b89d5353a08c04e6e27be8dc99e5b65ea2[m
+Author: Mokaddem_Karim <mokaddemkarim89@gmail.com>
+Date:   Sat Feb 15 14:33:30 2025 +0100
+
+    Merge remote-tracking branch 'origin/main' into moduleGestionAnnonces tested and cleaned
+
+[33mcommit ee0aed011ea57f78f33985a829f59d265453db91[m
+Author: Mokaddem_Karim <mokaddemkarim89@gmail.com>
+Date:   Sat Feb 15 14:32:38 2025 +0100
+
+    merged with main terminated daly userr
+
+[33mcommit b4364822d9eb3ef047e6ec6a4dad780b84ed08c5[m
+Merge: 310bd66 691e1d6
+Author: dali-97 <121346716+dali-97@users.noreply.github.com>
+Date:   Sat Feb 15 04:51:26 2025 +0100
+
+    Merge pull request #3 from alaya-dev/feature/dashbor_user
+    
+    fix the session
+
+[33mcommit 691e1d61310a56e5c9bfdd9fa5dc8601e2f27368[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 04:47:25 2025 +0100
+
+    fix the session
+
+[33mcommit 310bd66f0ce01cf63b8e32adcd3204325190e8ec[m
+Author: dali-97 <baarounmed3@gmail.com>
+Date:   Sat Feb 15 03:40:52 2025 +0100
+
+    adding dashbord admine and taillwind config
+
+[33mcommit 998f3b6d68e22016a8e583176bb7cb41d6674ce4[m
+Author: Mokaddem_Karim <mokaddemkarim89@gmail.com>
+Date:   Sat Feb 15 01
