@@ -1,6 +1,6 @@
 {% extends 'include.html.twig' %}
 
-{% block title %}Blog List{% endblock %}
+{% block title %}Liste Des Blogs{% endblock %}
 
 {% block content %}
 <style>
@@ -33,7 +33,7 @@
 </style>
 
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Blog List</h1>
+    <h1 class="text-center mb-4"> Listes Des Blogs</h1>
 
     {# Flash messages #}
     {% for label, messages in app.flashes %}
@@ -51,10 +51,10 @@
                 <thead>
                     <tr>
                         <th>Image</th>
-                        <th>Title</th>
-                        <th>Content</th>
-                        <th>Posted By</th>
-                        <th>Status</th>
+                        <th>Titre</th>
+                        <th>Contenu</th>
+                        <th>Posté par</th>
+                        <th>Statut</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -79,7 +79,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
+                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Voir Plus</a>
                             </td>
                         </tr>
                     {% else %}
@@ -108,10 +108,10 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
+                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Voir Plus</a>
                                 {% if is_granted('ROLE_ADMIN') %}
-                                    <a href="{{ path('accept_blog', {'id': blog.id}) }}" class="btn btn-success btn-sm">Accept</a>
-                                    <a href="{{ path('reject_blog', {'id': blog.id}) }}" class="btn btn-danger btn-sm">Reject</a>
+                                    <a href="{{ path('accept_blog', {'id': blog.id}) }}" class="btn btn-success btn-sm">Accepter</a>
+                                    <a href="{{ path('reject_blog', {'id': blog.id}) }}" class="btn btn-danger btn-sm">Rejeter</a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -141,7 +141,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
+                                <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Voir Plus</a>
                             </td>
                         </tr>
                     {% else %}

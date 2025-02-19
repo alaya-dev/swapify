@@ -57,9 +57,9 @@
                     <thead>
                         <tr>
                             <th>Image</th>
-                            <th>Title</th>
-                            <th>Content</th>
-                            <th>Status</th>
+                            <th>Titre</th>
+                            <th>Contenu</th>
+                            <th>Statut</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -83,7 +83,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
+                                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Voir Plus</a>
                                 </td>
                             </tr>
                         {% else %}
@@ -111,11 +111,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                        <a href="{{ path('accept_blog', {'id': blog.id}) }}" class="btn btn-success btn-sm">Accept</a>
-                                        <a href="{{ path('reject_blog', {'id': blog.id}) }}" class="btn btn-danger btn-sm">Reject</a>
-                                    {% endif %}
+                                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Voir Plus</a>
                                 </td>
                             </tr>
                         {% else %}
@@ -143,7 +139,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Read More</a>
+                                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary btn-sm">Voir Plus</a>
                                 </td>
                             </tr>
                         {% else %}

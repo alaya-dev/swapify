@@ -218,11 +218,11 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="form-container">
-                    <h1 class="text-center">Edit Blog</h1>
+                    <h1 class="text-center">Modifier Blog</h1>
                     {{ include('blog/_form.html.twig', {'button_label': 'Update'}) }}
                     <div class="text-center">
-                        <a href="{{ path('app_blog_index') }}" class="back-link">
-                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        <a href="{{ path('app_blog_all') }}" class="back-link">
+                            <i class="fas fa-arrow-left me-2"></i>Retourner à la Liste
                         </a>
                     </div>
                     {{ include('blog/_delete_form.html.twig') }}

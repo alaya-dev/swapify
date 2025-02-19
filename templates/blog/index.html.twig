@@ -234,7 +234,7 @@
                     </span>
                 </div>
                 <div class="blog-actions">
-                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary">Read More</a>
+                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary">Voir Plus</a>
                 </div>
 
                 {# Rate Section#}
@@ -269,7 +269,7 @@
             </div>
                 {# Give a Rate #}
                 <div class="rating-section">
-                    <h6>Rate this Blog</h6>
+                    <h6>Donner un rate </h6>
                     {%if app.user %}
                     {% if not blog.hasUserRated(app.user) %}
                         <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
@@ -279,7 +279,7 @@
                                 {% endfor %}
                             </div>
                             <input type="hidden" name="rating" class="rating-value" required>
-                            <button type="submit" class="btn btn-success mt-2">Submit Rating</button> <!-- Submit button added here -->
+                            <button type="submit" class="btn btn-success mt-2">Poster Rating</button> <!-- Submit button added here -->
     
                         </form>
                     {% else %}
@@ -293,13 +293,13 @@
                             {% endfor %}
                         </div>
                         <input type="hidden" name="rating" class="rating-value" required>
-                        <button type="submit" class="btn btn-success mt-2">Submit Rating</button> <!-- Submit button added here -->
+                        <button type="submit" class="btn btn-success mt-2">Poster Rating</button> <!-- Submit button added here -->
     
                     </form>
                     {% endif %}
                 </div>
                 <div class="comment-section">
-                    <h6>Comments ({{ blog.listeCommentaires|length }})</h6>
+                    <h6>Commentaires ({{ blog.listeCommentaires|length }})</h6>
                     {% if blog.listeCommentaires is empty %}
                         <p class="text-muted">No comments yet.</p>
                     {% else %}

@@ -237,7 +237,7 @@
         {% endif %}
 
         <a href="{{ path('app_blog_all') }}" class="btn btn-primary">
-            <i class="fas fa-arrow-left"></i> Back to Blogs
+            <i class="fas fa-arrow-left"></i> Retourner à la Liste
         </a>
 
         {# Ratings Section #}
@@ -273,7 +273,7 @@
 
         {# Comments Section #}
         <div class="comment-section">
-            <h6>Comments ({{ blog.listeCommentaires|length }})</h6>
+            <h6>Commentaires ({{ blog.listeCommentaires|length }})</h6>
             {% if blog.listeCommentaires is empty %}
                 <p class="no-comments">No comments yet.</p>
             {% else %}

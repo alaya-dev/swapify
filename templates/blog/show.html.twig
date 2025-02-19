@@ -199,7 +199,7 @@
 </style>
 
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Blog Details</h1>
+    <h1 class="text-center mb-4">Détails du Blog</h1>
 
     <div class="blog-post">
         <div class="blog-header">
@@ -225,19 +225,19 @@
         {% if blog.user == app.user %}
             <div class="blog-actions">
                 <a href="{{ path('app_blog_edit', {'id': blog.id}) }}" class="btn btn-warning">
-                    <i class="fas fa-edit"></i> Edit
+                    <i class="fas fa-edit"></i> Modifier
                 </a>
                 <form method="POST" action="{{ path('app_blog_delete', {'id': blog.id}) }}" class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ blog.id) }}">
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this blog?');">
-                        <i class="fas fa-trash"></i> Delete
+                        <i class="fas fa-trash"></i> Supprimer
                     </button>
                 </form>
             </div>
         {% endif %}
 
         <a href="{{ path('app_blog_index') }}" class="btn btn-primary">
-            <i class="fas fa-arrow-left"></i> Back to Blogs
+            <i class="fas fa-arrow-left"></i> Retourner aux Blogs
         </a>
 
         {# Ratings Section #}
@@ -273,7 +273,7 @@
         {# Rating Form (only if the user hasn't rated the blog yet) #}
         {% if blog.statut == constant('App\\Enum\\EtatEnum::Acceptée') %}
             <div class="rating-section">
-                <h6>Rate this Blog</h6>
+                <h6>Donner un Rate à ce Blog</h6>
                 {%if app.user %}
                 {% if not blog.hasUserRated(app.user) %}
                     <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
@@ -283,7 +283,7 @@
                             {% endfor %}
                         </div>
                         <input type="hidden" name="rating" class="rating-value" required>
-                        <button type="submit" class="btn btn-success mt-2">Submit Rating</button> <!-- Submit button added here -->
+                        <button type="submit" class="btn btn-success mt-2">Poster Rating</button> <!-- Submit button added here -->
 
                     </form>
                 {% else %}
@@ -297,7 +297,7 @@
                         {% endfor %}
                     </div>
                     <input type="hidden" name="rating" class="rating-value" required>
-                    <button type="submit" class="btn btn-success mt-2">Submit Rating</button> <!-- Submit button added here -->
+                    <button type="submit" class="btn btn-success mt-2">Poster Rating</button> <!-- Submit button added here -->
 
                 </form>
                 {% endif %}
@@ -307,7 +307,7 @@
         {# Comments Section #}
 {# Comments Section #}
 <div class="comment-section">
-    <h6>Comments ({{ blog.listeCommentaires|length }})</h6>
+    <h6>Commentaires ({{ blog.listeCommentaires|length }})</h6>
     {% if blog.listeCommentaires is empty %}
         <p class="no-comments">No comments yet.</p>
     {% else %}
@@ -334,8 +334,8 @@
                     {# Edit Form (hidden by default) #}
                     <form id="edit-comment-form-{{ comment.id }}" class="edit-comment-form" style="display: none;" data-comment-id="{{ comment.id }}">
                         <textarea class="form-control mb-2" name="contenu">{{ comment.contenuCmt }}</textarea>
-                        <button type="submit" class="btn btn-sm btn-success">Save</button>
-                        <button type="button" class="btn btn-sm btn-secondary cancel-edit-btn">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-success">Enregistrer</button>
+                        <button type="button" class="btn btn-sm btn-secondary cancel-edit-btn">Annuler</button>
                     </form>
                 </li>
             {% endfor %}
@@ -348,7 +348,7 @@
                 <div class="mb-2">
                     <textarea name="contenu" class="form-control" placeholder="Write a comment..." required></textarea>
                 </div>
-                <button type="submit" class="btn btn-secondary">Post Comment</button>
+                <button type="submit" class="btn btn-secondary">Post Commentaire</button>
             </form>
 
 <script>
