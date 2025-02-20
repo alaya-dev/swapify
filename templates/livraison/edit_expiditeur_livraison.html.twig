@@ -1,96 +1,131 @@
-<h1>modifier votre livraison</h1>
+{% extends 'souk_base.html.twig' %}
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    
-    {{ form_row(form.TelephoneExpediteur) }}
-    
-    {{ form_row(form.CodePostalExpediteur) }}
-    {{ form_row(form.localisation_expediteur_lat, {'attr': {'readonly': true}}) }}
-    {{ form_row(form.localisation_expediteur_lng, {'attr': {'readonly': true}}) }}
-    <button type="submit">Enregistrer</button>
-    {{ form_end(form) }}
-    
-    <!-- Carte -->
-    <div id="map" style="width: 100%; height: 400px;"></div>
-    
-    <!-- OpenLayers -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
-    <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
-    
-    <div id="map" style="width: 100%; height: 400px;"></div>
-    
-    <!-- OpenLayers -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
-    <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
-    
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-    var lat = {{ livraison.localisationExpediteurLat|default(36.8065) }};
-    var lng = {{ livraison.localisationExpediteurLng|default(10.1815) }};
-    
-    var map = new ol.Map({
-    target: 'map',
-    layers: [new ol.layer.Tile(
-    {source: new ol.source.OSM()}
-    )],
-    view: new ol.View(
-    {
-    center: ol.proj.fromLonLat(
-    [lng, lat]
-    ),
-    zoom: 12
-    }
-    )
-    });
-    
-    var marker = new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat]))
-    });
-    
-    var vectorSource = new ol.source.Vector({features: [marker]});
-    
-    var markerLayer = new ol.layer.Vector({
-    source: vectorSource,
-    style: new ol.style.Style(
-    {
-    image: new ol.style.Icon(
-    {
-    anchor: [
-    0.5, 1
-    ],
-    src: 'https://openlayers.org/en/latest/examples/data/icon.png'
-    }
-    )
-    }
-    )
-    });
-    
-    map.addLayer(markerLayer);
-    
-    // 📍 Récupérer la localisation actuelle
-    navigator.geolocation.getCurrentPosition(function (position) {
-    var newLat = position.coords.latitude;
-    var newLng = position.coords.longitude;
-    
-    document.getElementById('livraison_localisation_expediteur_lat').value = newLat;
-    document.getElementById('livraison_localisation_expediteur_lng').value = newLng;
-    
-    marker.setGeometry(new ol.geom.Point(ol.proj.fromLonLat([newLng, newLat])));
-    map.getView().setCenter(ol.proj.fromLonLat([newLng, newLat]));
-    map.getView().setZoom(15);
-    });
-    
-    // 📌 Permettre à l'utilisateur de modifier sa position
-    map.on('click', function (event) {
-    var coords = ol.proj.toLonLat(event.coordinate);
-    var newLat = coords[1];
-    var newLng = coords[0];
-    
-    document.getElementById('livraison_localisation_expediteur_lat').value = newLat;
-    document.getElementById('livraison_localisation_expediteur_lng').value = newLng;
-    
-    marker.setGeometry(new ol.geom.Point(ol.proj.fromLonLat([newLng, newLat])));
-    });
-    });
-    </script>
-    
+{% block body %}
+	{{ include('layout/navBar/auth_nav.html.twig') }}
+
+	<div class="flex flex-wrap justify-center items-center h-auto p-5 pl-[6%] pt-[9%]">
+		<div class="w-full md:w-2/5 p-4">
+			<h2 class="text-xl md:text-7xl font-semibold mb-5">Modifier livraison</h2>
+
+			{{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'space-y-4', 'data-turbo': 'false'}}) }}
+
+			<div>
+			<label class="block text-sm text-gray-600" for="cus_email">Votre Numéro Téléphone</label>
+
+				{{ form_widget(form.TelephoneExpediteur,  {'attr': {'value': app.user.tel, 'class': 'mt-1 p-4 w-full border rounded-md'}}) }}
+				<span class="text-red-500 text-sm">
+				{{ form_errors(form.TelephoneExpediteur) }}
+			</span>
+			</div>
+			<div>
+			<label class="block text-sm text-gray-600" for="cus_email">Votre adresse</label>
+
+				{{ form_widget(form.adresseExpediteur, {'attr': {'class': 'mt-1 p-4 w-full border rounded-md','placeholder': 'Votre adresse'}}) }}
+				<span class="text-red-500 text-sm">
+				{{ form_errors(form.adresseExpediteur) }}
+
+			</span>
+			</div>
+			<div>
+			<label class="block text-sm text-gray-600" for="cus_email">Votre Code Postale</label>
+
+				{{ form_widget(form.CodePostalExpediteur, {'attr': {'class': 'mt-1 p-4 w-full border rounded-md','placeholder': 'Votre code postale'}}) }}
+				<span class="text-red-500 text-sm">
+				{{ form_errors(form.CodePostalExpediteur) }}
+			</span>
+			</div>
+			
+			<div>
+				{{ form_widget(form.localisation_expediteur_lat, {'attr': {'readonly': true, 'class': 'mt-1 p-4 w-full border rounded-md','hidden':'true'}}) }}
+			</div>
+			<div>
+				{{ form_widget(form.localisation_expediteur_lng, {'attr': {'readonly': true, 'class': 'mt-1 p-4 w-full border rounded-md','hidden':'true'}}) }}
+			</div>
+
+			<button type="submit" class="px-8 py-4 bg-black text-white hover:bg-blue-700 transition">
+				Enregistrer
+			</button>
+
+			{{ form_end(form) }}
+		</div>
+		<div class="w-full md:w-1/2 p-4 flex justify-center">
+			<div class="rounded-full overflow-hidden w-[35rem] h-[35rem] shadow-md">
+				<div id="map" class="w-full h-full rounded-full"></div>
+			</div>
+		</div>
+	</div>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
+	<script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+var lat = {{ livraison.localisationExpediteurLat|default(36.8065) }};
+var lng = {{ livraison.localisationExpediteurLng|default(10.1815) }};
+
+var map = new ol.Map({
+target: 'map',
+layers: [new ol.layer.Tile(
+{source: new ol.source.OSM()}
+)],
+view: new ol.View(
+{
+center: ol.proj.fromLonLat(
+[lng, lat]
+),
+zoom: 12
+}
+)
+});
+
+var marker = new ol.Feature({
+geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat]))
+});
+
+var vectorSource = new ol.source.Vector({features: [marker]});
+
+var markerLayer = new ol.layer.Vector({
+source: vectorSource,
+style: new ol.style.Style(
+{
+image: new ol.style.Icon(
+{
+anchor: [
+0.5, 1
+],
+src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+}
+)
+}
+)
+});
+
+map.addLayer(markerLayer);
+
+// 📍 Récupérer la position actuelle
+navigator.geolocation.getCurrentPosition(function (position) {
+var newLat = position.coords.latitude;
+var newLng = position.coords.longitude;
+
+document.getElementById('livraison_localisation_expediteur_lat').value = newLat;
+document.getElementById('livraison_localisation_expediteur_lng').value = newLng;
+
+marker.setGeometry(new ol.geom.Point(ol.proj.fromLonLat([newLng, newLat])));
+map.getView().setCenter(ol.proj.fromLonLat([newLng, newLat]));
+map.getView().setZoom(15);
+});
+
+// 📌 Mise à jour de la position en cliquant sur la carte
+map.on('click', function (event) {
+var coords = ol.proj.toLonLat(event.coordinate);
+var newLat = coords[1];
+var newLng = coords[0];
+
+document.getElementById('livraison_localisation_expediteur_lat').value = newLat;
+document.getElementById('livraison_localisation_expediteur_lng').value = newLng;
+
+marker.setGeometry(new ol.geom.Point(ol.proj.fromLonLat([newLng, newLat])));
+});
+});
+	</script>
+{% endblock %}

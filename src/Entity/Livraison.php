@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\LivraisonRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;  
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LivraisonRepository::class)]
 class Livraison
@@ -17,7 +17,7 @@ class Livraison
 
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
-    
+
     #[ORM\ManyToOne(inversedBy: 'livraisons')]
     private ?Livreur $livreur = null;
 
@@ -50,20 +50,33 @@ class Livraison
 
     #[ORM\Column]
     #[Assert\NotBlank(message: "Le téléphone est obligatoire.")]
-    #[Assert\Length(min: 8, max: 8, minMessage: "numero de telephone contient 8 caractères.")]
+    #[Assert\Regex(
+        pattern: "/^\d{8}$/",
+        message: "Le numéro de téléphone doit contenir exactement 8 chiffres."
+    )]
     private ?int $TelephoneExpediteur = null;
 
     #[ORM\Column]
-    #[Assert\Length(min: 4, max: 10, minMessage: "Le code postal doit contenir au moins 4 caractères.")]
-    #[Assert\NotBlank(message: "La code postal ne peut pas être vide.")]
+    #[Assert\Regex(
+        pattern: "/^\d{4}$/",
+        message: "Le code postale doit contenir exactement 4 chiffres."
+    )]
+     #[Assert\NotBlank(message: "La code postal ne peut pas être vide.")]
     private ?int $CodePostalExpediteur = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $TelephoneDestinataire = null;
 
-   
+
     #[ORM\Column(nullable: true)]
     private ?int $CodePostalDestinataire = null;
+
+    #[Assert\NotBlank(message: "L 'adresse ne peut pas être vide.")]
+    #[ORM\Column(length: 255)]
+    private ?string $adresseExpediteur = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $adresseDestiniataire = null;
 
     public function getId(): ?int
     {
@@ -246,6 +259,30 @@ class Livraison
     public function setCodePostalDestinataire(int $CodePostalDestinataire): static
     {
         $this->CodePostalDestinataire = $CodePostalDestinataire;
+
+        return $this;
+    }
+
+    public function getAdresseExpediteur(): ?string
+    {
+        return $this->adresseExpediteur;
+    }
+
+    public function setAdresseExpediteur(string $adresseExpediteur): static
+    {
+        $this->adresseExpediteur = $adresseExpediteur;
+
+        return $this;
+    }
+
+    public function getAdresseDestiniataire(): ?string
+    {
+        return $this->adresseDestiniataire;
+    }
+
+    public function setAdresseDestiniataire(?string $adresseDestiniataire): static
+    {
+        $this->adresseDestiniataire = $adresseDestiniataire;
 
         return $this;
     }

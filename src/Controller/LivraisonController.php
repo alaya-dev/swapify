@@ -43,7 +43,7 @@ class LivraisonController extends AbstractController
 
         $livraisons = $livraisonRepository->findByUser($user);
 
-        return $this->render('dashboard/livraison.html.twig', [
+        return $this->render('livraison/livraison_liste_user.html.twig', [
             'livraisons' => $livraisons,
         ]);
     }
@@ -121,7 +121,7 @@ class LivraisonController extends AbstractController
 
         return new JsonResponse(['success' => true]);
     }
-    #[Route('/livraison/new2', name: 'livraison_create')]
+    #[Route('/livraison/new', name: 'livraison_create')]
     public function create(Request $request, EntityManagerInterface $em): Response
     {
         $livraison = new Livraison();
@@ -141,6 +141,7 @@ class LivraisonController extends AbstractController
         $form->remove('payment_dist');
         $form->remove('statut');
         $form->remove('date');
+        $form->remove('adresseDestiniataire');
 
 
 
@@ -174,6 +175,7 @@ class LivraisonController extends AbstractController
         $form->remove('localisation_expediteur_lng');
         $form->remove('TelephoneExpediteur');
         $form->remove('CodePostalExpediteur');
+        $form->remove('adresseExpediteur');
         $form->remove('payment_exp');
         $form->remove('payment_dist');
         $form->remove('statut');
@@ -209,6 +211,8 @@ class LivraisonController extends AbstractController
         $form->remove('localisation_expediteur_lng');
         $form->remove('TelephoneExpediteur');
         $form->remove('CodePostalExpediteur');
+        $form->remove('adresseExpediteur');
+
         $form->remove('payment_exp');
         $form->remove('payment_dist');
         $form->remove('statut');
@@ -244,6 +248,8 @@ class LivraisonController extends AbstractController
         $form->remove('CodePostalDestinataire');
         $form->remove('payment_exp');
         $form->remove('payment_dist');
+        $form->remove('adresseDestiniataire');
+
         $form->remove('statut');
         $form->remove('date');
 
@@ -273,4 +279,12 @@ class LivraisonController extends AbstractController
         $this->addFlash('success', 'livraison annulé.');
         return $this->redirectToRoute('livraison_list');
     }
+    #[Route('/livraison', name: 'livraison')]
+    public function index(): Response
+    {
+        return $this->render('livraison/livraison.html.twig', [
+            'controller_name' => 'LivraisonController',
+        ]);
+    }
+
 }

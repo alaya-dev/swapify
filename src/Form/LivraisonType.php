@@ -29,6 +29,10 @@ class LivraisonType extends AbstractType
             ->add('CodePostalExpediteur')
             ->add('TelephoneDestinataire')
             ->add('CodePostalDestinataire')
+            ->add('adresseExpediteur')
+            ->add('adresseDestiniataire')
+
+            
             ->add('livreur', EntityType::class, [
                 'class' => Livreur::class,
                 'choice_label' => 'id',
