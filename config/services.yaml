@@ -31,5 +31,7 @@ services:
         class: App\EventListener\LoginListener
         tags:
             - { name: kernel.event_listener, event: security.interactive_login }
-    
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
     

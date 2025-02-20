@@ -55,9 +55,13 @@ class LivraisonController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
+        if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->redirectToRoute('error403'); // Remplace 'app_home' par ta route
+        }
 
 
         $livraisons = $livraisonRepository->findAll();
+
         $livreurs = $livreurRepo->findAll();
         return $this->render('livraison/liste_livraison_admin.html.twig', [
             'livraisons' => $livraisons,
@@ -95,6 +99,9 @@ class LivraisonController extends AbstractController
     #[Route('/livraison/supprimer/{id}', name: 'livraison_delete')]
     public function deleteAdmin(int $id, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->redirectToRoute('error403'); // Remplace 'app_home' par ta route
+        }
         // Récupérer l'utilisateur
         $livraison = $entityManager->getRepository(Livraison::class)->find($id);
 
