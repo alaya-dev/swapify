@@ -3,350 +3,210 @@
 {% block title %}Blog List{% endblock %}
 
 {% block body %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-<!-- <link href="{{ asset('css/styles.css') }}" rel="stylesheet" /> -->
-
-<style>
-    /* Custom Styles */
-    body {
-        background: #f0f2f5;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .blog-post {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        padding: 20px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .blog-post:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    .blog-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-
-    .blog-header img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 15px;
-        object-fit: cover;
-    }
-
-    .blog-header .user-info {
-        flex: 1;
-    }
-
-    .blog-header .user-info h5 {
-        margin: 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #2c3e50;
-    }
-
-    .blog-header .user-info small {
-        color: #6c757d;
-        font-size: 0.9rem;
-    }
-
-    .blog-content {
-        margin-bottom: 15px;
-    }
-
-    .blog-content img {
-        width: 100%;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
-
-    .blog-content p {
-        font-size: 1rem;
-        color: #555;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    .blog-status {
-        margin-bottom: 15px;
-    }
-
-    .blog-status .badge {
-        font-size: 0.9rem;
-        padding: 6px 12px;
-        border-radius: 20px;
-        background: linear-gradient(135deg, #6c757d, #495057);
-        color: white;
-    }
-
-    .blog-actions {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-
-    .blog-actions .btn {
-        border-radius: 20px;
-        padding: 8px 16px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .blog-actions .btn-primary {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-    }
-
-    .blog-actions .btn-success {
-        background: linear-gradient(135deg, #28a745, #218838);
-    }
-
-    .blog-actions .btn-warning {
-        background: linear-gradient(135deg, #ffc107, #e0a800);
-    }
-
-    .blog-actions .btn-danger {
-        background: linear-gradient(135deg, #dc3545, #c82333);
-    }
-
-    .rating-section {
-        margin-bottom: 15px;
-    }
-
-    .rating-section h6 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #6c757d;
-        margin-bottom: 10px;
-    }
-
-    .rating-section .rating {
-        display: flex;
-        align-items: center;
-    }
-
-    .rating-section .rating i {
-        margin-right: 5px;
-        color: #ffc107;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 1.2rem;
-    }
-
-    .rating-section .rating i:hover,
-    .rating-section .rating i.active {
-        color: #ffc107;
-        transform: scale(1.2);
-    }
-
-    .comment-section {
-        margin-top: 15px;
-    }
-
-    .comment-section h6 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #6c757d;
-        margin-bottom: 10px;
-    }
-
-    .comment-section .list-group-item {
-        border: none;
-        padding: 10px;
-        background: rgba(248, 249, 250, 0.9);
-        margin-bottom: 10px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-    }
-
-    .comment-section .list-group-item:hover {
-        transform: translateX(5px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .comment-section .list-group-item p {
-        margin: 0;
-        font-size: 0.9rem;
-        color: #555;
-    }
-
-    .comment-section .list-group-item small {
-        color: #6c757d;
-        font-size: 0.8rem;
-    }
-
-    .no-blogs {
-        text-align: center;
-        color: #6c757d;
-        font-size: 1.2rem;
-        margin-top: 20px;
-    }
-</style>
-
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Blog Feed</h1>
-
-    {# Flash messages #}
-    {% for label, messages in app.flashes %}
-        <div class="alert alert-{{ label }} flash-message">
-            {% for message in messages %}
-                <p class="mb-0">{{ message }}</p>
-            {% endfor %}
+<section class="relative h-64 flex items-center justify-center bg-cover bg-center" style="background-image:url('{{ asset('public/assets/images/eventHero.jpg') }}')">
+    <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+    <div class="relative text-center text-black">
+        <h1 class="text-3xl font-bold">Tous les Articles</h1>
+        <nav class="text-sm mt-2">
+            <a href="#" class="hover:underline">Accueil</a>
+            <span class="mx-2">&raquo</span>
+            <span class="text-gray-300">Articles</span>
+        </nav>
+    </div>
+</section>
+<div class="max-w-screen-xl mx-auto">
+  <!-- Main Content -->
+  <main class="mt-10">
+    
+    <!-- Featured Posts Section -->
+<!-- Featured Posts Section -->
+<div class="block md:flex md:space-x-4 px-2 lg:p-0">
+    <!-- Featured Post 1 (Left, Larger) -->
+    <a class="mb-4 md:mb-0 w-full md:w-2/3 relative rounded inline-block" style="height: 28em;" href="{{ path('app_blog_show', {'id': blogs[0].id}) }}">
+      <div class="absolute left-0 bottom-0 w-full h-full z-10"
+        style="background-image: linear-gradient(180deg,transparent,rgba(0,0,0,.7));"></div>
+      <img src="{{ asset('uploads/images/' ~ blogs[0].image) }}" alt="{{ blogs[0].Titre }}" class="absolute left-0 top-0 w-full h-full rounded z-0 object-cover" />
+      <div class="p-4 absolute bottom-0 left-0 z-20">
+        <h2 class="text-4xl font-semibold text-gray-200 leading-tight">
+          {{ blogs[0].Titre }}
+        </h2>
+        <div class="flex mt-3">
+          <img src="{{ asset('uploads/images/' ~ blogs[0].image) }}" class="h-10 w-10 rounded-full mr-2 object-cover" />
+          <div>
+            <p class="font-semibold text-gray-200 text-sm">{{ blogs[0].user.prenom }} {{ blogs[0].user.nom }}</p>
+            <p class="font-semibold text-gray-400 text-xs">{{ blogs[0].createdAt|date('Y-m-d H:i:s') }}</p>
+          </div>
         </div>
-    {% endfor %}
+      </div>
+    </a>
+  
+    <!-- Featured Post 2 (Right, Smaller) -->
+    <a class="w-full md:w-1/3 relative rounded" style="height: 28em;" href="{{ path('app_blog_show', {'id': blogs[1].id}) }}">
+      <div class="absolute left-0 top-0 w-full h-full z-10"
+        style="background-image: linear-gradient(180deg,transparent,rgba(0,0,0,.7));margin-left: 10px;"></div>
+      <img src="{{ asset('uploads/images/' ~ blogs[1].image) }}" alt="{{ blogs[1].Titre }}" class="absolute left-0 top-0 w-full h-full rounded z-0 object-cover" />
+      <div class="p-4 absolute bottom-0 left-0 z-20">
+        <h2 class="text-3xl font-semibold text-gray-200 leading-tight">{{ blogs[1].Titre }}</h2>
+        <div class="flex mt-3">
+          <img src="{{ asset('uploads/images/' ~ blogs[1].image) }}" class="h-10 w-10 rounded-full mr-2 object-cover" />
+          <div>
+            <p class="font-semibold text-gray-200 text-sm">{{ blogs[1].user.prenom }} {{ blogs[1].user.nom }}</p>
+            <p class="font-semibold text-gray-400 text-xs">{{ blogs[1].createdAt|date('Y-m-d H:i:s') }}</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
 
-    {# Display All Blogs #}
-    {% if blogs|length > 0 %}
-        {% for blog in blogs %}
-            <div class="blog-post">
-                <div class="blog-header">
-                    <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}">
-                    <div class="user-info">
-                        <h5>{{ blog.user.prenom }} {{ blog.user.nom }}</h5>
-                        <small>{{ blog.createdAt|date('Y-m-d H:i:s') }}</small>
-                    </div>
+    <!-- Blog Posts Section -->
+<!-- Blog Posts Section -->
+<div class="block lg:flex lg:space-x-4 px-2 lg:p-0 mt-10 mb-10">
+    <!-- Left Column (Blog Posts) -->
+    <div class="w-full lg:w-2/3">
+      <div class="space-y-6"> <!-- Utilisation de space-y-6 pour l'espacement vertical -->
+        {% for blog in blogs|slice(2) %}
+        <!-- Blog Post -->
+        <a class="block rounded-lg shadow-lg overflow-hidden" href="{{ path('app_blog_show', {'id': blog.id}) }}">
+          <div class="h-64 bg-cover bg-center" style="background-image: url('{{ asset('uploads/images/' ~ blog.image) }}');" title="{{ blog.Titre }}"></div>
+          <div class="p-6">
+            <div class="text-gray-700 font-bold text-2xl mb-2">{{ blog.Titre }}</div>
+            <p class="text-gray-700 text-base">{{ blog.contenu|slice(0, 150) }}...</p>
+            <div class="flex items-center mt-4">
+              <img src="{{ asset('uploads/images/' ~ blog.image) }}" class="h-10 w-10 rounded-full mr-2 object-cover" />
+              <div>
+                <p class="font-semibold text-gray-700 text-sm capitalize">{{ blog.user.prenom }} {{ blog.user.nom }}</p>
+                <p class="text-gray-600 text-xs">{{ blog.createdAt|date('Y-m-d H:i:s') }}</p>
+              </div>
+            </div>
+  
+            {# Rate Section #}
+            <div class="rating-section mt-4">
+              <h6>Ratings ({{ blog.rateCount }})</h6>
+              {% if blog.getRate() > 0.0 %}
+                <div class="rating">
+                  {% set fullStars = blog.getRate()|round(0, 'floor') %}
+                  {% set fractionalPart = blog.getRate() % 1 %}
+                  {% set halfStar = fractionalPart >= 0.25 and fractionalPart < 0.75 ? 1 : 0 %}
+                  {% set emptyStars = 5 - fullStars - halfStar %}
+  
+                  {% for i in 0..fullStars - 1 %}
+                    <i class="fas fa-star text-warning"></i>
+                  {% endfor %}
+  
+                  {% if halfStar == 1 and fullStars < 5 %}
+                    <i class="fas fa-star-half-alt text-warning"></i>
+                  {% endif %}
+  
+                  {% if fullStars < 5 %}
+                    {% for i in 0..emptyStars - 1 %}
+                      <i class="far fa-star text-warning"></i>
+                    {% endfor %}
+                  {% endif %}
+                  <span>{{ blog.getRate()|number_format(1) }} ★</span>
                 </div>
-                <div class="blog-content">
-                    {% if blog.image %}
-                        <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}">
-                    {% endif %}
-                    <p>{{ blog.contenu }}</p>
-                </div>
-                <div class="blog-status">
-                    <span class="badge btn-{{ blog.statut.value == 'enAttente' ? 'warning' : 'success' }}">
-                        {{ blog.statut.value }}
-                    </span>
-                </div>
-                <div class="blog-actions">
-                    <a href="{{ path('app_blog_show', {'id': blog.id}) }}" class="btn btn-primary">Voir Plus</a>
-                </div>
-
-                {# Rate Section#}
-                            {# Ratings Section #}
-            <div class="rating-section">
-                <h6>Ratings ({{ blog.rateCount }})</h6>
-                {% if blog.getRate() > 0.0 %}
+              {% else %}
+                <p class="text-muted">No ratings yet.</p>
+              {% endif %}
+            </div>
+  
+            {# Give a Rate Section #}
+            <div class="rating-section mt-4">
+              <h6>Donner un rate</h6>
+              {% if app.user %}
+                {% if not blog.hasUserRated(app.user) %}
+                  <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
                     <div class="rating">
-                        {% set fullStars = blog.getRate()|round(0, 'floor') %}
-                        {% set fractionalPart = blog.getRate() % 1 %}
-                        {% set halfStar = fractionalPart >= 0.25 and fractionalPart < 0.75 ? 1 : 0 %}
-                        {% set emptyStars = 5 - fullStars - halfStar %}
-
-                        {% for i in 0..fullStars - 1 %}
-                            <i class="fas fa-star text-warning"></i>
-                        {% endfor %}
-
-                        {% if halfStar == 1 and fullStars < 5 %}
-                            <i class="fas fa-star-half-alt text-warning"></i>
-                        {% endif %}
-
-                        {% if fullStars < 5 %}
-                            {% for i in 0..emptyStars - 1 %}
-                                <i class="far fa-star text-warning"></i>
-                            {% endfor %}
-                        {% endif %}
-                        <span>{{ blog.getRate()|number_format(1) }} ★</span>
+                      {% for i in 1..5 %}
+                        <i class="far fa-star" data-value="{{ i }}"></i>
+                      {% endfor %}
                     </div>
+                    <input type="hidden" name="rating" class="rating-value" required>
+                    <button type="submit" class="btn btn-success mt-2">Poster Rating</button>
+                  </form>
                 {% else %}
-                    <p class="text-muted">No ratings yet.</p>
+                  <p class="text-muted">You have already rated this blog.</p>
                 {% endif %}
+              {% else %}
+                <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
+                  <div class="rating">
+                    {% for i in 1..5 %}
+                      <i class="far fa-star" data-value="{{ i }}"></i>
+                    {% endfor %}
+                  </div>
+                  <input type="hidden" name="rating" class="rating-value" required>
+                  <button type="submit" class="btn btn-success mt-2">Poster Rating</button>
+                </form>
+              {% endif %}
             </div>
-                {# Give a Rate #}
-                <div class="rating-section">
-                    <h6>Donner un rate </h6>
-                    {%if app.user %}
-                    {% if not blog.hasUserRated(app.user) %}
-                        <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
-                            <div class="rating">
-                                {% for i in 1..5 %}
-                                    <i class="far fa-star" data-value="{{ i }}"></i>
-                                {% endfor %}
-                            </div>
-                            <input type="hidden" name="rating" class="rating-value" required>
-                            <button type="submit" class="btn btn-success mt-2">Poster Rating</button> <!-- Submit button added here -->
-    
-                        </form>
-                    {% else %}
-                        <p class="text-muted">You have already rated this blog.</p>
-                    {% endif %}
-                    {% else %}
-                    <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
-                        <div class="rating">
-                            {% for i in 1..5 %}
-                                <i class="far fa-star" data-value="{{ i }}"></i>
-                            {% endfor %}
-                        </div>
-                        <input type="hidden" name="rating" class="rating-value" required>
-                        <button type="submit" class="btn btn-success mt-2">Poster Rating</button> <!-- Submit button added here -->
-    
-                    </form>
-                    {% endif %}
-                </div>
-                <div class="comment-section">
-                    <h6>Commentaires ({{ blog.listeCommentaires|length }})</h6>
-                    {% if blog.listeCommentaires is empty %}
-                        <p class="text-muted">No comments yet.</p>
-                    {% else %}
-                        {% for comment in blog.listeCommentaires %}
-                            <div class="list-group-item">
-                                <p><strong>{{ comment.user.prenom }} {{ comment.user.nom }}</strong> <small class="text-muted">({{ comment.createdAt|date('Y-m-d H:i:s') }})</small></p>
-                                <p>{{ comment.contenuCmt }}</p>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+  
+            {# Comment Section #}
+            <div class="comment-section mt-4">
+              <h6>Commentaires ({{ blog.listeCommentaires|length }})</h6>
+              {% if blog.listeCommentaires is empty %}
+                <p class="text-muted">No comments yet.</p>
+              {% else %}
+                {% for comment in blog.listeCommentaires %}
+                  <div class="list-group-item">
+                    <p><strong>{{ comment.user.prenom }} {{ comment.user.nom }}</strong> <small class="text-muted">({{ comment.createdAt|date('Y-m-d H:i:s') }})</small></p>
+                    <p>{{ comment.contenuCmt }}</p>
+                  </div>
+                {% endfor %}
+              {% endif %}
             </div>
+          </div>
+        </a>
         {% endfor %}
-    {% else %}
-        <p class="no-blogs">No blogs found.</p>
-    {% endif %}
+      </div>
+    </div>
+  
+    <!-- Right Column (Subscribe to Newsletter) -->
+    <div class="w-full lg:w-1/3 mt-10 lg:mt-0" style="margin: 50px;">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-bold mb-4">Subscribe to Newsletter</h2>
+        <p class="text-gray-700 mb-4">Recevez les dernières actualités et mises à jour directement dans votre boîte de réception.</p>
+        <form action="#" method="POST">
+          <div class="mb-4">
+            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+            <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Votre adresse email" required>
+          </div>
+          <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">S'abonner</button>
+        </form>
+      </div>
+    </div>
+  </div>
+    </div>
+  </main>
 </div>
 
 <script>
-    // Interactive Star Rating
-    document.querySelectorAll('.rating i').forEach(star => {
-        star.addEventListener('click', () => {
-            const ratingValue = star.getAttribute('data-value');
-            const ratingForm = star.closest('.rating-form');
-            ratingForm.querySelector('.rating-value').value = ratingValue;
+  // Interactive Star Rating
+  document.querySelectorAll('.rating i').forEach(star => {
+    star.addEventListener('click', () => {
+      const ratingValue = star.getAttribute('data-value');
+      const ratingForm = star.closest('.rating-form');
+      ratingForm.querySelector('.rating-value').value = ratingValue;
 
-            // Highlight selected stars
-            star.closest('.rating').querySelectorAll('i').forEach((s, index) => {
-                if (index < ratingValue) {
-                    s.classList.remove('far');
-                    s.classList.add('fas', 'active');
-                } else {
-                    s.classList.remove('fas', 'active');
-                    s.classList.add('far');
-                }
-            });
-        });
-    });
-
-    // Submit Rating for a Specific Blog
-    function submitRating(blogId) {
-        const ratingForm = document.querySelector(`.rating-form[action*="${blogId}"]`);
-        if (ratingForm.querySelector('.rating-value').value) {
-            ratingForm.submit();
+      // Highlight selected stars
+      star.closest('.rating').querySelectorAll('i').forEach((s, index) => {
+        if (index < ratingValue) {
+          s.classList.remove('far');
+          s.classList.add('fas', 'active');
         } else {
-            alert('Please select a rating before submitting.');
+          s.classList.remove('fas', 'active');
+          s.classList.add('far');
         }
+      });
+    });
+  });
+
+  // Submit Rating for a Specific Blog
+  function submitRating(blogId) {
+    const ratingForm = document.querySelector(`.rating-form[action*="${blogId}"]`);
+    if (ratingForm.querySelector('.rating-value').value) {
+      ratingForm.submit();
+    } else {
+      alert('Please select a rating before submitting.');
     }
+  }
 </script>
 {% endblock %}
