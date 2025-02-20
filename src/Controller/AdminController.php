@@ -83,6 +83,7 @@ public function listAdmins(UserRepository $userRepository): Response
     ]);
 }
 
+
     #[Route('/admin/supprimer/{id}', name: 'admin_delete')]
     public function deleteAdmin(int $id, EntityManagerInterface $entityManager): Response
     {

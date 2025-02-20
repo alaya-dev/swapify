@@ -1,13 +1,17 @@
 <!doctype html>
 <html lang="en">
+
+    
     <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="" name="author" />
+
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
+
     <!-- DataTables -->
     <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
@@ -32,6 +36,8 @@
 
         <!-- Begin page -->
         <div id="layout-wrapper">
+
+            
         <header id="page-topbar">
                 <div class="navbar-header">
                     <div class="d-flex">
@@ -67,7 +73,136 @@
                             </div>
                         </form>
 
-                        
+                        <div class="dropdown dropdown-mega d-none d-lg-block ms-2">
+                            <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                                <span key="t-megamenu">Mega Menu</span>
+                                <i class="mdi mdi-chevron-down"></i> 
+                            </button>
+                            <div class="dropdown-menu dropdown-megamenu">
+                                <div class="row">
+                                    <div class="col-sm-8">
+    
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h5 class="font-size-14" key="t-ui-components">UI Components</h5>
+                                                <ul class="list-unstyled megamenu-list">
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-lightbox">Lightbox</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-range-slider">Range Slider</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-sweet-alert">Sweet Alert</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-rating">Rating</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-forms">Forms</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-tables">Tables</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-charts">Charts</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5 class="font-size-14" key="t-applications">Applications</h5>
+                                                <ul class="list-unstyled megamenu-list">
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-ecommerce">Ecommerce</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-calendar">Calendar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-email">Email</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-projects">Projects</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-tasks">Tasks</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-contacts">Contacts</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5 class="font-size-14" key="t-extra-pages">Extra Pages</h5>
+                                                <ul class="list-unstyled megamenu-list">
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-light-sidebar">Light Sidebar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-compact-sidebar">Compact Sidebar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-horizontal">Horizontal layout</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-maintenance">Maintenance</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-coming-soon">Coming Soon</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-timeline">Timeline</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-faqs">FAQs</a>
+                                                    </li>
+                            
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5 class="font-size-14" key="t-ui-components">UI Components</h5>
+                                                <ul class="list-unstyled megamenu-list">
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-lightbox">Lightbox</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-range-slider">Range Slider</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-sweet-alert">Sweet Alert</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-rating">Rating</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-forms">Forms</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-tables">Tables</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-charts">Charts</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="col-sm-5">
+                                                <div>
+                                                    <img src="/assets/images/megamenu-img.png" alt="" class="img-fluid mx-auto d-block">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
 
                     <div class="d-flex">
@@ -126,6 +261,57 @@
                             </div>
                         </div>
 
+                        <div class="dropdown d-none d-lg-inline-block ms-1">
+                            <button type="button" class="btn header-item noti-icon waves-effect"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="bx bx-customize"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                                <div class="px-lg-2">
+                                    <div class="row g-0">
+                                        <div class="col">
+                                            <a class="dropdown-icon-item" href="#">
+                                                <img src="/assets/images/brands/github.png" alt="Github">
+                                                <span>GitHub</span>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a class="dropdown-icon-item" href="#">
+                                                <img src="/assets/images/brands/bitbucket.png" alt="bitbucket">
+                                                <span>Bitbucket</span>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a class="dropdown-icon-item" href="#">
+                                                <img src="/assets/images/brands/dribbble.png" alt="dribbble">
+                                                <span>Dribbble</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-0">
+                                        <div class="col">
+                                            <a class="dropdown-icon-item" href="#">
+                                                <img src="/assets/images/brands/dropbox.png" alt="dropbox">
+                                                <span>Dropbox</span>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a class="dropdown-icon-item" href="#">
+                                                <img src="/assets/images/brands/mail_chimp.png" alt="mail_chimp">
+                                                <span>Mail Chimp</span>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a class="dropdown-icon-item" href="#">
+                                                <img src="/assets/images/brands/slack.png" alt="slack">
+                                                <span>Slack</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="dropdown d-none d-lg-inline-block ms-1">
                             <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
@@ -186,9 +372,12 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                <a class="dropdown-item" href="/profile"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Mon profil</span></a>
-                                
+                                <a class="dropdown-item" href="/profile"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
+                                <a class="dropdown-item" href="#"><i class="bx bx-wallet font-size-16 align-middle me-1"></i> <span key="t-my-wallet">My Wallet</span></a>
+                                <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end">11</span><i class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>
+                                <a class="dropdown-item" href="#"><i class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></a>
                                 <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href=""><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></a>
                             </div>
                         </div>
 
@@ -223,21 +412,7 @@
                                     <li><a href="/dashboard" >Dashboard</a></li>
                                    
                                 </ul></li>
-                                {% if is_granted('ROLE_SUPER_ADMIN') %}
                                 <li>
-                                
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="fas fa-user"></i>
-                                    <span>Admin</span>
-                                    
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/admin/add_admin" >Ajouter un admin</a></li>
-                                    <li><a href="/admin/liste" >La liste des admins</a></li>
-                                   
-                                </ul></li>
-                                {% endif %}
-
                                 
                                
                                 <li>
@@ -246,53 +421,36 @@
                                     <span >Client</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/client/liste " >La liste des clients</a></li>
+                                    <li><a href="/client/liste" >La iste des clients</a></li>
                                    
                                 </ul></li>
-
-   <li>
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="bx bx-store"></i>
-                                    <span >Catégories</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-
-
-                                   <li><a href="{{ path('app_categorie_new') }}">Ajouter une catégorie</a></li>
-                                    <li><a href="/categorie" >La liste des catégories</a></li>
-                                   
-                                </ul></li>
-                                <li>
-
                                 <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="bx bx-store"></i>
                                     <span >Annonce</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/admin/annonces" >Les demandes des annonces</a></li>
-                                     <li><a  href="{{ path('app_admin_annonces_history') }}">Historique des demandes des annonces</a></li>
-
+                                    <li><a href="/liste-annonce" >La liste des annonces</a></li>
+                                   
                                 </ul></li>
                                 <li>
 
-                                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                        <i class="bx bx-news"></i>
-                                        <span >Blogs</span>
-                                    </a>
-                                    <ul class="sub-menu" aria-expanded="false">
-                                        <li><a href="{{ path('app_blog_all') }}" >Voir Tous Les Blogs</a></li>
-                                         <li><a  href="{{ path('admin_pending_blogs') }}">Gérer Les Demandes des Blogs</a></li>
-        
-                                    </ul></li>
-                                    <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="bx bx-news"></i>
+                                    <span >Article</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="/liste-annonce" >La liste des articles</a></li>
+                                   
+                                </ul></li>
+                                <li>
 
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="bx bx-calendar-event"></i>
                                     <span >Evénement</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="#" >La liste des événements</a></li>
+                                    <li><a href="/liste-annonce" >La liste des événements</a></li>
                                    
                                 </ul></li>
                                 <li>
@@ -317,7 +475,8 @@
                             
 
                                 <li>
-                                    <a href="/logout">
+                                    <a href="#" 
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         Se déconnecter
                                     </a>
 
