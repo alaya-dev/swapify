@@ -71,6 +71,12 @@ class Annonce
     #[ORM\ManyToOne(inversedBy: 'annonces')]
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
+
+    /**
+     * @var Collection<int, Favoris>
+     */
+    #[ORM\OneToMany(mappedBy: 'annonces', targetEntity: Favoris::class)]
+    private Collection $favoris;
   
 
     public function __construct()
@@ -80,6 +86,7 @@ class Annonce
             $this->dateCreation = new \DateTime();  
         }
         $this->images = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
     }
 
 
@@ -251,6 +258,36 @@ class Annonce
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Favoris>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+            $favori->setAnnonces($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Favoris $favori): static
+    {
+        if ($this->favoris->removeElement($favori)) {
+            // set the owning side to null (unless already changed)
+            if ($favori->getAnnonces() === $this) {
+                $favori->setAnnonces(null);
+            }
+        }
 
         return $this;
     }

@@ -13,7 +13,7 @@
     </div>
     <div class="hidden lg:flex lg:gap-x-8">
       <a href="{{ path('app_home') }}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Acceuil</a>
-       <a href="/annonce" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
+       <a href="/annonce" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Annonces</a>
       <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">À Propos</a>
       <a href="{{ path('app_blog_index') }}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
       <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
@@ -23,7 +23,6 @@
     <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6 pr-1">
        {% if app.user %}
                     <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="/logout">Se déconnecter</a>
-
                    {% if 'ROLE_CLIENT' in app.user.roles %}
                     <a href="/dashboard/client"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
                     {% else %}

@@ -27,10 +27,25 @@
 
           </li>
           <li>
-            <a href="annonce/mesAnnonces" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
+            <a href="/annonce/mesAnnonces" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
           </li>
+          <li class="relative group">
+  <a href="{{ path('wishlist_show') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-teal-50 rounded-lg transition-all duration-300">
+    <span class="mr-2">
+      <i class="fas fa-heart text-teal-500"></i>
+    </span>
+    <span>Favoris Annonce</span>
+    <span class="ml-2 bg-teal-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+      {{ app.user ? app.user.getFavoris().count : 0 }}
+    </span>
+  </a>
+</li>
+
           <li>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Evenements</a>
+          </li>
+           <li>
+            <a href="{{path('app_reclamation_new')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Envoyer réclamation</a>
           </li>
           <li>
             <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
