@@ -71,7 +71,7 @@ class RegistrationController extends AbstractController
                     ->to($user->getEmail())
                     ->subject('S"il vous plait confirmez votre email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+            );  
 
             // Authentification automatique de l'utilisateur après son inscription
             return $this->redirectToRoute('please-verify-email');
