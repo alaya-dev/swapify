@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Attestation d'Attendance</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        .certificate {
+            width: 297mm;
+            min-height: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .border-frame {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 50px;
+            bottom: 10px;
+            border: 2px solid rgb(6, 79, 1);
+            border-radius: 10px;
+            padding:12px;
+        }
+
+        .header {
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            text-align: center;
+            padding: 0 40px;
+            flex-grow: 1;
+        }
+
+        .recipient {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            padding: 20px 40px;
+        }
+
+        .signature {
+            text-align: center;
+            width: 40%;
+        }
+
+        .signature-line {
+            width: 100%;
+            border-bottom: 2px solid rgb(6, 79, 1);
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .certificate {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate ">
+        <div class="border-frame"></div>
+        <div class="header">
+            <div class="title">Attestation d'Attendance</div>
+        </div>
+
+        <div class="content">
+            <p style="font-size: 20px; color: #666;">Ce certificat est décerné à</p>
+            <div class="recipient">{{ app.user.nom }} {{ app.user.prenom }}</div>
+            <p style="font-size: 20px; color: #666;">Pour avoir participé à l'événement</p>
+            <div class="event-title">{{ event.title }}</div>
+            <div class="date">Du {{ event.dateDebut|date('d/m/Y') }} au {{ event.dateFin|date('d/m/Y') }}</div>
+        </div>
+
+        <div class="signatures">
+            <div class="signature">
+                <div class="signature-line"></div>
+                <p style="font-weight: bold;">{{ event.orgniser.nom }} {{ event.orgniser.prenom }}</p>
+                <p style="color: #666;">Organisateur</p>
+            </div>
+            <div class="signature">
+                <div class="signature-line"></div>
+                <p style="font-weight: bold;">Baaroun Mohamed ali</p>
+                <p style="color: #666;">Directeur SWAPIFY</p>
+            </div>
+        </div>
+
+        <div class="footer">Fait à Tunis, le {{ 'now'|date('d/m/Y') }}</div>
+    </div>
+</body>
+</html>

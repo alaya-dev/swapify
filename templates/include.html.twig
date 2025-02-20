@@ -289,10 +289,11 @@
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="bx bx-calendar-event"></i>
                                     <span >Evénement</span>
+                                   
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="#" >La liste des événements</a></li>
-                                   
+                                    <li><a href="{{path('app_admin_events')}}" >La liste des événements</a></li>
+                                    <li><a href="{{path('app_admin_event_history')}}"> Historique des demande de validation des événements</a></li>
                                 </ul></li>
                                 <li>
                                     
@@ -302,22 +303,16 @@
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="/liste-contact" >La liste des réclamations</a></li>
-                                   
-                
                                     <li>
-                                    
-                                    
-    
                                 </li>
-
                                 </ul></li>
 
 
                             
 
                                 <li>
-                                    <a href="/logout">
-                                        Se déconnecter
+                                    <a href="/logout" >
+                                        <i class="bx bx-log-out"></i> Se déconnecter
                                     </a>
 
                                     <form id="logout-form" action="{{ path('app_logout') }}" method="post" class="d-none">
