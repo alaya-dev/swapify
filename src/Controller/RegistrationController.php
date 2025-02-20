@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Form\RegistrationFormType;
 use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;
@@ -74,7 +75,10 @@ class RegistrationController extends AbstractController
             );  
 
             // Authentification automatique de l'utilisateur après son inscription
-            return $this->redirectToRoute('please-verify-email');
+            $this->addFlash('success', 'Un email de vérification a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception (et éventuellement votre dossier spam) pour confirmer votre adresse email.');
+
+             // Redirection vers la page de connexion
+             return $this->redirectToRoute('app_login');
         }
         
         return $this->render('registration/register.html.twig', [
@@ -84,20 +88,80 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+    public function verifyUserEmail(
+        Request $request, 
+        UserRepository $userRepository, 
+        EntityManagerInterface $entityManager
+    ): Response {
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
+            // Récupérer l'ID de l'utilisateur depuis l'URL
+            $userId = $request->query->get('id');
+    
+            if (!$userId) {
+                throw new \Exception('Aucun identifiant utilisateur trouvé.');
+            }
+    
+            // Trouver l'utilisateur en base de données
+            $user = $userRepository->find($userId);
+    
+            if (!$user) {
+                throw $this->createNotFoundException('Utilisateur introuvable.');
+            }
+    
+            // Vérifier l'email avec l'utilisateur récupéré
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
+    
+            // Marquer l'utilisateur comme vérifié
+            $user->setIsVerified(true);
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'Votre adresse e-mail a été vérifiée.');
+            return $this->redirectToRoute('app_login');
+      } catch (VerifyEmailExceptionInterface $exception) {
+             // Lien expiré → afficher un message et proposer le renvoi
+            $this->addFlash('warning', 'Le lien de vérification a expiré. Renvoyez un nouvel email.');
+            return $this->redirectToRoute('app_login', ['id' => $userId]);
 
-            return $this->redirectToRoute('app_register');
+        }}
+        
+
+        #[Route('/resend-verification-email', name: 'app_resend_verification_email')]
+        public function resendVerificationEmail(
+            Request $request,
+            UserRepository $userRepository,
+            EmailVerifier $emailVerifier
+        ): Response {
+            // Récupérer l'ID de l'utilisateur depuis l'URL ou la session
+            $userId = $request->query->get('id');
+
+            if (!$userId) {
+                $this->addFlash('error', 'Aucun identifiant utilisateur trouvé.');
+                return $this->redirectToRoute('app_register');
+            }
+
+            // Trouver l'utilisateur en base de données
+            $user = $userRepository->find($userId);
+
+            if (!$user) {
+                $this->addFlash('error', 'Utilisateur introuvable.');
+                return $this->redirectToRoute('app_register');
+            }
+
+            if ($user->isVerified()) {
+                $this->addFlash('info', 'Votre compte est déjà vérifié Vous pouvez vous connecter.');
+                return $this->redirectToRoute('app_login');
+            }
+
+            // Générer et envoyer un nouvel email de vérification
+            $email = (new TemplatedEmail())
+                ->from(new Address('mailer@mailer.de', 'swapy boot'))
+                ->to($user->getEmail())
+                ->subject('Renvoyer la vérification de l’email')
+                ->htmlTemplate('registration/confirmation_email.html.twig');
+
+            $emailVerifier->sendEmailConfirmation('app_verify_email', $user, $email);
+
+            $this->addFlash('success', 'Un nouvel email de vérification a été envoyé.');
+            return $this->redirectToRoute('app_login');
         }
-
-        $this->addFlash('success', 'Votre adresse e-mail a été vérifiée.');
-
-        return $this->redirectToRoute('app_login');
     }
-}
