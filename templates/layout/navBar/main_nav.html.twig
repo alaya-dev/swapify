@@ -13,10 +13,12 @@
     </div>
     <div class="hidden lg:flex lg:gap-x-8">
       <a href="{{ path('app_home') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Acceuil</a>
-       <a href="/annonce" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
       <a href="#"  data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">À Propos</a>
-      <a href="#" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
-      <a href="#" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
+      <a href="/annonce" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
+      <a href="{{ path('app_event_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Evenement</a>
+      <a href="{{ path('app_blog_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
+      <a href="{{path('app_home')}}#contact" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
+      
     </div>
 
 
@@ -49,13 +51,16 @@
       </button>
     </div>
     <div class="mt-6 space-y-4">
-      <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Acceuil</a>
-      <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">À Propos</a>
-      <a href="{{ path('app_home') }}#contact" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Contact</a>
+      <a href="#" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Acceuil</a>
+      <a href="#" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">À Propos</a>
+      <a href="/annonce" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
+      <a href="{{ path('app_event_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Evenement</a>
+      <a href="{{ path('app_blog_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
+      <a href="{{ path('app_home') }}#contact" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Contact</a>
     </div>
     <div class="mt-6 border-t border-gray-300 pt-4">
-      <a href="{{path('app_login')}}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Se Connecter</a>
-      <a href="{{path('app_register')}}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">S'Inscrire</a>
+      <a href="{{path('app_login')}}" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Se Connecter</a>
+      <a href="{{path('app_register')}}" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">S'Inscrire</a>
     </div>
   </div>
 </header>

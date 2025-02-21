@@ -186,8 +186,10 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                <a class="dropdown-item" href="/profile"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Mon profil</span></a>
-                                
+                            <a class="dropdown-item" href="{{ path('app_profile') }}">
+                                <i class="bx bx-user font-size-16 align-middle me-1"></i>
+                                <span>Mon profil</span>
+                            </a>                                
                                 <div class="dropdown-divider"></div>
                             </div>
                         </div>
@@ -276,15 +278,16 @@
                                 </ul></li>
                                 <li>
 
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="bx bx-news"></i>
-                                    <span >Article</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="#" >La liste des articles</a></li>
-                                   
-                                </ul></li>
-                                <li>
+                                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                        <i class="bx bx-news"></i>
+                                        <span >Blogs</span>
+                                    </a>
+                                    <ul class="sub-menu" aria-expanded="false">
+                                        <li><a href="{{ path('app_blog_all') }}" >Voir Tous Les Blogs</a></li>
+                                         <li><a  href="{{ path('admin_pending_blogs') }}">Gérer Les Demandes des Blogs</a></li>
+        
+                                    </ul></li>
+                                    <li>
 
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="bx bx-calendar-event"></i>

@@ -10,6 +10,7 @@ parameters:
     projectDir: '%kernel.project_dir%/public/uploads/certifs'
     videosdk_api_key: '%env(VIDEOSDK_API_KEY)%'
     VIDEOSDK_SECRET_KEY: '%env(VIDEOSDK_SECRET_KEY)%'
+    images_directory: '%kernel.project_dir%/public/uploads/images'
 
 services:
     App\Service\CertificateGeneratorService:

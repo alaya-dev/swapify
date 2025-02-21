@@ -12,6 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
         "dompdf/dompdf": "*",
+        "karser/karser-recaptcha3-bundle": "^0.2.0",
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpstan/phpdoc-parser": "^2.0",
         "scheb/2fa": "*",
@@ -52,9 +53,10 @@
         "symfonycasts/reset-password-bundle": "^1.13",
         "symfonycasts/tailwind-bundle": "^0.7.1",
         "symfonycasts/verify-email-bundle": "^1.10",
-        "twbs/bootstrap": "*",
+        "twbs/bootstrap": "^5.3",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "victor-prdh/recaptcha-bundle": "^2.0"
     },
     "config": {
         "allow-plugins": {

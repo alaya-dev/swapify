@@ -25,27 +25,27 @@
 
     <!-- Dropdown Nav -->
     <nav id="nav-menu" class="flex flex-col pt-4 hidden">
-        <a href="{{ path('app_dashboard_client') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-tachometer-alt mr-3"></i>
             Profile
         </a>
-        <a href="{{ path('souk') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'souk' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('souk') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'souk' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-sticky-note mr-3"></i>
             Souk
         </a>
-        <a href="{{ path('annonce') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'annonce' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('app_annonce_index') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'annonce' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-table mr-3"></i>
             Annonce
         </a>
-        <a href="{{ path('blog') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'blog' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('app_blog_index') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'blog' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-align-left mr-3"></i>
             Blog
         </a>
-        <a href="{{ path('evenment') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'evenment' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('app_event_index') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'evenment' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-tablet-alt mr-3"></i>
             Evenment
         </a>
-        <a href="{{ path('livraison') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('livraison') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-calendar mr-3"></i>
             Livraison
         </a>
