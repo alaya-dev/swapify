@@ -1,0 +1,62 @@
+{% extends 'dashBord_user.html.twig' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <main class="py-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Ajouter Produit</h5>
+                            {{ form_start(form, {'attr': {'class': 'p-4 bg-white rounded-lg shadow-md', 'novalidate': 'novalidate'}}) }}
+                                <div class="mb-4">
+                                    {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                                    {{ form_widget(form.name, {'attr': {'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'}}) }}
+                                    {% for error in form.name.vars.errors %}
+                                        <div class="mt-2 text-sm text-red-600">{{ error.message }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                                    {{ form_widget(form.description, {'attr': {'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'}}) }}
+                                    {% for error in form.description.vars.errors %}
+                                        <div class="mt-2 text-sm text-red-600">{{ error.message }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form_label(form.price, 'Prix', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                                    {{ form_widget(form.price, {'attr': {'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'}}) }}
+                                    {% for error in form.price.vars.errors %}
+                                        <div class="mt-2 text-sm text-red-600">{{ error.message }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form_label(form.discoutPrice, 'Prix Remisé', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                                    {{ form_widget(form.discoutPrice, {'attr': {'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'}}) }}
+                                    {% for error in form.discoutPrice.vars.errors %}
+                                        <div class="mt-2 text-sm text-red-600">{{ error.message }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form_label(form.image, 'Image', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                                    {{ form_widget(form.image, {'attr': {'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'}}) }}
+                                    {% for error in form.image.vars.errors %}
+                                        <div class="mt-2 text-sm text-red-600">{{ error.message }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="mb-4">
+                                    {{ form_label(form.souk, 'Souk', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                                    {{ form_widget(form.souk, {'attr': {'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'}}) }}
+                                    {% for error in form.souk.vars.errors %}
+                                        <div class="mt-2 text-sm text-red-600">{{ error.message }}</div>
+                                    {% endfor %}
+                                </div>
+                                <button class="w-25 mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Submit</button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>    
+{% endblock %}

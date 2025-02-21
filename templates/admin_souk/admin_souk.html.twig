@@ -1,0 +1,42 @@
+{% extends 'include.html.twig' %}
+
+{% block content %}
+<div class="container mt-4">
+    <main class="py-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Ajouter</h5>
+                          {{ form_start(form, {'attr': {'class': 'p-4 bg-white rounded shadow-sm', 'novalidate': 'novalidate'}}) }}
+                            <div class="mb-3">
+                                {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                                {% for error in form.name.vars.errors %}
+                                    <div class="mt-2 alert alert-danger">{{ error.message }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.startSouke, 'Date Début', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.startSouke, {'attr': {'class': 'form-control'}}) }}
+                                {% for error in form.startSouke.vars.errors %}
+                                    <div class="mt-2 alert alert-danger">{{ error.message }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.endSouke, 'Date Fin', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.endSouke, {'attr': {'class': 'form-control'}}) }}
+                                {% for error in form.endSouke.vars.errors %}
+                                    <div class="mt-2 alert alert-danger">{{ error.message }}</div>
+                                {% endfor %}
+                            </div>
+                            <button class="btn btn-dark w-20 mt-3" type="submit">Submit</button>
+                            {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock %}

@@ -1,4 +1,3 @@
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
     <div class="w-1/2"></div>
     <div class="relative w-1/2 flex justify-end">
@@ -56,26 +55,30 @@
     const dropdown = document.getElementById('dropdown');
     const closeBtn = document.getElementById('close-btn');
 
-    avatarBtn.addEventListener('click', function() {
-        const isOpen = dropdown.style.display === 'block';
-        dropdown.style.display = isOpen ? 'none' : 'block';
-        closeBtn.style.display = isOpen ? 'none' : 'block';
-    });
+    if (avatarBtn && dropdown && closeBtn) {
+        avatarBtn.addEventListener('click', function () {
+            const isOpen = dropdown.style.display === 'block';
+            dropdown.style.display = isOpen ? 'none' : 'block';
+            closeBtn.style.display = isOpen ? 'none' : 'block';
+        });
 
-    closeBtn.addEventListener('click', function() {
-        dropdown.style.display = 'none';
-        closeBtn.style.display = 'none';
-    });
+        closeBtn.addEventListener('click', function () {
+            dropdown.style.display = 'none';
+            closeBtn.style.display = 'none';
+        });
+    }
 
     // Mobile menu toggle
     const menuBtn = document.getElementById('menu-btn');
     const menuIcon = document.getElementById('menu-icon');
     const navMenu = document.getElementById('nav-menu');
 
-    menuBtn.addEventListener('click', function() {
-        const isOpen = navMenu.style.display === 'flex';
-        navMenu.style.display = isOpen ? 'none' : 'flex';
-        menuIcon.classList.toggle('fa-bars', isOpen);
-        menuIcon.classList.toggle('fa-times', !isOpen);
-    });
+    if (menuBtn && menuIcon && navMenu) {
+        menuBtn.addEventListener('click', function () {
+            const isOpen = navMenu.style.display === 'flex';
+            navMenu.style.display = isOpen ? 'none' : 'flex';
+            menuIcon.classList.toggle('fa-bars', isOpen);
+            menuIcon.classList.toggle('fa-times', !isOpen);
+        });
+    }
 </script>

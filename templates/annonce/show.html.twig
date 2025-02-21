@@ -54,6 +54,24 @@
         {% endif %}
       </div>
 
+      <div class="card mb-4 shadow">
+        <div class="card-body">
+          <h4 class="alert-heading">Publiée par : </h4>
+          <h5 class="card-title"><strong>{{ annonce.user.nom }} {{ annonce.user.prenom }}</strong></h5>
+          <div class="star-rating mb-3" style="--rating: 4;"></div>
+          {% if app.user != annonce.user %}
+            <a href="{{ path('conversation.show', {'recipient': annonce.user.id}) }}" class="btn btn-success btn-sm">
+              <i class="fas fa-paper-plane"></i> contact User
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Added Section: Description and Details -->
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <h2 class="mb-3">Description :</h2>
+          <p class="lead">{{ annonce.description }}</p>
       {# Thumbnail images section #}
       {% if images|length > 1 %}
         <div class="col-md-5 ms-3">

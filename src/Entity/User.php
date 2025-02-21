@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
-use Symfony\Component\Validator\Constraints as Assert;  
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 //#[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -27,13 +26,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(message: "L'email ne peut pas être vide.")]
     #[Assert\Email(message: "L'adresse e-mail '{{ value }}' n'est pas valide.")]
-    private ?string $email ;
+    private ?string $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column]
-    private ?string $password = null;   
+    private ?string $password = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
@@ -47,10 +46,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
 
     #[ORM\Column(type: 'date')]
-    private ?\DateTimeInterface $dateNaissance ;
+    private ?\DateTimeInterface $dateNaissance;
 
 
-    
+
 
 
     #[ORM\Column(type: 'string', length: 8, unique: true)]
@@ -60,7 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         message: "Le numéro de téléphone doit comporter exactement 8 chiffres."
     )]
 
-    
+
     private ?string $tel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -78,6 +77,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     private ?string $authCode = null;
 
     /**
+     * @var Collection<int, Offre>
+     */
+    #[ORM\OneToMany(mappedBy: 'annonceOwner', targetEntity: Offre::class, orphanRemoval: true)]
+    private Collection $offres;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Message::class, orphanRemoval: true)]
+    private Collection $messages;
+
+    /**
+     * @var Collection<int, Conversation>
+     */
+    #[ORM\ManyToMany(targetEntity: Conversation::class, mappedBy: 'users')]
+    private Collection $conversations;
+
+    /**
+     * @var Collection<int, Souk>
+     */
+    #[ORM\ManyToMany(targetEntity: Souk::class, mappedBy: 'participant')]
+    private Collection $souks;
+
+    /**
+     * @var Collection<int, Product>
+     */
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Product::class)]
+    private Collection $products;
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getConversations(): Collection
+    {
+        return $this->conversations;
+    }
+
+    public function addConversation(Conversation $conversation): static
+    {
+        if (!$this->conversations->contains($conversation)) {
+            $this->conversations->add($conversation);
+            $conversation->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversation(Conversation $conversation): static
+    {
+        if ($this->conversations->removeElement($conversation)) {
+            $conversation->removeUser($this);
+        }
+
+        return $this;
+    }
+    /** 
      * @var Collection<int, Favoris>
      */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Favoris::class)]
@@ -87,19 +142,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
      * @var Collection<int, Reclamation>
      */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reclamation::class, orphanRemoval: true)]
-    private Collection $reclamations; 
+    private Collection $reclamations;
 
 
-        /**
+    /**
      * @var Collection<int, Rating>
      */
     #[ORM\OneToMany(mappedBy: 'idRecepteur', targetEntity: Rating::class)]
-    private Collection $ratings; 
+    private Collection $ratings;
 
     public function __construct()
     {
+        $this->conversations = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->dateNaissance = new \DateTime(); // Exemple de valeur par défaut : la date actuelle
+        $this->offres = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->souks = new ArrayCollection();
+        $this->products = new ArrayCollection();
         $this->favoris = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
         $this->ratings = new ArrayCollection();
@@ -129,7 +189,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER'; 
+        $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
 
@@ -239,11 +299,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     }
 
     public function getDateNaissance(): \DateTimeInterface
-{
-    // Si la date n'est pas définie, tu pourrais vouloir lever une exception ou la créer automatiquement
-    
-    return $this->dateNaissance;
-}
+    {
+        // Si la date n'est pas définie, tu pourrais vouloir lever une exception ou la créer automatiquement
+
+        return $this->dateNaissance;
+    }
 
 
     public function setDateNaissance(\DateTimeInterface $dateNaissance): static
@@ -277,6 +337,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     }
 
     /**
+     * @return Collection<int, Offre>
+     */
+    public function getOffres(): Collection
+    {
+        return $this->offres;
+    }
+    /*
      * @return Collection<int, Favoris>
      */
     public function getFavoris(): Collection
@@ -284,7 +351,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->favoris;
     }
 
-    public function addFavori(Favoris $favori): static
+    public function addFavori(Favoris $favori)
     {
         if (!$this->favoris->contains($favori)) {
             $this->favoris->add($favori);
@@ -340,16 +407,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this;
     }
 
-    public function removeReclamation(Reclamation $reclamation): static
+    public function removeReclamation(Reclamation $reclamation)
     {
         if ($this->reclamations->removeElement($reclamation)) {
             // set the owning side to null (unless already changed)
             if ($reclamation->getUser() === $this) {
                 $reclamation->setUser(null);
-
             }
         }
-
     }
 
 
@@ -366,6 +431,112 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     }
 
 
-    
-    
+    public function addOffre(Offre $offre): static
+    {
+        if (!$this->offres->contains($offre)) {
+            $this->offres->add($offre);
+            $offre->setAnnonceOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffre(Offre $offre): static
+    {
+        if ($this->offres->removeElement($offre)) {
+            // set the owning side to null (unless already changed)
+            if ($offre->getAnnonceOwner() === $this) {
+                $offre->setAnnonceOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getAuthor() === $this) {
+                $message->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Souk>
+     */
+    public function getSouks(): Collection
+    {
+        return $this->souks;
+    }
+
+    public function addSouk(Souk $souk): static
+    {
+        if (!$this->souks->contains($souk)) {
+            $this->souks->add($souk);
+            $souk->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSouk(Souk $souk): static
+    {
+        if ($this->souks->removeElement($souk)) {
+            $souk->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getOwner() === $this) {
+                $product->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
 }

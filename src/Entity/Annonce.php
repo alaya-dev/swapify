@@ -2,25 +2,19 @@
 
 namespace App\Entity;
 
-use App\Enum\etat;
 use App\Repository\AnnonceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\Validator\Constraints as Assert;  
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 
 #[ORM\Entity(repositoryClass: AnnonceRepository::class)]
 class Annonce
 {
-
-
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -28,12 +22,11 @@ class Annonce
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    private ?string $titre ;
+    private ?string $titre;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $description ;
+    private ?string $description;
 
-   
     #[ORM\Column]
     private ?bool $disponibilite = null;
 
@@ -44,7 +37,7 @@ class Annonce
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorie $categorie = null;
 
-    
+
 
     #[ORM\Column]
     private ?float $x = null;
@@ -73,19 +66,25 @@ class Annonce
     private ?User $user = null;
 
     /**
+     * @var Collection<int, Offre>
+     */
+    #[ORM\OneToMany(mappedBy: 'annonceName', targetEntity: Offre::class, orphanRemoval: true)]
+    private Collection $offres;
+    /*
      * @var Collection<int, Favoris>
      */
     #[ORM\OneToMany(mappedBy: 'annonces', targetEntity: Favoris::class)]
     private Collection $favoris;
-  
+
 
     public function __construct()
     {
- 
+
         if ($this->dateCreation === null) {
-            $this->dateCreation = new \DateTime();  
+            $this->dateCreation = new \DateTime();
         }
         $this->images = new ArrayCollection();
+        $this->offres = new ArrayCollection();
         $this->favoris = new ArrayCollection();
     }
 
@@ -130,9 +129,6 @@ class Annonce
 
         return $this;
     }
-
- 
-
 
     public function isDisponibilite(): ?bool
     {
@@ -219,7 +215,7 @@ class Annonce
         return $this;
     }
 
- 
+
 
     /**
      * @return Collection<int, Image>
@@ -291,7 +287,35 @@ class Annonce
 
         return $this;
     }
-  
 
- 
+
+    /**
+     * @return Collection<int, Offre>
+     */
+    public function getOffres(): Collection
+    {
+        return $this->offres;
+    }
+
+    public function addOffre(Offre $offre): static
+    {
+        if (!$this->offres->contains($offre)) {
+            $this->offres->add($offre);
+            $offre->setAnnonceName($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffre(Offre $offre): static
+    {
+        if ($this->offres->removeElement($offre)) {
+            // set the owning side to null (unless already changed)
+            if ($offre->getAnnonceName() === $this) {
+                $offre->setAnnonceName(null);
+            }
+        }
+
+        return $this;
+    }
 }
