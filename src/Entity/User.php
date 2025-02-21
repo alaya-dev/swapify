@@ -48,6 +48,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     #[ORM\Column(type: 'date')]
     private ?\DateTimeInterface $dateNaissance ;
+
+
     
 
 
@@ -76,6 +78,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     private ?string $authCode = null;
 
     /**
+     * @var Collection<int, Favoris>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Favoris::class)]
+    private Collection $favoris;
+
+    /**
+     * @var Collection<int, Reclamation>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reclamation::class, orphanRemoval: true)]
+    private Collection $reclamations; 
+
+
+        /**
      * @var Collection<int, Rating>
      */
     #[ORM\OneToMany(mappedBy: 'idRecepteur', targetEntity: Rating::class)]
@@ -85,6 +100,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->dateNaissance = new \DateTime(); // Exemple de valeur par défaut : la date actuelle
+        $this->favoris = new ArrayCollection();
+        $this->reclamations = new ArrayCollection();
         $this->ratings = new ArrayCollection();
     }
 
@@ -260,6 +277,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     }
 
     /**
+     * @return Collection<int, Favoris>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+            $favori->setUser($this);
+        }
+    }
+
+    /** 
      * @return Collection<int, Rating>
      */
     public function getRatings(): Collection
@@ -276,6 +309,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
         return $this;
     }
+
+    public function removeFavori(Favoris $favori): static
+    {
+        if ($this->favoris->removeElement($favori)) {
+            // set the owning side to null (unless already changed)
+            if ($favori->getUser() === $this) {
+                $favori->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reclamation>
+     */
+    public function getReclamations(): Collection
+    {
+        return $this->reclamations;
+    }
+
+    public function addReclamation(Reclamation $reclamation): static
+    {
+        if (!$this->reclamations->contains($reclamation)) {
+            $this->reclamations->add($reclamation);
+            $reclamation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReclamation(Reclamation $reclamation): static
+    {
+        if ($this->reclamations->removeElement($reclamation)) {
+            // set the owning side to null (unless already changed)
+            if ($reclamation->getUser() === $this) {
+                $reclamation->setUser(null);
+
+            }
+        }
+
+    }
+
 
     public function removeRating(Rating $rating): static
     {

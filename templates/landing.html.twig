@@ -1,6 +1,39 @@
 {%  extends 'base.html.twig' %}
 
 {% block body %}
+    <style>
+        .fade-out {
+            animation: fadeOut 5s forwards; /* 5 seconds duration */
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+   {% for type, messages in app.flashes %}
+        {% if type == 'success' %}
+            {% for message in messages %}
+                <div class="alert alert-success fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'warning' %}
+            {% for message in messages %}
+                <div class="alert alert-warning fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'error' %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
 {# Hero Section #}
 <section class="relative bg-gradient-to-b from-emerald-500 to-emerald-700 overflow-hidden min-h-[500px]">
     <div class="grid max-w-screen-xl px-4 py-24 mx-auto gap-8 lg:grid-cols-12 grid-cols-1 text-center lg:text-left">

@@ -72,7 +72,7 @@ class RegistrationController extends AbstractController
                     ->to($user->getEmail())
                     ->subject('S"il vous plait confirmez votre email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+            );  
 
             // Authentification automatique de l'utilisateur après son inscription
             $this->addFlash('success', 'Un email de vérification a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception (et éventuellement votre dossier spam) pour confirmer votre adresse email.');

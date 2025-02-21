@@ -38,7 +38,7 @@ final class BlogController extends AbstractController
     {
         $user = $security->getUser();
     
-        if ($this->isGranted('ROLE_ADMIN')) {
+        if ($this->isGranted('ROLE_ADMIN') ||  $this->isGranted('ROLE_SUPER_ADMIN')) {
             // Fetch all blogs for admin
             $acceptedBlogs = $entityManager->getRepository(Blog::class)->findBy(
                 ['statut' => 'Acceptée'],

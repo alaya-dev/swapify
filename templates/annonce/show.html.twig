@@ -1,168 +1,226 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" defer>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" defer>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  {# External CSS and JS libraries #}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" defer>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" defer>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 
-<div class="container my-5">
-  <div class="row d-flex">
-    <h2 class="mb-3 text-primary fw-bold text-uppercase border-bottom pb-2">
+  <div class="container my-5">
+    {# Check if the annonce is favorited by the user #}
+    {% set isFavorited = app.user and favoris is not empty and annonce in favoris %}
+
+    {# Annonce title section with gradient background and animation #}
+    <h3 class="mb-4 text-white fw-bold text-uppercase py-3 px-4 rounded-lg shadow-lg" style="
+      background: linear-gradient(135deg, rgb(25, 109, 60), rgb(72, 212, 142));
+      position: relative;
+      overflow: hidden;
+    ">
       <i class="fas fa-bullhorn me-2"></i> Détails annonce : {{ annonce.titre }}
-    </h2>
-    
-    <div class="col-md-6 mb-4">
-      {% set mainImage = images|filter(image => image.annonce.id == annonce.id)|first %}
-      {% if mainImage %}
-        <img id="mainImage" src="{{ asset('uploads/images/' ~ mainImage.imageName) }}" alt="Annonce Image" class="img-fluid rounded shadow">
+      {% if isFavorited %}
+        <div class="position-absolute top-1 end-0 p-3">
+          <i class="fas fa-heart text-pink-500 text-4xl"></i>
+        </div>
       {% endif %}
-    </div>
-    
-    {% if images|length > 1 %}
-    <div class="col-md-5 ms-3">
-      <div class="row">
-        {% for image in images %}
-          {% if image.annonce.id == annonce.id %}
-            <div class="col-md-4 mb-3">
-              <img src="{{ asset('uploads/images/' ~ image.imageName) }}" alt="Thumbnail" class="img-thumbnail img-fluid" loading="lazy" style="cursor: pointer;" onclick="changeMainImage('{{ asset('uploads/images/' ~ image.imageName) }}')">
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    {% endif %}
-  </div>
+      <span style="
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: underline 5s infinite alternate;
+      "></span>
+    </h3>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div id="map" class="mb-4 rounded shadow" style="height: 300px; width: 100%;"></div>
+    {# Animation keyframes for the underline effect #}
+    <style>
+      @keyframes underline {
+        0% { transform: scaleX(0); }
+        100% { transform: scaleX(1); }
+      }
+    </style>
 
-      <div class="alert alert-info mb-4">
-        <h4 class="alert-heading">Disponibilité : 
-          <span class="badge {{ annonce.disponibilite == 1 ? 'bg-success' : 'bg-danger' }}">
-            {{ annonce.disponibilite == 1 ? 'Disponible' : 'Indisponible' }}
-          </span>
-        </h4>
-      </div>
-
-      <div class="card mb-4 shadow">
-        <div class="card-body">
-          <h4 class="alert-heading">Publiée par : </h4>
-          <h5 class="card-title"><strong>{{ annonce.user.nom }} {{ annonce.user.prenom }}</strong></h5>
-          <a href="{{ path('profile_user', { id: annonce.user.id }) }}"  class="btn btn-outline-primary btn-sm mb-2">Voir profil</a>
-          <div class="star-rating mb-3" style="--rating: 4;"></div>
-          {% if app.user %}
-            <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-success btn-sm">
-              <i class="fas fa-paper-plane"></i> Envoyer Offre
-            </a>
-          {% endif %}
-        </div>
+    {# Main content row #}
+    <div class="row">
+      {# Main image section #}
+      <div class="col-md-6 mb-4 position-relative">
+        {% set mainImage = images|filter(image => image.annonce.id == annonce.id)|first %}
+        {% if mainImage %}
+          <img id="mainImage" src="{{ asset('uploads/images/' ~ mainImage.imageName) }}" alt="Annonce Image" class="img-fluid rounded shadow-lg" loading="lazy">
+        {% endif %}
       </div>
 
-      <!-- Added Section: Description and Details -->
-      <div class="row mt-4">
-        <div class="col-md-12">
-          <h2 class="mb-3">Description :</h2>
-          <p class="lead">{{ annonce.description }}</p>
+      {# Thumbnail images section #}
+      {% if images|length > 1 %}
+        <div class="col-md-5 ms-3">
           <div class="row">
-            <div class="col-md-4">
-              <div class="card mb-3 shadow">
-                <div class="card-body">
-                  <strong>Région:</strong> {{ annonce.region }}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card mb-3 shadow">
-                <div class="card-body">
-                  <strong>Catégorie:</strong> {{ annonce.categorie.libelle }}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card mb-3 shadow">
-                <div class="card-body">
-                  <strong>Date Publication:</strong> {{ annonce.dateCreation|date('j M Y') }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Added Section: Latest Annonces -->
-      {% set anID = annonce.id %}
-      <div class="row mt-4">
-        <div class="col-md-12">
-          <h2>Dernières annonces publiées :</h2>
-          <div class="d-flex overflow-auto">
-            {% for annonce in annonces|slice(0,5) %} 
-              {% if annonce.id != anID %} 
-                <div class="card mx-2" style="width: 18rem;">
-                  {% if annonce.images is not empty %}
-                    <img src="{{ asset('uploads/images/' ~ annonce.images.0.imageName) }}" class="card-img-top" alt="Image de l'annonce">
-                  {% else %}
-                    <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Image par défaut">
-                  {% endif %}
-                  <div class="card-body">
-                    <h5 class="card-title">{{ annonce.titre }}</h5>
-                    <p class="card-text">{{ annonce.description|slice(0, 100) }}...</p>
-                    <small class="text-muted">Publié le {{ annonce.dateCreation|date('d F Y') }}</small>
-                    <br>
-                    <small class="text-muted">Catégorie: {{ annonce.categorie.libelle }}</small>
-                    <br>
-                    <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-primary btn-sm mt-2">Voir Détails</a>
-                  </div>
+            {% for image in images %}
+              {% if image.annonce.id == annonce.id %}
+                <div class="col-md-4 mb-3">
+                  <img src="{{ asset('uploads/images/' ~ image.imageName) }}" alt="Thumbnail" class="img-thumbnail img-fluid cursor-pointer" loading="lazy" onclick="changeMainImage('{{ asset('uploads/images/' ~ image.imageName) }}')">
                 </div>
               {% endif %}
             {% endfor %}
           </div>
         </div>
+      {% endif %}
+    </div>
+
+    {# Map section #}
+    <div class="row">
+      <div class="col-md-12">
+        <div id="map" class="mb-4 rounded shadow-lg" style="height: 300px; width: 100%;"></div>
+      </div>
+    </div>
+
+    {# Availability alert #}
+    <div class="alert alert-info mb-4">
+      <h4 class="alert-heading">Disponibilité : 
+        <span class="badge {{ annonce.disponibilite == 1 ? 'bg-success' : 'bg-danger' }}">
+          {{ annonce.disponibilite == 1 ? 'Disponible' : 'Indisponible' }}
+        </span>
+      </h4>
+    </div>
+
+    {# User profile card #}
+    <div class="card mb-4 shadow-lg">
+      <div class="card-body">
+        <h4 class="alert-heading">Publiée par : </h4>
+        <h5 class="card-title"><strong>{{ annonce.user.nom }} {{ annonce.user.prenom }}</strong></h5>
+        <a href="{{ path('profil_user', {'id': annonce.user.id}) }}" class="btn btn-outline-primary btn-sm mb-2">Voir profil</a>
+        <div class="star-rating mb-3" style="--rating: {{rating}};"></div>
+
+        {# Actions for logged-in users #}
+        {% if app.user %}
+          <a class="btn btn-success btn-sm mb-2" href="{{ path('wishlist_add', {'id': annonce.id}) }}">
+            <i class="fas fa-heart me-2"></i> Ajouter favoris
+          </a>
+          <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-primary btn-sm">
+            <i class="fas fa-paper-plane me-2"></i> Envoyer Offre
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Description and details section #}
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h2 class="mb-3">Description :</h2>
+        <p class="lead">{{ annonce.description }}</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card mb-3 shadow-sm">
+              <div class="card-body">
+                <strong>Région:</strong> {{ annonce.region }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3 shadow-sm">
+              <div class="card-body">
+                <strong>Catégorie:</strong> {{ annonce.categorie.libelle }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3 shadow-sm">
+              <div class="card-body">
+                <strong>Date Publication:</strong> {{ annonce.dateCreation|date('j M Y') }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# Related annonces section #}
+    {% set anID = annonce.id %}
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h2>Dernières annonces publiées :</h2>
+        <div class="d-flex overflow-auto">
+          {% for annonce in annonces|slice(0,5) %} 
+            {% if annonce.id != anID %} 
+              <div class="card mx-2 shadow-sm" style="width: 18rem;">
+                {% if annonce.images is not empty %}
+                  <img src="{{ asset('uploads/images/' ~ annonce.images.0.imageName) }}" class="card-img-top" alt="Image de l'annonce" loading="lazy">
+                {% else %}
+                  <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Image par défaut" loading="lazy">
+                {% endif %}
+                <div class="card-body">
+                  <h5 class="card-title">{{ annonce.titre }}</h5>
+                  <p class="card-text">{{ annonce.description|slice(0, 100) }}...</p>
+                  <small class="text-muted">Publié le {{ annonce.dateCreation|date('d F Y') }}</small>
+                  <br>
+                  <small class="text-muted">Catégorie: {{ annonce.categorie.libelle }}</small>
+                  <br>
+                  <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-primary btn-sm mt-2">Voir Détails</a>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  if ({{ annonce.x is defined and annonce.y is defined }}) {
-    var map = L.map('map').setView([{{ annonce.x }}, {{ annonce.y }}], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    L.marker([{{ annonce.x }}, {{ annonce.y }}]).addTo(map)
-      .bindPopup("<b>{{ annonce.titre }}</b>")
-      .openPopup();
-  }
-});
+  {# Leaflet JS for map functionality #}
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if ({{ annonce.x is defined and annonce.y is defined }}) {
+        var map = L.map('map').setView([{{ annonce.x }}, {{ annonce.y }}], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        L.marker([{{ annonce.x }}, {{ annonce.y }}]).addTo(map)
+          .bindPopup("<b>{{ annonce.titre }}</b>")
+          .openPopup();
+      }
+    });
 
-function changeMainImage(newSrc) {
-  document.getElementById('mainImage').src = newSrc;
-}
-</script>
+    function changeMainImage(newSrc) {
+      document.getElementById('mainImage').src = newSrc;
+    }
+  </script>
 
-<style>
-body {
-  background-color: #f0fff4;
-  font-family: 'Arial', sans-serif;
-}
+  {# Custom styles #}
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Arial', sans-serif;
+    }
 
-.star-rating {
-  --percent: calc(var(--rating) / 5 * 100%);
-  font-size: 24px;
-}
+    .star-rating {
+      --percent: calc(var(--rating) / 5 * 100%);
+      font-size: 24px;
+    }
 
-.star-rating::before {
-  content: '★★★★★';
-  letter-spacing: 2px;
-  background: linear-gradient(90deg, gold var(--percent), lightgray var(--percent));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+    .star-rating::before {
+      content: '★★★★★';
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, gold var(--percent), lightgray var(--percent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-.card:hover { transform: translateY(-5px); }
-.img-thumbnail:hover { transform: scale(1.05); }
-</style>
+    .card:hover {
+      transform: translateY(-5px);
+      transition: transform 0.3s ease;
+    }
+
+    .img-thumbnail:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+
+    .cursor-pointer {
+      cursor: pointer;
+    }
+  </style>
 {% endblock %}
