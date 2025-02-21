@@ -6,20 +6,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\User;
+use App\Form\ProfileType;
 
 class DashboardClientController extends AbstractController
 {
     #[Route('/dashboard/client', name: 'app_dashboard_client')]
     public function index(Request $request): Response
     {
+
+        $user = $this->getUser();
         // remove this line to it juste for check if teh sesstion is working wassim raged m3a raha <3 hh 
        /* $session = $request->getSession();
         $session->set('test_key', 'test_value');
         dd($session);
         return new Response('Session test: ' . $session->get('test_key'));*/
 
+        $form = $this->createForm(ProfileType::class, $user);
+        $form->handleRequest($request);    
+
         return $this->render('dashboard/accueil_client.html.twig', [
             'controller_name' => 'DashboardClientController',
+            'form' => $form->createView(),
         ]);
     }
 
