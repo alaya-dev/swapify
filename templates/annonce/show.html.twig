@@ -1,59 +1,60 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+  {# External CSS and JS libraries #}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" defer>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" defer>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 
   <div class="container my-5">
-        {% set isFavorited = app.user and favoris is not empty and annonce in favoris %}
+    {# Check if the annonce is favorited by the user #}
+    {% set isFavorited = app.user and favoris is not empty and annonce in favoris %}
 
-<h3 class="mb-4 text-white fw-bold text-uppercase py-3 px-4 rounded-lg shadow-lg" style="
-    background: linear-gradient(135deg,rgb(25, 109, 60),rgb(72, 212, 142));
-    position: relative;
-    overflow: hidden;
-">
-  <i class="fas fa-bullhorn me-2"></i> Détails annonce : {{ annonce.titre }}
-     {% if isFavorited %}
-          <div class="position-absolute top-1 end-0 p-3">
-           <i class="fas fa-heart text-pink-500 text-4xl"></i>
-            </div>
-        {% endif %}
+    {# Annonce title section with gradient background and animation #}
+    <h3 class="mb-4 text-white fw-bold text-uppercase py-3 px-4 rounded-lg shadow-lg" style="
+      background: linear-gradient(135deg, rgb(25, 109, 60), rgb(72, 212, 142));
+      position: relative;
+      overflow: hidden;
+    ">
+      <i class="fas fa-bullhorn me-2"></i> Détails annonce : {{ annonce.titre }}
+      {% if isFavorited %}
+        <div class="position-absolute top-1 end-0 p-3">
+          <i class="fas fa-heart text-pink-500 text-4xl"></i>
+        </div>
+      {% endif %}
+      <span style="
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: underline 5s infinite alternate;
+      "></span>
+    </h3>
 
-  <span style="
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, #ff9a9e, #fad0c4);
-      transform: scaleX(0);
-      transform-origin: left;
-      animation: underline 5s infinite alternate;
-  "></span>
-</h3>
+    {# Animation keyframes for the underline effect #}
+    <style>
+      @keyframes underline {
+        0% { transform: scaleX(0); }
+        100% { transform: scaleX(1); }
+      }
+    </style>
 
-<style>
-  @keyframes underline {
-    0% {
-      transform: scaleX(0);
-    }
-    100% {
-      transform: scaleX(1);
-    }
-  }
-</style>
+    {# Main content row #}
     <div class="row">
-
+      {# Main image section #}
       <div class="col-md-6 mb-4 position-relative">
-     
         {% set mainImage = images|filter(image => image.annonce.id == annonce.id)|first %}
         {% if mainImage %}
           <img id="mainImage" src="{{ asset('uploads/images/' ~ mainImage.imageName) }}" alt="Annonce Image" class="img-fluid rounded shadow-lg" loading="lazy">
         {% endif %}
       </div>
 
+      {# Thumbnail images section #}
       {% if images|length > 1 %}
         <div class="col-md-5 ms-3">
           <div class="row">
@@ -69,12 +70,14 @@
       {% endif %}
     </div>
 
+    {# Map section #}
     <div class="row">
       <div class="col-md-12">
         <div id="map" class="mb-4 rounded shadow-lg" style="height: 300px; width: 100%;"></div>
       </div>
     </div>
 
+    {# Availability alert #}
     <div class="alert alert-info mb-4">
       <h4 class="alert-heading">Disponibilité : 
         <span class="badge {{ annonce.disponibilite == 1 ? 'bg-success' : 'bg-danger' }}">
@@ -83,13 +86,15 @@
       </h4>
     </div>
 
+    {# User profile card #}
     <div class="card mb-4 shadow-lg">
       <div class="card-body">
         <h4 class="alert-heading">Publiée par : </h4>
         <h5 class="card-title"><strong>{{ annonce.user.nom }} {{ annonce.user.prenom }}</strong></h5>
-        <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-outline-primary btn-sm mb-2">Voir profil</a>
-        <div class="star-rating mb-3" style="--rating: 4;"></div>
+        <a href="{{ path('profil_user', {'id': annonce.user.id}) }}" class="btn btn-outline-primary btn-sm mb-2">Voir profil</a>
+        <div class="star-rating mb-3" style="--rating: {{rating}};"></div>
 
+        {# Actions for logged-in users #}
         {% if app.user %}
           <a class="btn btn-success btn-sm mb-2" href="{{ path('wishlist_add', {'id': annonce.id}) }}">
             <i class="fas fa-heart me-2"></i> Ajouter favoris
@@ -101,6 +106,7 @@
       </div>
     </div>
 
+    {# Description and details section #}
     <div class="row mt-4">
       <div class="col-md-12">
         <h2 class="mb-3">Description :</h2>
@@ -131,6 +137,7 @@
       </div>
     </div>
 
+    {# Related annonces section #}
     {% set anID = annonce.id %}
     <div class="row mt-4">
       <div class="col-md-12">
@@ -161,6 +168,7 @@
     </div>
   </div>
 
+  {# Leaflet JS for map functionality #}
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -180,6 +188,7 @@
     }
   </script>
 
+  {# Custom styles #}
   <style>
     body {
       background-color: #f8f9fa;

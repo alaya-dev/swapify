@@ -2,11 +2,13 @@
 namespace App\Controller;
 
 use App\Entity\Annonce;
+use App\Entity\Event;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Form\RegistrationFormType;
 use App\Repository\AnnonceRepository;
 use App\Repository\CategorieRepository;
+use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -145,6 +147,19 @@ public function listAdmins(UserRepository $userRepository): Response
             'annonces' => $annonces
         ]);
     }
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+    #[Route('/admin/events', name: 'app_admin_events')]
+    public function events(EventRepository $eventRepository): Response
+    {
+
+        $events = $eventRepository->findEnAttEvents();
+      
+
+        return $this->render('events/all_events.html.twig', [
+            'events' => $events
+        ]);
+    }
+
 
 
     //#[IsGranted('ROLE_ADMIN')]
@@ -162,6 +177,7 @@ public function listAdmins(UserRepository $userRepository): Response
     }
 
 
+
     #[Route('/admin/annonce/{id}/validate', name: 'admin_annonce_validate')]
      //#[IsGranted('ROLE_ADMIN')]
      #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
@@ -173,6 +189,17 @@ public function listAdmins(UserRepository $userRepository): Response
         $this->addFlash('success', 'Annonce validated successfully!');
         return $this->redirectToRoute('app_admin_annonces');
     }
+    #[Route('/admin/event/{id}/validate', name: 'admin_event_validate')]
+    //#[IsGranted('ROLE_ADMIN')]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+   public function validateEvent(Event $event, EntityManagerInterface $entityManager): RedirectResponse
+   {
+       $event->setStatus('Acceptee');
+       $entityManager->flush();
+
+       $this->addFlash('success', 'évenement a été validé avec succès!');
+       return $this->redirectToRoute('app_admin_events');
+   }
 
 
     #[Route('/admin/annonce/{id}/reject', name: 'admin_annonce_reject')]
@@ -185,6 +212,18 @@ public function listAdmins(UserRepository $userRepository): Response
 
         $this->addFlash('success', 'Annonce rejected successfully!');
         return $this->redirectToRoute('app_admin_annonces');
+    }
+    
+    #[Route('/admin/event/{id}/reject', name: 'admin_event_reject')]
+    //#[IsGranted('ROLE_ADMIN')]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+    public function rejectEvent(Event $event, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $event->setStatus('Rejetee');
+        $entityManager->flush();
+
+        $this->addFlash('success', "l'évenement a été rejetée avec succès !");
+        return $this->redirectToRoute('app_admin_events');
     }
 
 
@@ -204,6 +243,25 @@ public function listAdmins(UserRepository $userRepository): Response
 
     return $this->render('validationAnnonce/historiqueAnnonces.html.twig', [
         'annonces' => $annonces,
+    ]);
+    }
+
+    #[Route('/admin/historique/events', name: 'app_admin_event_history')]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+    public function histEvents(EventRepository $eventRepository, Request $request): Response
+    {
+
+    $filter = $request->query->get('filter', 'all');
+
+    $events = match ($filter) {
+        'pending' => $eventRepository->findBy(['status' => 'En Attente']),
+        'active' => $eventRepository->findBy(['status' => 'Acceptée']),
+        'inactive' => $eventRepository->findBy(['status' => 'Rejetée']),
+        default => $eventRepository->findAll(),
+    };
+
+    return $this->render('events/historiqueEvents.html.twig', [
+        'events' => $events,
     ]);
     }
 

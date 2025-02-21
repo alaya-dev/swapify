@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateSuperAdminCommand extends Command
 {
@@ -52,6 +52,12 @@ class CreateSuperAdminCommand extends Command
         // Demander le mot de passe
         $password = $io->askHidden('Veuillez entrer le mot de passe du super administrateur : ');
 
+        // Vérifier que le mot de passe contient au moins 8 caractères
+        if (strlen($password) < 8) {
+            $io->error('Le mot de passe doit contenir au moins 8 caractères.');
+            return Command::FAILURE;
+        }
+
         // Demander les autres informations : nom, prénom, téléphone, adresse, etc.
         $nom = $io->ask('Veuillez entrer le nom du super administrateur : ');
         $prenom = $io->ask('Veuillez entrer le prénom du super administrateur : ');
@@ -67,6 +73,14 @@ class CreateSuperAdminCommand extends Command
         $user->setDateNaissance(new \DateTime($dateNaissance));
         $user->setTel($tel);
         $user->setAdresse($adresse);
+
+        // Vérifier si l'utilisateur a au moins 18 ans
+        $now = new \DateTime();
+        $age = $now->diff($user->getDateNaissance())->y;
+        if ($age < 18) {
+            $io->error('Le super administrateur doit avoir au moins 18 ans.');
+            return Command::FAILURE;
+        }
 
         // Hacher le mot de passe
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);

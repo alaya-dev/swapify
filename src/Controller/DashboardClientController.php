@@ -56,12 +56,7 @@ class DashboardClientController extends AbstractController
         return $this->render('dashboard/evenment.html.twig');
     }
 
-    #[Route('/dashboard/client/livraison', name: 'livraison')]
-    public function livraison(): Response
-    {
-        return $this->render('dashboard/livraison.html.twig');
-    }
-
+   
     #[Route('/dashboard/client/conversation', name: 'conversation')]
     public function conversation(): Response
     {

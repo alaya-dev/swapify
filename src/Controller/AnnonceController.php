@@ -13,6 +13,7 @@ use App\Enum\etat;
 use App\Form\AnnoncesFilterType;
 use App\Repository\FavorisRepository;
 use App\Repository\ImageRepository;
+use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use stdClass;
@@ -160,7 +161,7 @@ final class AnnonceController extends AbstractController
     
 
     #[Route('/{id}', name: 'app_annonce_show', methods: ['GET'])]
-    public function show(Annonce $annonce,ImageRepository $imageRepository,AnnonceRepository $annonceRepository,  FavorisRepository $favorisRepository): Response
+    public function show(Annonce $annonce,ImageRepository $imageRepository,AnnonceRepository $annonceRepository,  FavorisRepository $favorisRepository,RatingRepository $ratingRepo): Response
     {
 
         $user = $this->getUser();
@@ -172,12 +173,17 @@ final class AnnonceController extends AbstractController
         $favoris = $user ? $favorisRepository->findBy(['user' => $user]) : [];
 
 
+        $user2 = $annonce->getUser();
+        $avgRating = $ratingRepo->getAverageRating($user2) ?? 0;
+
+
 
         return $this->render('annonce/show.html.twig', [
             'annonce' => $annonce,
             'images'=>$images,
             'annonces' => $annonces,
-            'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris)
+            'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris),
+            'rating'=> $avgRating
 
         ]);
     }

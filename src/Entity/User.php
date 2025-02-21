@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Symfony\Component\Validator\Constraints as Assert;  
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
 //#[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -49,6 +48,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     #[ORM\Column(type: 'date')]
     private ?\DateTimeInterface $dateNaissance ;
+
+
     
 
 
@@ -88,12 +89,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reclamation::class, orphanRemoval: true)]
     private Collection $reclamations; 
 
+
+        /**
+     * @var Collection<int, Rating>
+     */
+    #[ORM\OneToMany(mappedBy: 'idRecepteur', targetEntity: Rating::class)]
+    private Collection $ratings; 
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->dateNaissance = new \DateTime(); // Exemple de valeur par défaut : la date actuelle
         $this->favoris = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -281,6 +290,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             $this->favoris->add($favori);
             $favori->setUser($this);
         }
+    }
+
+    /** 
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): static
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setIdRecepteur($this);
+        }
 
         return $this;
     }
@@ -321,6 +346,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             // set the owning side to null (unless already changed)
             if ($reclamation->getUser() === $this) {
                 $reclamation->setUser(null);
+
+            }
+        }
+
+    }
+
+
+    public function removeRating(Rating $rating): static
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getIdRecepteur() === $this) {
+                $rating->setIdRecepteur(null);
             }
         }
 

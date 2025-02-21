@@ -12,27 +12,30 @@
       </button>
     </div>
     <div class="hidden lg:flex lg:gap-x-8">
-      <a href="{{ path('app_home') }}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Acceuil</a>
-       <a href="/annonce" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Annonces</a>
-      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">À Propos</a>
-      <a href="{{ path('app_blog_index') }}" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
-      <a href="#" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
+      <a href="{{ path('app_home') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Acceuil</a>
+      <a href="#"  data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">À Propos</a>
+      <a href="/annonce" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
+      <a href="{{ path('app_event_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Evenement</a>
+      <a href="{{ path('app_blog_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
+      <a href="{{path('app_home')}}#contact" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
+      
     </div>
 
 
     <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6 pr-1">
        {% if app.user %}
-                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="/logout">Se déconnecter</a>
+                    <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="/logout" data-turbo="false">Se déconnecter</a>
+
                    {% if 'ROLE_CLIENT' in app.user.roles %}
-                    <a href="/dashboard/client"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
+                    <a href="/dashboard/client" data-turbo="false"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
                     {% else %}
-                    <a href="/dashboard"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
+                    <a href="/dashboard" data-turbo="false"  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" class="welcome-message">Bienvenue, {{ app.user.nom }} {{ app.user.prenom }}</a>
                     {% endif %}
 
 
                 {% else %}
-                  <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_login') }}">Se connecter</a>
-                  <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_register') }}">S'inscrire</a>
+                  <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_login') }}" data-turbo="false">Se connecter</a>
+                  <a  class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" href="{{ path('app_register') }}" data-turbo="false">S'inscrire</a>
                 {% endif %}
     </div>
 
@@ -48,13 +51,16 @@
       </button>
     </div>
     <div class="mt-6 space-y-4">
-      <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Acceuil</a>
-      <a href="#" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">À Propos</a>
-      <a href="{{ path('app_home') }}#contact" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Contact</a>
+      <a href="#" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Acceuil</a>
+      <a href="#" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">À Propos</a>
+      <a href="/annonce" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
+      <a href="{{ path('app_event_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Evenement</a>
+      <a href="{{ path('app_blog_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
+      <a href="{{ path('app_home') }}#contact" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Contact</a>
     </div>
     <div class="mt-6 border-t border-gray-300 pt-4">
-      <a href="{{path('app_login')}}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">Se Connecter</a>
-      <a href="{{path('app_register')}}" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg">S'Inscrire</a>
+      <a href="{{path('app_login')}}" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Se Connecter</a>
+      <a href="{{path('app_register')}}" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">S'Inscrire</a>
     </div>
   </div>
 </header>
