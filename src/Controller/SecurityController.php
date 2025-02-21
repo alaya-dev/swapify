@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\TaskType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;

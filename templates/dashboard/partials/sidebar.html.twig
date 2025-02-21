@@ -9,6 +9,11 @@
             <i class="fas fa-user mr-3"></i>
             Profile
         </a>
+        <a href="{{ path('check_certificate_eligibility') }}" data-turbo="false" 
+           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
+            <i class="fas fa-chart-line mr-3"></i>
+            Statistique
+        </a>
 
         <!-- Souk Link -->
         <a href="#" data-turbo="false" 
@@ -18,10 +23,10 @@
         </a>
 
         <!-- Annonce Dropdown -->
-        <div x-data="{ isOpen: false }" class="w-full">
+        <div x-data="{ isOpen: false }" class="w-full" >
             <button @click="isOpen = !isOpen" 
                     class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
-                <div class="flex items-center">
+                <div class="flex items-center" >
                     <i class="fas fa-calendar-alt mr-3"></i>
                     Annonce
                 </div>
@@ -35,12 +40,17 @@
                  x-transition:leave="transition ease-in duration-200" 
                  x-transition:leave-start="opacity-100 transform translate-y-0" 
                  x-transition:leave-end="opacity-0 transform -translate-y-2" 
-                 class="bg-gray-700">
-                <a href="{{path('mesAnnonces')}}" 
+                 class="bg-gray-700" >
+                <a href="{{path('mesAnnonces')}}"  data-turbo="false"
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     mes annonces
                 </a>
+                      <a href="{{path('wishlist_show')}}" 
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+                    mes favoris
+                </a>
                 <a href="{{path('app_annonce_new')}}" 
+                <a href="{{path('app_annonce_new')}}" data-turbo="false"
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     ajouter annonce
                 </a>
@@ -66,11 +76,11 @@
                  x-transition:leave-start="opacity-100 transform translate-y-0" 
                  x-transition:leave-end="opacity-0 transform -translate-y-2" 
                  class="bg-gray-700">
-                <a href="{{path('app_blog_all')}}" 
+                <a href="{{path('app_blog_all')}}"  data-turbo="false"
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     Mes Blogs
                 </a>
-                <a href="{{path('app_blog_new')}}" 
+                <a href="{{path('app_blog_new')}}" data-turbo="false" 
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     Créer Blog 
                 </a>
@@ -96,19 +106,21 @@
                  x-transition:leave-start="opacity-100 transform translate-y-0" 
                  x-transition:leave-end="opacity-0 transform -translate-y-2" 
                  class="bg-gray-700">
-                <a href="{{path('evenment')}}" 
+                <a href="{{path('my_events')}}" data-turbo="false"
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     mes evenements
                 </a>
-                <a href="#" 
+                <a href="{{path('app_event_new')}}" data-turbo="false"
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 ">
                     ajouter evenements
                 </a>
             </div>
+
+             
         </div>
 
         <!-- Livraison Link -->
-        <a href="{{ path('livraison') }}" data-turbo="false" 
+        <a href="{{ path('livraison_list') }}" data-turbo="false" 
            class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'livraison' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
             <i class="fas fa-shipping-fast mr-3"></i>
             Livraison
@@ -120,7 +132,19 @@
             <i class="fa fa-comments mr-3" aria-hidden="true"></i>
             Conversation
         </a>
+
+
+          
+
+                  <div class="flex items-center block py-4 pl-6 hover:bg-green-800 transition-colors duration-200">
+                        <a href="{{path('app_reclamation_new')}}" >
+                    Envoyée reclamation
+                </a>
+                    
+                </div>
+
     </nav>
+
 </aside>
 
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>

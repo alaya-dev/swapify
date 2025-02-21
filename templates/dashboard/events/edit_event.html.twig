@@ -1,0 +1,101 @@
+       {% extends 'dashBord_user.html.twig' %}
+
+{% block content %}
+<div class="w-full overflow-hidden border-t flex flex-col">
+    <main class="w-full flex-grow p-6">
+        <p class="text-xl pb-6 flex items-center">
+            <i class="fas fa-calendar-alt mr-3"></i><a href="{{path('my_events')}}">Mes Évenements</a>/ modifier Événement
+        </p>
+        <div class="flex flex-col space-y-6">
+            <!-- Form -->
+            <div class="w-full">
+                <div class="leading-loose">
+                    {{ form_start(form, {'attr': {'class': 'p-10 bg-white rounded shadow-xl space-y-4', 'novalidate': 'novalidate'}}) }}
+
+                    <p class="text-lg text-gray-800 font-medium pb-4">Informations de l'événement</p>
+                    
+                    <div>
+                        {{ form_label(form.title, 'Titre', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                        {{ form_widget(form.title, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                        {% for error in form.title.vars.errors %}
+                            <div class=" mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                        {% for error in form.description.vars.errors %}
+                            <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.dateDebut, 'Date de début', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                        {{ form_widget(form.dateDebut, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                        {% for error in form.dateDebut.vars.errors %}
+                            <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.dateFin, 'Date de fin', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                        {{ form_widget(form.dateFin, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                        {% for error in form.dateFin.vars.errors %}
+                            <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.maxParticipant, 'Participants max', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                        {{ form_widget(form.maxParticipant, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                        {% for error in form.maxParticipant.vars.errors %}
+                            <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+
+                        {{ form_label(form.image, 'Image', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-600'}}) }}
+                        {{ form_widget(form.image, {'attr': {'class': 'block w-full text-sm text-gray-700 p-3  border border-gray-300 rounded-lg cursor-pointer bg-gray-200 focus:outline-none '}}) }}
+                        {% for error in form.image.vars.errors %}
+                            <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded shadow-sm">
+                        <h3 class="text-lg font-semibold text-gray-700">Editer mes Sessions</h3>
+                        <div class="sessions-collection space-y-4">
+                            {% for session in form.sessions %}
+                                <div class="session-item bg-white p-4 rounded shadow">
+                                    {{ form_label(session.objective, 'Objective', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                                    {{ form_widget(session.objective, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded '}}) }}
+                                    {{ form_label(session.startHour, 'Heure de Début', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                                    {{ form_widget(session.startHour, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded '}}) }}
+                                    {% for error in form.image.vars.errors %}
+                                        <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                                    {% endfor %}
+                                    {{ form_label(session.endHour, 'Heure de Fin', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                                    {{ form_widget(session.endHour, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded '}}) }}
+                                    {% for error in form.image.vars.errors %}
+                                        <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                                    {% endfor %}
+                                    {{ form_label(session.typeSession, 'type session', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                                    {{ form_widget(session.typeSession, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded '}}) }}
+                                    
+                                    <button type="button" class="mt-2 w-full bg-red-500 text-white py-2 rounded remove-session">Supprimer la session</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="mt-4 w-full bg-blue-50 text-gray-700 py-2 rounded add-session-btn border border-2 border-dashed border-blue-500 flex items-center justify-center"><i class="fas fa-plus mr-3"></i> Ajouter une session</button>
+                    </div>
+                    
+                    <button type="submit" class="px-4 py-1 text-white font-light tracking-wider bg-gray-700 rounded">Enregistrer l'événement</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock %}
+

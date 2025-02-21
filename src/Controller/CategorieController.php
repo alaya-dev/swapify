@@ -6,6 +6,7 @@ use App\Entity\Categorie;
 use App\Form\CategorieType;
 use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/categorie')]
 final class CategorieController extends AbstractController
 {
+
+
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')" )]
     #[Route(name: 'app_categorie_index', methods: ['GET'])]
     public function index(CategorieRepository $categorieRepository): Response
     {
@@ -22,6 +26,7 @@ final class CategorieController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')" )]
     #[Route('/new', name: 'app_categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -65,6 +70,7 @@ final class CategorieController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')" )]
     #[Route('/{id}', name: 'app_categorie_show', methods: ['GET'])]
     public function show(Categorie $categorie): Response
     {
@@ -73,6 +79,7 @@ final class CategorieController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')" )]
     #[Route('/{id}/edit', name: 'app_categorie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
     {
@@ -90,6 +97,7 @@ final class CategorieController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')" )]
     #[Route('/{id}/delete', name: 'app_categorie_delete', methods: ['POST'])]
     public function delete(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
     {

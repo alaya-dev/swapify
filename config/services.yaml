@@ -7,9 +7,22 @@
 
 parameters:
     uploads_directory: '%kernel.project_dir%/public/uploads/images'
+    projectDir: '%kernel.project_dir%/public/uploads/certifs'
+    videosdk_api_key: '%env(VIDEOSDK_API_KEY)%'
+    VIDEOSDK_SECRET_KEY: '%env(VIDEOSDK_SECRET_KEY)%'
     images_directory: '%kernel.project_dir%/public/uploads/images'
 
 services:
+    App\Service\CertificateGeneratorService:
+        arguments:
+             $projectDir: '%kernel.project_dir%/public/uploads/certifs'
+    
+            
+    App\Service\ParticipationCalculatorService:
+        arguments: 
+            $attendanceRepository: '@App\Repository\AttendanceRepository'
+            $sessionRepository: '@App\Repository\SessionRepository'
+            $participantEventRepository: '@App\Repository\ParticipantEventRepository'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -32,5 +45,7 @@ services:
         class: App\EventListener\LoginListener
         tags:
             - { name: kernel.event_listener, event: security.interactive_login }
-    
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
     

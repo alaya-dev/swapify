@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250218221703 extends AbstractMigration
+final class Version20250219135630 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,6 +28,7 @@ final class Version20250218221703 extends AbstractMigration
         $this->addSql('ALTER TABLE blog_user_ratings ADD CONSTRAINT FK_CC67F644A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE commentaire ADD CONSTRAINT FK_67F068BCDAE07E97 FOREIGN KEY (blog_id) REFERENCES blog (id)');
         $this->addSql('ALTER TABLE commentaire ADD CONSTRAINT FK_67F068BCA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE annonce CHANGE description description LONGTEXT NOT NULL');
     }
 
     public function down(Schema $schema): void
@@ -41,5 +42,6 @@ final class Version20250218221703 extends AbstractMigration
         $this->addSql('DROP TABLE blog');
         $this->addSql('DROP TABLE blog_user_ratings');
         $this->addSql('DROP TABLE commentaire');
+        $this->addSql('ALTER TABLE annonce CHANGE description description LONGTEXT DEFAULT NULL');
     }
 }

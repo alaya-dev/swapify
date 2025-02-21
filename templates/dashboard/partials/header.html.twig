@@ -7,14 +7,13 @@
         </button>
         <button id="close-btn" class="h-full w-full fixed inset-0 cursor-default" style="display: none;"></button>
         <div id="dropdown" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16" style="display: none;">
-            <a href="/" data-turbo="false" class="block px-4 py-2 account-link hover:text-white">home</a>
-            <a href="#" class="block px-4 py-2 account-link hover:text-white">Support</a>
-            <a href="/logout" class="block px-4 py-2 account-link hover:text-white">Sign Out</a>
+            <a href="/" data-turbo="false" class="block px-4 py-2 account-link ">home</a>
+            <a href="#" data-turbo="false" class="block px-4 py-2 account-link ">Support</a>
+            <a href="/logout" data-turbo="false" class="block px-4 py-2 account-link ">Sign Out</a>
         </div>
     </div>
 </header>
 
-<!-- Mobile Header & Nav -->
 <header class="w-full bg-sidebar py-5 px-6 sm:hidden">
     <div class="flex items-center justify-between">
         <a href="index.html" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">user</a>
@@ -23,29 +22,28 @@
         </button>
     </div>
 
-    <!-- Dropdown Nav -->
     <nav id="nav-menu" class="flex flex-col pt-4 hidden">
-        <a href="{{ path('app_dashboard_client') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-tachometer-alt mr-3"></i>
             Profile
         </a>
-        <a href="{{ path('souk') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'souk' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('souk') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'souk' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-sticky-note mr-3"></i>
             Souk
         </a>
-        <a href="{{ path('annonce') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'annonce' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('app_annonce_index') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'annonce' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-table mr-3"></i>
             Annonce
         </a>
-        <a href="{{ path('blog') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'blog' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('app_blog_index') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'blog' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-align-left mr-3"></i>
             Blog
         </a>
-        <a href="{{ path('evenment') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'evenment' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('app_event_index') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'evenment' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-tablet-alt mr-3"></i>
             Evenment
         </a>
-        <a href="{{ path('livraison') }}" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
+        <a href="{{ path('livraison_list') }}" data-turbo="false" class="flex items-center {{ app.request.attributes.get('_route') == 'livraison' ? 'active-nav-link' : 'text-white opacity-75 hover:opacity-100' }} py-2 pl-4 nav-item">
             <i class="fas fa-calendar mr-3"></i>
             Livraison
         </a>

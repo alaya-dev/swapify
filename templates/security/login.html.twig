@@ -1,10 +1,101 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Swapify</title>
-    
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="grid grid-cols-1 md:grid-cols-2 h-screen  gap-4 items-center  overflow-hidden">
+    <!-- Left Section -->
+    <div class="p-10 w-full max-w-lg mx-auto h-[100vh]">
+        <h3 class="text-3xl font-semibold text-gray-800 mb-8">
+            Connectez-vous sur <span class="font-handwriting text-green-600">SWAPIFY</span>
+        </h3>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <form action="{{path('app_login')}}" method='POST'>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <!-- Email Input -->
+            <div class="mb-6">
+                <label for="email" class="block text-gray-700 font-bold mb-2">E-mail *</label>
+                <input
+                    type="email"
+                    id="email"
+                    name='email'
+                    placeholder="alouioussema697@salman.tn"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:outline-none"
+                />
+            </div>
+            <!-- Password Input -->
+            <div class="mb-6">
+                <label for="mdp" class="block text-gray-700 font-bold mb-2">Mot de passe *</label>
+                <input
+                    type="password"
+                    id="mdp"
+                    name="password"
+                    placeholder="***********"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:outline-none"
+                />
+            </div>
+                                        <div class="form-group mb-3">
+                                {{ form_row(form.recaptcha) }}
+                                <div class="text-danger">
+                                    {{ form_errors(form.recaptcha) }} 
+                                </div>
+                            </div>
+            <!-- Login Button -->
+            <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-green-700 transition duration-200">
+                Se connecter
+            </button>
+            <!-- Forgot Password Link -->
+            <div class="mt-4 text-center">
+                <a href="/reset-password" class="text-gray-600 hover:underline">Mot de passe oublié ?</a>
+            </div>
+            <!-- Separator Line -->
+            <div class="my-6 w-full h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+            <!-- Create Account Button -->
+            <a href="{{ path('app_register') }}" class="w-full block text-center bg-gray-50 border border-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Créez votre compte dès maintenant
+            </a>
+        </form>
+    </div>
+
+    <!-- Right Section -->
+    <div class="hidden md:grid grid-cols-3 gap-4 overflow-hidden h-[100vh]">
+        <!-- Column 1 -->
+        <div class="grid grid-rows-6 gap-4 animate-slide">
+            <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">🚗</div>
+            <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
+            <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📚</div>
+            <!-- Duplicate items -->
+            <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">🚗</div>
+            <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
+            <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📚</div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="grid grid-rows-6 gap-4 animate-slide-reverse">
+            <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">👕</div>
+            <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">⛺</div>
+            <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">🪑</div>
+            <!-- Duplicate items -->
+            <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">👕</div>
+            <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">⛺</div>
+            <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">🪑</div>
+        </div>
+
+        <!-- Column 3 -->
+        <div class="grid grid-rows-6 gap-4 animate-slide">
+            <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">🚗</div>
+            <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
+            <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">🪑</div>
+            <!-- Duplicate items -->
+            <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">🚗</div>
+            <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
+            <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">🪑</div>
+        </div>
+    </div>
+</div>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Gruppo&display=swap');
 
@@ -229,107 +320,4 @@
 
 
     </style>
-</head>
-<body>
-    <div class="navbar">
-        <div class="home"><a href="#">⬅</a></div>
-        <div class="logo">Swapify</div>
-        <div class="logo-img">🚗</div>
-    </div>
-    
-    <br><br><br>
-
-    <div class="container">
-       <div class="left-section">
-            <h3>Connectez-vous sur <span>SWAPIFY</span></h3>
-
-                        {% for message in app.flashes('warning') %}
-                        <div class="alert alert-warning">
-                            {{ message }}
-                            {% if app.request.query.get('id') %}
-                                <a href="{{ path('app_resend_verification_email', {'id': app.request.query.get('id')}) }}" >
-                                    Renvoyer l'email de vérification
-                                </a>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-
-            
-                      {% for label, messages in app.flashes %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ label }}">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                      {% endfor %}
-
-                    <form method="post" novalidate>
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                        <div class="input-group">
-                            <label for="email">E-mail</label>
-                            <input type="email" id="email" name="email" value="{{ last_username }}" class="input-field" required>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="password">Mot de passe</label>
-                            <input type="password" id="password" name="password" class="input-field" required>
-                        </div>
-
-
-
-                            <div class="form-group">
-                                {{ form_row(form.recaptcha) }}
-                                <div class="text-danger">
-                                    {{ form_errors(form.recaptcha) }} 
-                                </div>
-                            </div>
-
-
-
-                        <button type="submit" class="btn-primary">Se connecter</button>
-                    </form>
-     
-
-            <div class="forgot-password">
-                <a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié ?</a>
-            </div>
-
-            <div class="custom-line"></div>
-            
-            <button class="create-account">
-                <a href="/register">Créez votre compte dès maintenant</a>
-            </button>
-        </div>
-
-        <div class="right-section">
-            <div class="column" id="col-1">
-                <div class="item" style="background-color: #FFE4E1;">🚗</div>
-                <div class="item" style="background-color: #E0FFFF;">📱</div>
-                <div class="item" style="background-color: #F0FFF0;">📚</div>
-                <div class="item" style="background-color: #FFE4E1;">🚗</div>
-                <div class="item" style="background-color: #E0FFFF;">📱</div>
-                <div class="item" style="background-color: #F0FFF0;">📚</div>
-            </div>
-
-            <div class="column" id="col-2">
-                <div class="item" style="background-color: #F0FFF0;">👕</div>
-                <div class="item" style="background-color: #FFE4E1;">⛺</div>
-                <div class="item" style="background-color: #E0FFFF;">🪑</div>
-                <div class="item" style="background-color: #F0FFF0;">👕</div>
-                <div class="item" style="background-color: #FFE4E1;">⛺</div>
-                <div class="item" style="background-color: #E0FFFF;">🪑</div>
-            </div>
-
-            <div class="column" id="col-3">
-                <div class="item" style="background-color: #E0FFFF;">🚗</div>
-                <div class="item" style="background-color: #F0FFF0;">📱</div>
-                <div class="item" style="background-color: #FFE4E1;">🪑</div>
-                <div class="item" style="background-color: #E0FFFF;">🚗</div>
-                <div class="item" style="background-color: #F0FFF0;">📱</div>
-                <div class="item" style="background-color: #FFE4E1;">🪑</div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+{% endblock %}

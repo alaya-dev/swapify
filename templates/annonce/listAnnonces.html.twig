@@ -3,75 +3,93 @@
 {% block title %}Liste des Annonces{% endblock %}
 
 {% block body %}
-    {# External Libraries #}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <div class="min-h-screen bg-gradient-to-br from-white-600 to-teal-400 p-6">
-        <h3 class="text-center text-2xl font-bold py-4 bg-gradient-to-r from-white-700 to-teal-500 rounded-lg shadow-md">
-            Liste des Annonces
-        </h3>
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-teal-50 p-6" style="overflow-y-auto">
+    <h3 class="text-center text-2xl font-bold py-4 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg shadow-md" style="overflow-y-auto">
+      Liste des Annonces
+    </h3>
 
-        <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto max-h-[800px]">
-                {{ include('annonce/_formAnFilter.html.twig') }}
+    <div class="grid md:grid-cols-2 gap-6 mt-6">
+      <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto max-h-[800px]">
+        {{ include('annonce/_formAnFilter.html.twig') }}
 
-                {% if annonces is defined and annonces is not empty %}
-                    {% for annonce in annonces %}
-                        <div class="flex p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all mb-4">
-                            <div class="mr-4">
-                                {% for image in annonce.images %}
-                                    {% if annonce.id == image.annonce.id and loop.first %}
-                                        <img src="{{ asset('uploads/images/' ~ image.imageName) }}" alt="Annonce Image" class="w-32 h-32 object-cover rounded-lg">
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+        {% if annonces is defined and annonces is not empty %}
+       {% for annonce in annonces %}
+  <div class="flex p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all mb-4 relative">
+   
+    {% set isFavorited = app.user and favoris is not empty and annonce in favoris %}
 
-                            <div class="flex-1">
-                                <div class="text-lg font-bold text-green-700">{{ annonce.titre }}</div>
-                                <div class="text-gray-600">Région: {{ annonce.region }}</div>
-                                <div class="text-gray-600">Catégorie: {{ annonce.categorie.libelle }}</div>
-                                <div class="text-gray-500 text-sm">Créé le: {{ annonce.dateCreation|date('j M Y') }}</div>
-
-                                <div class="mt-3 flex space-x-2">
-                                    {% if app.user %}
-                                        <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm shadow">
-                                            <i class="fas fa-paper-plane"></i> Envoyer Offre
-                                        </a>
-                                    {% endif %}
-                                    <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm shadow">
-                                        <i class="fas fa-eye"></i> Voir Détails
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="text-center text-gray-500">Aucune annonce disponible.</div>
-                {% endif %}
-            </div>
-
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div id="map" class="h-[800px]"></div>
-            </div>
+      {% if isFavorited %}
+        <div class="absolute top-2 right-2">
+          <i class="fas fa-heart text-pink-500 text-2xl"></i>
         </div>
+      {% endif %}
+
+    {# Annonce Image #}
+    <div class="mr-4">
+      {% for image in annonce.images %}
+        {% if annonce.id == image.annonce.id and loop.first %}
+          <img src="{{ asset('uploads/images/' ~ image.imageName) }}" alt="Annonce Image" class="w-32 h-32 object-cover rounded-lg">
+        {% endif %}
+      {% endfor %}
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var map = L.map('map').setView([36.8065, 10.1815], 12);
+    {# Annonce Details #}
+    <div class="flex-1">
+      <div class="text-lg font-bold text-teal-700">{{ annonce.titre }}</div>
+      <div class="text-gray-600">Région: {{ annonce.region }}</div>
+      <div class="text-gray-600">Catégorie: {{ annonce.categorie.libelle }}</div>
+      <div class="text-gray-500 text-sm">Créé le: {{ annonce.dateCreation|date('j M Y') }}</div>
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
+      {# Buttons #}
+      <div class="mt-3 flex space-x-2">
+        {% if app.user %}
+          <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="bg-teal-500 hover:bg-teal-600 text-white px-3 py-1 rounded text-sm shadow transition-all">
+            <i class="fas fa-paper-plane"></i> Envoyer Offre
+          </a>
+          <a href="{{ path('wishlist_add', {'id': annonce.id}) }}" class="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded text-sm shadow transition-all flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Ajouter favoris
+          </a>
+        {% endif %}
+        <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm shadow transition-all">
+          <i class="fas fa-eye"></i> Voir Détails
+        </a>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+        {% else %}
+          <div class="text-center text-gray-500">Aucune annonce disponible.</div>
+        {% endif %}
+      </div>
 
-            {% for item in annonces %}
-                L.marker([{{ item.x }}, {{ item.y }}])
-                    .addTo(map)
-                    .bindPopup("<b>{{ item.user.email }}</b>")
-                    .openPopup();
-            {% endfor %}
-        });
-    </script>
+      <div class="bg-white rounded-lg shadow-lg z-1 ">
+        <div id="map" class="h-[800px]"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var map = L.map('map').setView([36.8065, 10.1815], 12);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      {% for item in annonces %}
+        L.marker([{{ item.x }}, {{ item.y }}])
+          .addTo(map)
+          .bindPopup("<b>{{ item.user.email }}</b>")
+          .openPopup();
+      {% endfor %}
+    });
+  </script>
 {% endblock %}
