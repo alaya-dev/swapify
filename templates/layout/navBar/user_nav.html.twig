@@ -20,20 +20,20 @@
     {% if 'ROLE_ADMIN' in app.user.getRoles() %}
     <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
     {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
-    <a href="{{ path('app_dashboard') }}"  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+    <a href="{{ path('app_dashboard') }}" data-turbo="false"  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
     {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
-    <a href="{{ path('app_dashboard_client') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+    <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
      {% endif %}
 
           </li>
           <li>
-            <a href="annonce/mesAnnonces" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
+            <a href="annonce/mesAnnonces" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
           </li>
           <li>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Evenements</a>
+            <a href="{{path('my_events')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Evenements</a>
           </li>
           <li>
-            <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
+            <a href="/logout" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
           </li>
         </ul>
       </div>
@@ -47,25 +47,26 @@
   <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
     <ul class="flex flex-col font-medium  md:p-0 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
       <li>
-        <a href="/" class="block py-2 px-3 text-gray-900  rounded-sm md:bg-transparent md:p-0" aria-current="page">Acceuil</a>
+        <a href="/" data-turbo="false" class="block py-2 px-3 text-gray-900  rounded-sm md:bg-transparent md:p-0" aria-current="page">Acceuil</a>
       </li>
       <li>
-        <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">A propos</a>
+        <a href="#" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">A propos</a>
       </li>
       <li>
-        <a href="/annonce" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Annonces</a>
+        <a href="/annonce" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Annonces</a>
       </li>
       <li>
-        <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Evenements</a>
+        <a href="{{path('app_event_index')}}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Evenements</a>
       </li>
       <li>
-        <a href="{{ path('app_blog_index') }}" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Blog</a>
+        
+        <a href="{{ path('app_blog_index') }}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Blog</a>
       </li>
       <li>
-        <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Contact</a>
+        <a href="#" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Contact</a>
       </li>
       <li>
-          <a href="{{path('souk')}}" class="block py-2 px-3 text-red-500 rounded-sm md:bg-transparent md:p-0 animate-bounce">
+          <a href="{{path('souk')}}" data-turbo="false" class="block py-2 px-3 text-red-500 rounded-sm md:bg-transparent md:p-0 animate-bounce">
             Live
           </a>
       </li>
