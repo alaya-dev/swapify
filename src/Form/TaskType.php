@@ -8,8 +8,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use VictorPrdh\RecaptchaBundle\Form\ReCaptchaType;
 
-
-
 class TaskType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

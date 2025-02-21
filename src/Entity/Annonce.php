@@ -70,6 +70,11 @@ class Annonce
      */
     #[ORM\OneToMany(mappedBy: 'annonceName', targetEntity: Offre::class, orphanRemoval: true)]
     private Collection $offres;
+    /*
+     * @var Collection<int, Favoris>
+     */
+    #[ORM\OneToMany(mappedBy: 'annonces', targetEntity: Favoris::class)]
+    private Collection $favoris;
 
 
     public function __construct()
@@ -80,6 +85,7 @@ class Annonce
         }
         $this->images = new ArrayCollection();
         $this->offres = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
     }
 
 
@@ -251,6 +257,37 @@ class Annonce
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Favoris>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+            $favori->setAnnonces($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Favoris $favori): static
+    {
+        if ($this->favoris->removeElement($favori)) {
+            // set the owning side to null (unless already changed)
+            if ($favori->getAnnonces() === $this) {
+                $favori->setAnnonces(null);
+            }
+        }
+
+        return $this;
+    }
+
 
     /**
      * @return Collection<int, Offre>

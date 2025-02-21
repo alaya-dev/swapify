@@ -83,6 +83,15 @@
                 <div id="map" class="h-[800px] z-0"></div>
             </div>
         </div>
+      {% endif %}
+
+    {# Annonce Image #}
+    <div class="mr-4">
+      {% for image in annonce.images %}
+        {% if annonce.id == image.annonce.id and loop.first %}
+          <img src="{{ asset('uploads/images/' ~ image.imageName) }}" alt="Annonce Image" class="w-32 h-32 object-cover rounded-lg">
+        {% endif %}
+      {% endfor %}
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {

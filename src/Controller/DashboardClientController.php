@@ -148,7 +148,7 @@ class DashboardClientController extends AbstractController
         return $this->render('dashboard/evenment.html.twig');
     }
 
-   
+
     #[Route('/dashboard/client/conversation', name: 'conversation')]
     public function conversation(EntityManagerInterface $entityManager): Response
     {

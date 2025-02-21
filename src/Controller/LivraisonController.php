@@ -12,6 +12,7 @@ use App\Repository\LivraisonRepository;
 use App\Repository\LivreurRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Endroid\QrCode\QrCode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,20 +69,20 @@ class LivraisonController extends AbstractController
             'livreurs' => $livreurs
         ]);
     }
+  
+  
     #[Route('/livraison/{id}/qr', name: 'livraison_qr')]
-    public function generateQrCode(Livraison $livraison): Response
+    public function generateQrCode(Livraison $livraison): Response 
     {
-        $url = 'http://192.168.37.161:8000/livraison/' . $livraison->getId() . '/confirmer';
-
-        $qrCode = Builder::create()
-            ->writer(new PngWriter())
-            ->data($url)
-            ->encoding(new Encoding('UTF-8'))
-            ->size(200)
-            ->margin(10)
-            ->build();
-
-        return new Response($qrCode->getString(), 200, ['Content-Type' => 'image/png']);
+        $url = 'http://192.168.1.33:8000/livraison/' . $livraison->getId() . '/confirmer';
+    
+        $qrCode = new QrCode($url);
+   
+    
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+    
+        return new Response($result->getString(), 200, ['Content-Type' => 'image/png']);
     }
 
 

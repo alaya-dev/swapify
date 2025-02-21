@@ -5,31 +5,32 @@ namespace App\Controller;
 
 use App\Entity\Annonce;
 use App\Entity\Image;
-use App\Entity\Position;
 use App\Form\AnnonceType;
 use App\Repository\AnnonceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Enum\etat;
 use App\Form\AnnoncesFilterType;
+use App\Repository\FavorisRepository;
 use App\Repository\ImageRepository;
+use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
-use stdClass;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/annonce')]
 final class AnnonceController extends AbstractController
 {
 
-
     #[Route(name: 'app_annonce_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, AnnonceRepository $annonceRepository, ImageRepository $imageRepository)
+    public function index(Request $request, AnnonceRepository $annonceRepository, ImageRepository $imageRepository, FavorisRepository $favorisRepository)
     {
+
+        $user = $this->getUser();
+
         $form = $this->createForm(AnnoncesFilterType::class);
         $form->handleRequest($request);
 
@@ -44,13 +45,20 @@ final class AnnonceController extends AbstractController
 
         $annonces = $this->handleFilter($request, $annonceRepository);
         $images = $imageRepository->findAll();
+
+        $favoris = $user ? $favorisRepository->findBy(['user' => $user]) : [];
+
+
         return $this->render('annonce/listAnnonces.html.twig', [
             'form' => $form->createView(),
             'annonces' => $annonces,
             'images' => $images,
+            'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris)
         ]);
     }
 
+
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')")]
     #[Route('/mesAnnonces', name: 'mesAnnonces', methods: ['GET', 'POST'])]
     public function mesAnnonces(AnnonceRepository $annonceRepository, Request $request): Response
     {
@@ -84,7 +92,7 @@ final class AnnonceController extends AbstractController
     }
 
 
-
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')")]
     #[Route('/new', name: 'app_annonce_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,  SluggerInterface $slugger, UserRepository $userRepo): Response
     {
@@ -107,7 +115,6 @@ final class AnnonceController extends AbstractController
                     $safeFilename = $slugger->slug($originalFilename);
                     $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
                     $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
-
                     $image = new Image();
                     $image->setImageName($newFilename);
                     $annonce->addImage($image);
@@ -148,19 +155,34 @@ final class AnnonceController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_annonce_show', methods: ['GET'])]
-    public function show(Annonce $annonce, ImageRepository $imageRepository, AnnonceRepository $annonceRepository): Response
+    public function show(Annonce $annonce, ImageRepository $imageRepository, AnnonceRepository $annonceRepository,  FavorisRepository $favorisRepository, RatingRepository $ratingRepo): Response
     {
+
+        $user = $this->getUser();
+
+
         $images = $imageRepository->findAll();
         $annonces = $annonceRepository->findValideAnnoncesByUsrId($annonce->getUser());
+
+        $favoris = $user ? $favorisRepository->findBy(['user' => $user]) : [];
+
+
+        $user2 = $annonce->getUser();
+        $avgRating = $ratingRepo->getAverageRating($user2) ?? 0;
+
 
 
         return $this->render('annonce/show.html.twig', [
             'annonce' => $annonce,
             'images' => $images,
-            'annonces' => $annonces
+            'annonces' => $annonces,
+            'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris),
+            'rating' => $avgRating
+
         ]);
     }
 
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')")]
     #[Route('/{id}/edit', name: 'app_annonce_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Annonce $annonce, EntityManagerInterface $entityManager): Response
     {
@@ -179,6 +201,7 @@ final class AnnonceController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')")]
     #[Route('/{id}', name: 'app_annonce_delete', methods: ['POST'])]
     public function delete(Request $request, Annonce $annonce, EntityManagerInterface $entityManager): Response
     {

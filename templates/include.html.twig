@@ -59,13 +59,7 @@
                             <i class="fa fa-fw fa-bars"></i>
                         </button>
 
-                        <!-- App Search-->
-                        <form class="app-search d-none d-lg-block">
-                            <div class="position-relative">
-                                <input type="text" class="form-control" placeholder="Search...">
-                                <span class="bx bx-search-alt"></span>
-                            </div>
-                        </form>
+                        
 
                         
                     </div>
@@ -179,9 +173,9 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-1.jpg"
+                                <img class="rounded-circle header-profile-user" src="/assets/images/users/"
                                     alt="Header Avatar">
-                                <span class="d-none d-xl-inline-block ms-1" key="t-henry">Henry</span>
+                                <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{app.user.email}}</span>
                                 <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
@@ -326,7 +320,9 @@
                                     <span >Réclamation</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/liste-contact" >La liste des réclamations</a></li>
+                                    <li><a href="{{path('app_reclamation_index') }}" >La liste des réclamations</a></li>
+                                   
+                
                                     <li>
                                 </li>
                                 </ul></li>
