@@ -22,18 +22,6 @@ class DashboardClientController extends AbstractController
     #[Route('/dashboard/client', name: 'app_dashboard_client')]
     public function rendre(OffreRepository $offerRepository, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
     {
-<<<<<<< HEAD
-
-        $user = $this->getUser();
-       /* $session = $request->getSession();
-        $session->set('test_key', 'test_value');
-        dd($session);
-        return new Response('Session test: ' . $session->get('test_key'));*/
-
-        $form = $this->createForm(ProfileType::class, $user);
-        $form->handleRequest($request);    
-
-=======
         $current_user = $this->getUser();
         $conversations = $entityManager->getRepository(Conversation::class)->findConversationsForUser($current_user);
         $my_offers = $offerRepository->findBy(['offerMaker' => $current_user]);
@@ -42,7 +30,6 @@ class DashboardClientController extends AbstractController
             'status' => ['accepted', 'pending']
         ]);
         $my_products = $productRepository->findBy(['owner' => $current_user]);
->>>>>>> origin/main
         return $this->render('dashboard/accueil_client.html.twig', [
             'my_offers' => $my_offers,
             'other_offers' => $other_offers,
