@@ -1,0 +1,323 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<style>
+    .tag {
+        border-top: 0.65rem solid #fff;
+        border-left: 0.65rem solid #fff;
+        border-right: 0.65rem solid #fff;
+        border-radius: 2rem 2rem 0 0;
+        position: absolute;
+        bottom: 0;
+        left: 42.5%;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+    }
+
+    .curveOne, .curveTwo {
+        width: 1.5rem;
+        height: 1.5rem;
+        position: absolute;
+        background-color: transparent;
+        z-index: 90;
+        overflow: hidden;
+    }
+
+    .curveOne {
+        bottom: 0;
+        right: 34.2%;
+        width: 1.9rem;
+        background-color: transparent;
+        border-bottom-left-radius: 2rem;
+        box-shadow: -0.5rem 0.346rem #fff;
+        z-index: 9;
+    }
+
+    .curveTwo {
+        bottom: 0;
+        left: 39.85%;
+        width: 1.9rem;
+        background-color: transparent;
+        border-bottom-right-radius: 2rem;
+        box-shadow: 0.45rem 0.37rem #fff;
+        z-index: 9;
+    }
+
+    /* Improved overlay styling for event cards */
+    .et-event:before {
+        border-radius: 20px;
+        content: "";
+        background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8));
+    }
+
+    /* Slider-specific styles */
+    .et-events-slider {
+        position: relative;
+        overflow: hidden;
+        min-height: 400px;
+    }
+
+    .slides-container {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+        flex: 0 0 100%;
+        width: 100%;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .slide[data-active="true"] {
+        opacity: 1;
+    }
+</style>
+
+{# Hero Section #}
+<section class="relative h-64 flex items-center justify-center bg-cover bg-center" style="background-image:url('{{ asset('assets/images/eventHero.jpg') }}')">
+    <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+    <div class="relative text-center text-white">
+        <h1 class="text-3xl font-bold">Tous les Événements</h1>
+        <nav class="text-sm mt-2">
+            <a href="#" class="hover:underline">Accueil</a>
+            <span class="mx-2">&raquo</span>
+            <span class="text-gray-300">Événements</span>
+        </nav>
+    </div>
+</section>
+
+{# Event Slider #}
+{% set upcoming_events = events 
+    |filter(event => event.status == "Acceptee" and event.dateDebut >= "now"|date("Y-m-d")) 
+    |sort((a, b) => a.dateDebut <=> b.dateDebut) 
+    |slice(0, 3) 
+%}
+{% if upcoming_events is not empty %}
+<div class="p-2">
+    <div class="container mx-auto max-w-[1200px] pt-[120px] lg:pt-[80px] md:pt-[60px] px-[12px] xl:max-w-6xl mb-5">
+    <div class="relative h-full">
+        <div class="et-events-slider">
+            <div class="slides-container">
+                {% for event in upcoming_events %}
+                <div class="slide" data-active="{{ loop.first ? 'true' : 'false' }}">
+                    <div class="et-event bg-cover bg-no-repeat bg-center relative z-[1] rounded-[20px] before:content-normal before:absolute before:inset-0 before:bg-gradient-to-b before:from-transparent before:to-black/70 before:-z-[1]"
+                        style="background-image: url('{{ asset('uploads/images/' ~ event.image) }}')">
+                        <div class="txt min-h-full flex flex-col justify-between items-start gap-[265px] lg:gap-[215px] xxs:gap-[165px] p-[40px] lg:p-[20px] pb-[50px] md:pb-[80px] text-white">
+                            <span class="inline-block bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">
+                                événements à venir
+                            </span>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-2 border border-white border-xl w-[40%] p-1 rounded-lg">
+                                    <span class="inline-block">
+                                        <svg class="text-white text-sm w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="text-sm">{{ event.dateDebut|date('d,M - Y') }}</span>
+                                </div>
+                                <h2 class="text-4xl font-bold leading-tight">
+                                    {{ event.title }}
+                                </h2>
+                                <p>{{ event.description|slice(0, 50) ~ (event.description|length > 50 ? '...' : '') }}</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block">
+                                        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.5 12A2.5 2.5 0 0 1 21 9.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v2.5a2.5 2.5 0 0 1 0 5V17a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="text-lg">encore {{ event.maxParticipant }} place</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Navigation buttons -->
+            <div class="w-[14.5rem] h-[4.8rem] gap-[16px] p-4 z-[1] tag">
+                <button class="prev w-[60px] h-[60px] border border-[#d9d9d9] rounded-full text-[18px] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/>
+                    </svg>
+                </button>
+                <button class="next w-[60px] h-[60px] border border-[#d9d9d9] rounded-full text-[18px] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="curveOne"></div>
+            <div class="curveTwo"></div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endif %}
+
+{# all event #}
+{% set hasAcceptedEvents = false %}
+
+{% for event in events %}
+    {% if event.status == 'Acceptee' %}
+        {% set hasAcceptedEvents = true %}
+        <div class="container p-2">
+                    <div class="max-w-6xl mx-auto space-y-8 mb-5">
+            <div class="flex flex-col md:flex-row bg-white rounded-xl shadow-sm overflow-hidden">
+                <!-- Image Card -->
+                <div class="w-full md:w-72 h-56 md:h-auto flex-shrink-0">
+                    <img 
+                        src="{{ asset('uploads/images/' ~ event.image) }}" 
+                        alt="Event audience" 
+                        class="w-full h-full object-cover"
+                    >
+                </div>
+                
+                <!-- Content Card -->
+                <div class="flex-1 p-6 md:p-8 flex flex-col justify-between">
+                    <div>
+                        <!-- Date and Time Pills -->
+                        <div class="flex flex-wrap gap-3 mb-5">
+                            <div class="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                {{ event.dateDebut|date('d,M - Y') }}
+                            </div>
+                            <div class="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                {{ event.dateFin|date('d,M - Y') }}
+                            </div>
+                        </div>
+                        
+                        <!-- Event Title -->
+                        <h3 class="text-2xl font-bold text-gray-800 mb-5 leading-tight mb-3">
+                            {{ event.title }}
+                            <br>
+                            <p class="text-sm text-gray-600 font-light">{{ event.description }}</p>
+                        </h3>
+                    </div>
+                    
+                    <!-- Actions Area -->
+                    <div class="flex items-center mt-auto">
+                        <a href="{{path('app_event',{'id':event.id})}}" class="bg-gray-900 text-gray-200 font-semibold py-2 px-6 rounded-full transition mr-3">
+                            Voir Details
+                        </a>
+                        {% set isRegistered = false %}
+                        {% for participantEvent in event.participantEvents %}
+                            {% if participantEvent.user == app.user %}
+                                {% set isRegistered = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if app.user != event.orgniser %}
+                            {% if isRegistered %}
+                                <a href='{{path('user_planning',{'id' : app.user.id })}}'    class="bg-gray-700 text-white font-semibold py-2 px-6 rounded-full transition">
+                                    Voir planning
+                                </a>
+                            {% else %}
+                                <a href="{{ path('app_event_registration',{'id':event.id}) }}" class="bg-gray-600 text-white font-semibold py-2 px-6 rounded-full transition mr-3">
+                                    Réservez ta place
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+
+    {% endif %}
+{% endfor %}
+
+{% if not hasAcceptedEvents %}
+    <div class="text-center p-4 bg-gray-100 rounded-md">
+        Vous n'avez aucune événement pour le moment.
+    </div>
+{% endif %}
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const slidesContainer = document.querySelector('.slides-container');
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    let currentIndex = 0;
+    let autoSlideInterval;
+
+    function showSlide(index) {
+        const offset = -index * 100;
+        slidesContainer.style.transform = `translateX(${offset}%)`;
+
+        // Update active slide
+        slides.forEach((slide, i) => {
+            slide.setAttribute('data-active', i === index);
+        });
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % slides.length;
+        showSlide(currentIndex);
+    }
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        showSlide(currentIndex);
+    }
+
+    // Controls
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // Auto-slide
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+    }
+
+    startAutoSlide();
+
+    // Pause on hover
+    const carousel = document.querySelector('.et-events-slider');
+    carousel.addEventListener('mouseenter', stopAutoSlide);
+    carousel.addEventListener('mouseleave', startAutoSlide);
+
+    // Touch support
+    let touchStartX = 0;
+    carousel.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+    });
+
+    carousel.addEventListener('touchend', e => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) nextSlide();
+            else prevSlide();
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{# all events #}
+
+
+

@@ -16,7 +16,38 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ProductController extends AbstractController
 {
-    #[Route('/product/{id}', name: 'single_product')]
+
+    #[Route('/product/new', name: 'app_product_new')]
+    public function new(Request $request, SoukRepository $soukRepository, EntityManagerInterface $entityManager, #[Autowire('%photo_dir_products%')] string $photoDir): Response
+    {
+        $product = new Product();
+        $user = $this->getUser();
+        $souks = $soukRepository->findByParticipant($user);
+        $form = $this->createForm(ProductFormType::class, $product, [
+            'souks' => $souks
+        ]);
+
+        $form->handleRequest($request);
+        $product->setOwner($this->getUser());
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($photo = $form['image']->getData()) {
+                $fileName = uniqid() . '.' . $photo->guessExtension();
+                $destination = $photoDir . DIRECTORY_SEPARATOR . $fileName;
+                //$photo->move($photoDir, $fileName);
+                copy($photo->getPathname(), $destination);
+            }
+            $product->setImage($fileName);
+            $entityManager->persist($product);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_dashboard_client');
+        }
+        return $this->render('souk/produits/create.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+
+    #[Route('/product/{id}', name: 'single_product', requirements: ['id' => '\d+'])]
     public function singleProducts($id, ProductRepository $productRepository): Response
     {
         $product = $productRepository->find($id);
@@ -56,37 +87,5 @@ final class ProductController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Offer deleted successfully.');
         return $this->redirectToRoute('app_dashboard_client');
-    }
-
-
-
-    #[Route('/product/new', name: 'app_product')]
-    public function new(Request $request, SoukRepository $soukRepository, EntityManagerInterface $entityManager, #[Autowire('%photo_dir_products%')] string $photoDir): Response
-    {
-
-        $product = new Product();
-        $user = $this->getUser();
-        $souks = $soukRepository->findByParticipant($user);
-        $form = $this->createForm(ProductFormType::class, $product, [
-            'souks' => $souks
-        ]);
-        $form->handleRequest($request);
-        $product->setOwner($this->getUser());
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($photo = $form['image']->getData()) {
-                $fileName = uniqid() . '.' . $photo->guessExtension();
-                $destination = $photoDir . DIRECTORY_SEPARATOR . $fileName;
-                //$photo->move($photoDir, $fileName);
-                copy($photo->getPathname(), $destination);
-            }
-            $product->setImage($fileName);
-            $entityManager->persist($product);
-            $entityManager->flush();
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('souk/produits/create.html.twig', [
-            'form' => $form,
-        ]);
     }
 }

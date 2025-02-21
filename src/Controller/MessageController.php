@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\DTO\CreateMessage;
 use App\Factory\MessageFactory;
 use App\Repository\ConversationRepository;
-use App\service\PusherService;
+use App\Service\PusherService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

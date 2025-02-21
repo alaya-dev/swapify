@@ -130,6 +130,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
         return $this;
     }
+    /** 
+     * @var Collection<int, Rating>
+     */
+    #[ORM\OneToMany(mappedBy: 'idRecepteur', targetEntity: Rating::class)]
+    private Collection $ratings;
 
     public function __construct()
     {
@@ -140,6 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         $this->messages = new ArrayCollection();
         $this->souks = new ArrayCollection();
         $this->products = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -320,6 +326,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     {
         return $this->offres;
     }
+    /** 
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): static
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setIdRecepteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): static
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getIdRecepteur() === $this) {
+                $rating->setIdRecepteur(null);
+            }
+        }
+
+        return $this;
+    }
+
 
     public function addOffre(Offre $offre): static
     {

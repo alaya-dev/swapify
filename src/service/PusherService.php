@@ -1,6 +1,6 @@
 <?php
 
-namespace App\service;
+namespace App\Service;
 
 use Pusher\Pusher;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;

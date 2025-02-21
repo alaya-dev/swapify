@@ -40,7 +40,7 @@ final class OffreController extends AbstractController
         $offer->setStatus('pending');
         $offer->setAnnonceName($annonce);
         $offer->setAnnonceOwner($annonce->getUser());
-        $offer->setOfferMaker($currentUser);
+        $offer->setOfferMaker($this->getUser());
         $entityManager->persist($offer);
         $entityManager->flush();
 

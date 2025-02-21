@@ -1,0 +1,138 @@
+{% extends 'dashBord_user.html.twig' %}
+
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+	<div
+		class="flex flex-col md:flex-row gap-6 p-4">
+		<!-- Profile Card -->
+		<div class="bg-white rounded-lg shadow-lg w-full md:w-1/3">
+			<div
+				class="relative">
+				<!-- Cover Image -->
+				<img
+				class="w-full h-40 object-cover rounded-t-lg" src="https://th.bing.com/th/id/R.f48ceff9ab3322d4e84ed12a44c484d1?rik=0KQ6OgL4T%2b9uCA&riu=http%3a%2f%2fwww.photo-paysage.com%2falbums%2fuserpics%2f10001%2fCascade_-15.JPG&ehk=kx1JjE9ugj%2bZvUIrjzSmcnslPc7NE1cOnZdra%2f3pJEM%3d&risl=1&pid=ImgRaw&r=0" alt="Cover Image">
+				<!-- Profile Image -->
+				<div class="absolute inset-x-0 -bottom-12 flex justify-center">
+					<img class="w-24 h-24 rounded-full border-4 border-white" src="https://th.bing.com/th/id/OIP.AbGafkazjc_S1pZPh0B9cQHaIm?rs=1&pid=ImgDetMain" alt="Profile">
+				</div>
+			</div>
+			<!-- Profile Details -->
+			<div class="text-center mt-14 p-4">
+				<h2 class="text-lg font-semibold">{{ user.nom }}
+					{{user.prenom}}</h2>
+				<div class="flex justify-around mt-4 text-gray-600 text-sm">Rating</div>
+				<div class="average-rating flex justify-center gap-1 text-3xl">
+					{% for i in 1..5 %}
+						{% if i <= avgRating %}
+							<span class="text-yellow-500">&#9733;</span>
+							{# Étoile pleine jaune #}
+						{% else %}
+							<span class="text-gray-300">&#9734;</span>
+							{# Étoile vide #}
+						{% endif %}
+					{% endfor %}
+				</div>
+				{% if app.user and app.user.id != user.id %}
+
+					<!-- Bouton pour ouvrir le modal -->
+					<button onclick="openModal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-3">
+						Donner un avis
+					</button>
+				{% endif %}
+				<!-- Modal -->
+				<div id="rating-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+					<div class="bg-white p-6 rounded-lg shadow-lg w-96">
+						<div class="border-b pb-2 mb-4">
+							<h5 class="text-lg font-semibold">Donner votre avis</h5>
+						</div>
+						<!-- Titre -->
+
+
+						<!-- Formulaire -->
+						<form
+							id="ratingForm" action="{{ path('rate_user', {idRecepteur: user.id}) }}" method="POST">
+							<!-- Etoiles -->
+							<div class="flex justify-center text-3xl gap-2 cursor-pointer mb-4">
+								{% for i in 1..5 %}
+									<span class="star text-gray-300" data-value="{{ i }}">&#9733;</span>
+								{% endfor %}
+							</div>
+
+							<!-- Inputs cachés -->
+							<input
+							type="hidden" id="selected-rating" name="rating" value="0">
+
+							<!-- Bouton de soumission -->
+							<div class="flex justify-end">
+								<button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg">Soumettre</button>
+							</div>
+						</form>
+
+						<!-- Bouton pour fermer -->
+						<button onclick="closeModal()" class="text-red-500 mt-3 w-full text-center">Annuler</button>
+					</div>
+				</div>
+				<script>
+					function openModal() {
+document.getElementById('rating-modal').classList.remove('hidden');
+}
+
+function closeModal() {
+document.getElementById('rating-modal').classList.add('hidden');
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+let stars = document.querySelectorAll(".star");
+let ratingInput = document.getElementById("selected-rating");
+
+stars.forEach((star) => {
+star.addEventListener("click", function () {
+let rating = this.getAttribute("data-value");
+ratingInput.value = rating;
+
+// Mettre à jour l'affichage des étoiles
+stars.forEach((s, index) => {
+if (index < rating) {
+s.classList.add("text-yellow-500");
+s.classList.remove("text-gray-300");
+} else {
+s.classList.add("text-gray-300");
+s.classList.remove("text-yellow-500");
+}
+});
+});
+});
+});
+				</script>
+
+			</div>
+		</div>
+
+		<!-- Modifier Détails Form -->
+		<div class="bg-white p-6 rounded-lg shadow-lg w-full md:w-2/3">
+			<h2 class="text-xl font-bold mb-4">Détails</h2>
+			<div class="space-y-4">
+				<div>
+					<label class="block text-gray-700 font-semibold">Email</label>
+					<p class="w-full p-2 border border-gray-300 rounded-md bg-gray-100">{{ user.email }}</p>
+				</div>
+				<div>
+					<label class="block text-gray-700 font-semibold">Téléphone</label>
+					<p class="w-full p-2 border border-gray-300 rounded-md bg-gray-100">{{ user.tel }}</p>
+				</div>
+				<div>
+					<label class="block text-gray-700 font-semibold">Adresse</label>
+					<p class="w-full p-2 border border-gray-300 rounded-md bg-gray-100">{{user.adresse}}</p>
+				</div>
+				<div>
+					<label class="block text-gray-700 font-semibold">Date de naissance</label>
+					<p class="w-full p-2 border border-gray-300 rounded-md bg-gray-100">
+						{{ user.dateNaissance|date('Y-m-d') }}
+					</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}
