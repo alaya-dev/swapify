@@ -1,0 +1,62 @@
+{% extends 'include.html.twig' %}
+
+{% block content %}
+    {% if souks is empty %}
+    <div class="text-center p-4 bg-light rounded">
+        <p class="mb-0 text-muted">Vous n'avez aucun Souk pour le moment.</p>
+    </div>
+{% else %}
+<div class="table-responsive">
+  <table class="table table-bordered table-striped">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">Titre</th>
+        <th scope="col">Date Début</th>
+        <th scope="col">Date Fin</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for souk in souks %}
+      <tr>
+        <td class="d-flex align-items-center">
+          <div>
+            <strong>{{ souk.name }}</strong>
+          </div>
+        </td>
+        <td>{{ souk.startSouke|date('d M, Y') }}</td>
+        <td>{{ souk.endSouke|date('d M, Y') }}</td>
+        <td>
+          <a href="{{path('app_souk_edit' , {'id' : souk.id})}}" class="btn btn-primary btn-sm">Éditer</a>
+          <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ souk.id }}">
+            Supprimer
+          </button>
+        </td>
+      </tr>
+      <div class="modal fade" id="deleteModal-{{ souk.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Êtes-vous sûr de vouloir supprimer cet souk ?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+              <form action="{{path('app_souk_delete', {'id' : souk.id} )}}" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ souk.id) }}" />
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% endblock %}

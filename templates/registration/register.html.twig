@@ -1,4 +1,6 @@
 {% extends 'base.html.twig' %}
+
+
 {% block body %}
 <html lang="fr">
 <head>
@@ -85,7 +87,9 @@
             <h3 class="text-3xl font-semibold text-gray-800 mb-8">
                 Inscrivez-vous sur <span class=" text-green-600">SWAPIFY</span>
             </h3>
+
             {{ form_start(registrationForm, {'attr': {'class': 'space-y-6', 'novalidate': 'novalidate'}}) }}
+
             <div class="space-y-4">
                 {% for field in ['nom', 'prenom', 'email', 'dateNaissance', 'tel', 'adresse'] %}
                 <div class="space-y-2">
@@ -94,12 +98,14 @@
                     {{ form_errors(attribute(registrationForm, field), {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
                 </div>
                 {% endfor %}
+
                 <!-- Password Fields -->
                 <div class="space-y-2">
                     {{ form_label(registrationForm.password.first, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
                     {{ form_widget(registrationForm.password.first, {'attr': {'class': 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:outline-none'}}) }}
                     {{ form_errors(registrationForm.password.first, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
                 </div>
+
                 <div class="space-y-2">
                     {{ form_label(registrationForm.password.second, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
                     {{ form_widget(registrationForm.password.second, {'attr': {'class': 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:outline-none'}}) }}
@@ -129,7 +135,6 @@
                 <div class="h-56 bg-cyan-100 rounded-lg flex items-center justify-center text-4xl">📱</div>
                 <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">📚</div>
             </div>
-
             <div class="grid grid-rows-6 gap-4 animate-slide-reverse">
                 <div class="h-56 bg-green-100 rounded-lg flex items-center justify-center text-4xl">👕</div>
                 <div class="h-56 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">⛺</div>
@@ -151,18 +156,4 @@
 
 
 
-<<<<<<< HEAD
-        .left-section::-webkit-scrollbar {
-            display: none;
-        }
-
-        .left-section {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-    </style>
 {% endblock %}
-=======
-{% endblock %}
->>>>>>> a60974948c52b49aa21f6d1be6db19f7d95cc8b2

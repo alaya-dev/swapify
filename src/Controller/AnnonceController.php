@@ -27,12 +27,12 @@ final class AnnonceController extends AbstractController
 {
 
 
-    #[Route(name: 'app_annonce_index', methods: ['GET','POST'])]
+    #[Route(name: 'app_annonce_index', methods: ['GET', 'POST'])]
     public function index(Request $request, AnnonceRepository $annonceRepository, ImageRepository $imageRepository)
     {
         $form = $this->createForm(AnnoncesFilterType::class);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->redirectToRoute('app_annonce_index', [
                 'titre' => $form->get('titre')->getData(),
@@ -41,10 +41,9 @@ final class AnnonceController extends AbstractController
                 'dateCreation' => $form->get('dateCreation')->getData(),
             ]);
         }
-    
+
         $annonces = $this->handleFilter($request, $annonceRepository);
         $images = $imageRepository->findAll();
-    
         return $this->render('annonce/listAnnonces.html.twig', [
             'form' => $form->createView(),
             'annonces' => $annonces,
@@ -56,19 +55,19 @@ final class AnnonceController extends AbstractController
     public function mesAnnonces(AnnonceRepository $annonceRepository, Request $request): Response
     {
         $filter = $request->query->get('filter', 'all');
-        
+
         $annonces = match ($filter) {
             'pending' => $annonceRepository->findBy(['statut' => 'En Attente', 'user' => $this->getUser()]),
             'active' => $annonceRepository->findBy(['statut' => 'Acceptée', 'user' => $this->getUser()]),
             'inactive' => $annonceRepository->findBy(['statut' => 'Rejetée', 'user' => $this->getUser()]),
             default => $annonceRepository->findBy(['user' => $this->getUser()]),
         };
-    
+
         return $this->render('annonce/mesAnnonces.html.twig', [
             'annonces' => $annonces,
         ]);
     }
-    
+
 
     private function handleFilter(Request $request, AnnonceRepository $annonceRepository)
     {
@@ -76,80 +75,80 @@ final class AnnonceController extends AbstractController
         $cat = $request->query->get('categorie');
         $region = $request->query->get('Region');
         $date = $request->query->get('dateCreation');
-    
+
         if ($titre || $cat || $region || $date) {
             return $annonceRepository->findFilteredAnnonces($titre, $cat, $region, $date);
         }
-    
+
         return $annonceRepository->findValiderAnnonces();
     }
-    
+
 
 
     #[Route('/new', name: 'app_annonce_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,  SluggerInterface $slugger,UserRepository $userRepo): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,  SluggerInterface $slugger, UserRepository $userRepo): Response
     {
         $annonce = new Annonce();
         $form = $this->createForm(AnnonceType::class, $annonce);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && !$form->isValid() ){
+        if ($form->isSubmitted() && !$form->isValid()) {
             $this->addFlash('error', 'Le champ titre est obligatoire !');
             return $this->redirectToRoute('app_annonce_new', [], Response::HTTP_SEE_OTHER);
         }
 
         if ($form->isSubmitted() &&  $form->isValid()) {
 
-              /** @var UploadedFile[] $imageFiles */
-              $imageFiles = $form->get('imageFile')->getData();
-              foreach ($imageFiles as $imageFile) {
-                 if ($imageFile) {
-                     $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                     $safeFilename = $slugger->slug($originalFilename);
-                     $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-                     $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
- 
-                     $image = new Image();
-                     $image->setImageName($newFilename);
-                     $annonce->addImage($image);
-                 }
-             }
- 
+            /** @var UploadedFile[] $imageFiles */
+            $imageFiles = $form->get('imageFile')->getData();
+            foreach ($imageFiles as $imageFile) {
+                if ($imageFile) {
+                    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                    $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
+
+                    $image = new Image();
+                    $image->setImageName($newFilename);
+                    $annonce->addImage($image);
+                }
+            }
+
 
 
 
             // Get localisation values
             $localisationX = $form->get('localisation_x')->getData();
             $localisationY = $form->get('localisation_y')->getData();
-    
+
             // Set default values
             $annonce->setDisponibilite(true);
             $annonce->setStatut((etat::EnAttente)->label());
             $annonce->setX($localisationX);
             $annonce->setY($localisationY);
-            
 
-           
+
+
             $annonce->setUser($this->getUser());
 
-    
+
             $entityManager->persist($annonce);
             $entityManager->flush();
             $this->addFlash('success', 'Demande d\'annonce envoyée !');
 
-    
+
             return $this->redirectToRoute('mesAnnonces', [], Response::HTTP_SEE_OTHER);
         }
-    
+
         return $this->render('annonce/new.html.twig', [
             'annonce' => $annonce,
             'form' => $form->createView(),
         ]);
     }
-    
+
 
     #[Route('/{id}', name: 'app_annonce_show', methods: ['GET'])]
-    public function show(Annonce $annonce,ImageRepository $imageRepository,AnnonceRepository $annonceRepository): Response
+    public function show(Annonce $annonce, ImageRepository $imageRepository, AnnonceRepository $annonceRepository): Response
     {
         $images = $imageRepository->findAll();
         $annonces = $annonceRepository->findValideAnnoncesByUsrId($annonce->getUser());
@@ -157,7 +156,7 @@ final class AnnonceController extends AbstractController
 
         return $this->render('annonce/show.html.twig', [
             'annonce' => $annonce,
-            'images'=>$images,
+            'images' => $images,
             'annonces' => $annonces
         ]);
     }
@@ -183,7 +182,7 @@ final class AnnonceController extends AbstractController
     #[Route('/{id}', name: 'app_annonce_delete', methods: ['POST'])]
     public function delete(Request $request, Annonce $annonce, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$annonce->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $annonce->getId(), $request->request->get('_token'))) {
             $entityManager->remove($annonce);
             $entityManager->flush();
         }

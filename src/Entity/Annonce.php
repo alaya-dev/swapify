@@ -124,9 +124,6 @@ class Annonce
         return $this;
     }
 
-
-
-
     public function isDisponibilite(): ?bool
     {
         return $this->disponibilite;

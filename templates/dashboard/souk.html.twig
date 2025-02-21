@@ -6,43 +6,28 @@
             <p class="text-xl pb-6 flex items-center">
                 <i class="fas fa-store mr-3"></i> Souk
             </p>
-
-            <!-- Card 1 -->
-            <div class="w-full bg-white rounded-xl shadow-md overflow-hidden mb-6"> <!-- Added mb-6 for spacing -->
-                <div class="md:flex">
-                    <div class="md:shrink-0">
-                        <img class="h-48 w-full object-cover md:h-full md:w-48" src="https://loremflickr.com/g/320/240/team">
-                    </div>
-                    <div class="p-8">
-                        <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Company retreats</div>
-                        <a href="#" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">
-                            Incredible accommodation for your team
-                        </a>
-                        <p class="mt-2 text-slate-500">
-                            Looking to take your team away on a retreat to enjoy awesome food and take in some sunshine? We have a list of places to do just that.
-                        </p>
-                        <button class="bg-green-400 rounded-md p-3">show</button>
-                    </div>
-                </div>
-            </div>
             
-            <!-- Card 2 -->
-            <div class="w-full bg-white rounded-xl shadow-md overflow-hidden"> <!-- Added second card -->
-                <div class="md:flex">
-                    <div class="md:shrink-0">
-                        <img class="h-48 w-full object-cover md:h-full md:w-48" src="https://loremflickr.com/g/320/240/office">
+            {% if souks  is not empty %}
+                {% for souk in souks %}
+                    <div class="w-full bg-white rounded-xl shadow-md overflow-hidden mb-6"> 
+                    <a href="{{path('souk_details', {'id' : souk.id })}}" class="md:flex flex-row items-center bg-white hover:bg-gray-100 transition-all hover:shadow-lg">
+                        <div class="md:shrink-0" style='height: 200px;'>
+                            <img class="h-48 w-full object-cover md:h-full md:w-48" src="https://th.bing.com/th/id/R.66ea752b120484e0d2589c7b3e17cf21?rik=ea6xpmushQFJ6Q&riu=http%3a%2f%2fcdn1.foap.com%2fimages%2fa7b262d4-a4b0-4484-9989-76478f814bff%2fw1920.jpg%3f1431214879&ehk=DbLpTD%2bY0DE23fOghF%2bePyRKjtcwpSTQtygYKRtTkbY%3d&risl=&pid=ImgRaw&r=0">
+                        </div>
+                        <div class="p-8">
+                            <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{{souk.name}}</div>
+                            <p class="mt-2 text-slate-500">
+                                Nous avons les lieux parfaits pour cela ! Ajoutez vos produits sur Souk et laissez-nous vous aider à les mettre en valeur auprès d'un public recherchant une expérience inoubliable
+                            </p>
+                        </div>
+                    </a>
                     </div>
-                    <div class="p-8">
-                        <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Office spaces</div>
-                        <a href="#" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">
-                            Modern and spacious office spaces
-                        </a>
-                        <p class="mt-2 text-slate-500">
-                            Find the perfect office space for your team. Whether you need a small co-working space or a large corporate office, we have you covered.
-                        </p>
-                    </div>
-                </div>
-            </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-lg text-gray-800 font-semibold leading-relaxed p-4 bg-gray-50 rounded-lg shadow-md hover:bg-gray-100 transition-all">
+                    Rejoignez Souk pour pouvoir ajouter vos produits, gérer vos offres et interagir directement avec votre communauté.
+                </p>
+            {% endif %}
         </main>
     </div>
 {% endblock %}
