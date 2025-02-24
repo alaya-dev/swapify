@@ -33,7 +33,8 @@
 						{% endif %}
 					{% endfor %}
 				</div>
-				{% if app.user and app.user.id != user.id %}
+
+				{% if app.user and app.user.id != user.id  %}
 
 					<!-- Bouton pour ouvrir le modal -->
 					<button onclick="openModal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-3">

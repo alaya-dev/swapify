@@ -68,10 +68,10 @@ class LivraisonController extends AbstractController
             'livreurs' => $livreurs
         ]);
     }
-    #[Route('/livraison/{id}/qr', name: 'livraison_qr')]
+    #[Route('/livraison/{id}/qr/destinataire', name: 'livraison_qr_destinataire')]
     public function generateQrCode(Livraison $livraison): Response
     {
-        $url = 'http://192.168.37.161:8000/livraison/' . $livraison->getId() . '/confirmer';
+        $url = 'http://192.168.201.161:8000/livraison/' . $livraison->getId() . '/confirmer/destinataire';
 
         $qrCode = Builder::create()
             ->writer(new PngWriter())
@@ -83,12 +83,49 @@ class LivraisonController extends AbstractController
 
         return new Response($qrCode->getString(), 200, ['Content-Type' => 'image/png']);
     }
+    #[Route('/livraison/{id}/qr/expediteur', name: 'livraison_qr_expediteur')]
+    public function generateQrCode2(Livraison $livraison): Response
+    {
+        $url = 'http://192.168.201.161:8000/livraison/' . $livraison->getId() . '/confirmer/expediteur';
 
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data($url)
+            ->encoding(new Encoding('UTF-8'))
+            ->size(200)
+            ->margin(10)
+            ->build();
 
-    #[Route('/livraison/{id}/confirmer', name: 'livraison_confirmer', methods: ['GET'])]
+        return new Response($qrCode->getString(), 200, ['Content-Type' => 'image/png']);
+    }
+    
+    #[Route('/livraison/{id}/confirmer/expediteur', name: 'livraison_confirmer_expediteur', methods: ['GET'])]
+    public function confirmerLivraison2(Livraison $livraison, EntityManagerInterface $em): Response
+    {
+
+        if ($livraison->getStatut() === 'En cours de livraison') {
+            $livraison->setStatut('Livrée pour l\'expéditeur');
+        } elseif ($livraison->getStatut() === 'Livrée pour le destinataire') {
+            $livraison->setStatut('Livrée pour les deux');
+        }
+        $em->persist($livraison);
+        $em->flush();
+
+        return $this->render('livraison/confirmation.html.twig', [
+            'livraison' => $livraison
+        ]);
+    }
+
+    #[Route('/livraison/{id}/confirmer/destinataire', name: 'livraison_confirmer_destinataire', methods: ['GET'])]
     public function confirmerLivraison(Livraison $livraison, EntityManagerInterface $em): Response
     {
-        $livraison->setStatut('Livrée');
+
+
+        if ($livraison->getStatut() === 'En cours de livraison') {
+            $livraison->setStatut('Livrée pour le destinataire');
+        } elseif ($livraison->getStatut() === 'Livrée pour l\'expéditeur') {
+            $livraison->setStatut('Livrée pour les deux');
+        }
         $em->persist($livraison);
         $em->flush();
 

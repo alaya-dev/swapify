@@ -49,7 +49,7 @@
         <div class="card-body">
           <h4 class="alert-heading">Publiée par : </h4>
           <h5 class="card-title"><strong>{{ annonce.user.nom }} {{ annonce.user.prenom }}</strong></h5>
-          <a href="{{ path('profile_user', { id: annonce.user.id }) }}"  class="btn btn-outline-primary btn-sm mb-2">Voir profil</a>
+          <a href="{{ path('profil_user', { id: annonce.user.id }) }}"  class="btn btn-outline-primary btn-sm mb-2">Voir profil</a>
           <div class="star-rating mb-3" style="--rating: 4;"></div>
           {% if app.user %}
             <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-success btn-sm">
