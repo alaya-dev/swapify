@@ -23,7 +23,7 @@ final class ConversationController extends AbstractController
             throw $this->createNotFoundException('Recipient user not found.');
         }
 
-        $offer = $this->offerRepository->findOneBy([
+        /*$offer = $this->offerRepository->findOneBy([
             'offerMaker' => $currentUser,
             'annonceOwner' => $recipientUser,
         ]);
@@ -49,6 +49,7 @@ final class ConversationController extends AbstractController
             'conversation' => $conversation,
             'currentUser' => $currentUser,
             'conversations' => $conversations,
+            'recipientID' => $recipient,
         ]);
     }
 }
