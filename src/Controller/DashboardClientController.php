@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Conversation;
 use App\Entity\Offre;
 use App\Entity\Souk;
+use App\Form\ProfileType;
 use App\Repository\ConversationRepository;
 use App\Repository\OffreRepository;
 use App\Repository\ProductRepository;
@@ -20,9 +21,11 @@ class DashboardClientController extends AbstractController
     public function __construct(private readonly ConversationRepository $conversationRepository) {}
 
     #[Route('/dashboard/client', name: 'app_dashboard_client')]
-    public function rendre(OffreRepository $offerRepository, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
+    public function rendre(OffreRepository $offerRepository, Request $request, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
     {
         $current_user = $this->getUser();
+        $form = $this->createForm(ProfileType::class, $current_user);
+        $form->handleRequest($request);
         $conversations = $entityManager->getRepository(Conversation::class)->findConversationsForUser($current_user);
         $my_offers = $offerRepository->findBy(['offerMaker' => $current_user]);
         $other_offers = $offerRepository->findBy([
@@ -35,6 +38,7 @@ class DashboardClientController extends AbstractController
             'other_offers' => $other_offers,
             'my_products' => $my_products,
             'conversations' => $conversations,
+            'form' => $form->createView()
         ]);
     }
 

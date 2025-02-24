@@ -50,11 +50,8 @@ Btn.addEventListener("click", sendMessage);
 const channel = pusher.subscribe("chat");
 
 channel.bind("message-created", (data) => {
-  console.log("Binding message-created event");
   const parent = document.createElement("div");
-  console.log("Parent element created");
   const content = document.createElement("div");
-  console.log("Content element created");
   const parentClasses = [
     "flex",
     "mb-2",

@@ -113,12 +113,12 @@
         <div class="star-rating mb-3" style="--rating: {{rating}};"></div>
 
         {# Actions for logged-in users #}
-        {% if app.user %}
+        {% if app.user != annonce.user %}
           <a class="btn btn-success btn-sm mb-2" href="{{ path('wishlist_add', {'id': annonce.id}) }}">
             <i class="fas fa-heart me-2"></i> Ajouter favoris
           </a>
-          <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="btn btn-primary btn-sm">
-            <i class="fas fa-paper-plane me-2"></i> Envoyer Offre
+          <a href="{{ path('conversation.show', {'recipient': annonce.user.id}) }}" class="btn btn-primary btn-sm">
+            <i class="fas fa-paper-plane me-2"></i> Contacter 
           </a>
         {% endif %}
       </div>
