@@ -14,8 +14,10 @@ use App\Repository\FavorisRepository;
 use App\Repository\ImageRepository;
 use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
+use App\Service\RecommandationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,6 +26,13 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/annonce')]
 final class AnnonceController extends AbstractController
 {
+    private $recommendationService;
+
+    public function __construct(RecommandationService $recommendationService)
+    {
+        $this->recommendationService = $recommendationService;
+    }
+
 
     #[Route(name: 'app_annonce_index', methods: ['GET', 'POST'])]
     public function index(Request $request, AnnonceRepository $annonceRepository, ImageRepository $imageRepository, FavorisRepository $favorisRepository)
@@ -155,7 +164,7 @@ final class AnnonceController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_annonce_show', methods: ['GET'])]
-    public function show(Annonce $annonce, ImageRepository $imageRepository, AnnonceRepository $annonceRepository,  FavorisRepository $favorisRepository, RatingRepository $ratingRepo): Response
+    public function show(Annonce $annonce, ImageRepository $imageRepository, AnnonceRepository $annonceRepository,  FavorisRepository $favorisRepository, RatingRepository $ratingRepo,$id): Response
     {
 
         $user = $this->getUser();
@@ -171,13 +180,21 @@ final class AnnonceController extends AbstractController
         $avgRating = $ratingRepo->getAverageRating($user2) ?? 0;
 
 
+        //communication avec service recommandation déja crée
+        $recommendations = $this->recommendationService->getRecommendations($id);
+        //dd($recommendations);*
+        $annonceIdsREC = array_column($recommendations, 'id');
+        $annoncesSimilaires = $annonceRepository->findBy(['id' => $annonceIdsREC]);
+
+
 
         return $this->render('annonce/show.html.twig', [
             'annonce' => $annonce,
             'images' => $images,
             'annonces' => $annonces,
             'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris),
-            'rating' => $avgRating
+            'rating' => $avgRating,
+            'annoncesSim'=> $annoncesSimilaires
 
         ]);
     }
@@ -209,7 +226,12 @@ final class AnnonceController extends AbstractController
             $entityManager->remove($annonce);
             $entityManager->flush();
         }
-
+    
+        // Check if the user has the role ADMIN or SUPER_ADMIN
+        if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->redirectToRoute('app_admin_annonces_history', [], Response::HTTP_SEE_OTHER);
+        }
+    
         return $this->redirectToRoute('mesAnnonces', [], Response::HTTP_SEE_OTHER);
     }
 }

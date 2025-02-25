@@ -1,3 +1,6 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
 <aside class="relative bg-gray-800 h-screen w-[350px] hidden sm:block shadow-xl">
     <div class="p-6">
         <a href="{{ path('app_dashboard_client') }}" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">WELCOME</a>
@@ -52,8 +55,8 @@
             <button @click="isOpen = !isOpen" 
                     class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
                 <div class="flex items-center" >
-                    <i class="fas fa-calendar-alt mr-3"></i>
-                    Annonce
+                    <i class="fa-solid fa-scroll mr-3"></i>
+                                        Annonce
                 </div>
                 <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
                    :class="{'rotate-180': isOpen}"></i>
@@ -86,7 +89,7 @@
             <button @click="isOpen = !isOpen" 
                     class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
                 <div class="flex items-center">
-                    <i class="fas fa-calendar-alt mr-3"></i>
+                    <i class="fa-solid fa-blog mr-3"></i>
                     Blogs
                 </div>
                 <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
@@ -157,6 +160,42 @@
             Conversation
         </a>
         {% endif %}
+
+
+         <!-- Annonce Dropdown -->
+        <div x-data="{ isOpen: false }" class="w-full" >
+            <button @click="isOpen = !isOpen" 
+                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
+                <div class="flex items-center" >
+                    <i class="fa-solid fa-file-contract mr-3"></i>
+                    Contrats
+                </div>
+                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+                   :class="{'rotate-180': isOpen}"></i>
+            </button>
+            <div x-show="isOpen" 
+                 x-transition:enter="transition ease-out duration-200" 
+                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
+                 x-transition:enter-end="opacity-100 transform translate-y-0" 
+                 x-transition:leave="transition ease-in duration-200" 
+                 x-transition:leave-start="opacity-100 transform translate-y-0" 
+                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
+                 class="bg-gray-700" >
+                <a href="{{path('app_home')}}"  data-turbo="false"
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+                    mes contrats
+                </a>
+                <a href="{{path('app_home')}}" 
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+                       contrat à signée 
+                </a>
+                <a href="{{path('app_home')}}" data-turbo="false"
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+                    crée contrat
+                </a>
+            </div>
+        </div>
+
     </nav>
 </aside>
 

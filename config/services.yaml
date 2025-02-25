@@ -28,6 +28,12 @@ services:
             $attendanceRepository: '@App\Repository\AttendanceRepository'
             $sessionRepository: '@App\Repository\SessionRepository'
             $participantEventRepository: '@App\Repository\ParticipantEventRepository'
+   
+   
+    # RecommandationAnnonce service
+    App\Service\RecommandationService:
+        arguments:
+            $client: '@http_client'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
