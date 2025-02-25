@@ -38,10 +38,6 @@ class LivraisonType extends AbstractType
                 'choice_label' => 'id',
             ])
 
-            ->add('id_distinataire', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 
