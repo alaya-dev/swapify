@@ -13,7 +13,7 @@
                 </div>
             {% endfor %}
         {% endfor %}
-        <form action="{{path('app_login')}}" method='POST'>
+        <form id="login-form" action="{{path('app_login')}}" method='POST'>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <!-- Email Input -->
             <div class="mb-6">
@@ -47,6 +47,8 @@
             <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-green-700 transition duration-200">
                 Se connecter
             </button>
+
+           
             <!-- Forgot Password Link -->
             <div class="mt-4 text-center">
                 <a href="/reset-password" class="text-gray-600 hover:underline">Mot de passe oublié ?</a>

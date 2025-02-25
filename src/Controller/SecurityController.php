@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use App\Form\TaskType;
 
 
 class SecurityController extends AbstractController
@@ -21,6 +20,7 @@ class SecurityController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
+        
 
         $form = $this->createForm(TaskType::class);
         $form->handleRequest($request);
@@ -35,15 +35,6 @@ class SecurityController extends AbstractController
         if ($error) {
             $this->addFlash('error', 'données invalides');
         }
-
-        if ($form->isSubmitted() && !$form->isValid()) {
-            $recaptchaResponse = $request->request->get('g-recaptcha-response');
-            
-            if (!$recaptchaResponse) {
-                $this->addFlash('error', 'Veuillez valider le reCAPTCHA.');
-            }
-        }
-        
         
             // 🔹 Retourner toujours une réponse
         return $this->render('security/login.html.twig', [

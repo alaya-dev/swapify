@@ -2,8 +2,14 @@
 
 namespace App\DTO;
 
-
-readonly final class CreateMessage
+final class CreateMessage
 {
-    public function __construct(public string $content, public int $conversationId) {}
+    public readonly string $content;
+    public readonly int $conversationId;
+
+    public function __construct(string $content, int $conversationId)
+    {
+        $this->content = $content;
+        $this->conversationId = $conversationId;
+    }
 }

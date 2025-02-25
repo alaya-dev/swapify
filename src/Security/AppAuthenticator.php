@@ -14,6 +14,10 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
+use ReCaptcha\ReCaptcha;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\RequestStack;
+
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -21,20 +25,45 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private  UrlGeneratorInterface $urlGenerator, private UserRepository $userRepository) {}
-    public function authenticate(Request $request): Passport
-    {
-        $email = $request->getPayload()->getString('email');
-        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
+    public function __construct(private  UrlGeneratorInterface $urlGenerator,
+     private UserRepository $userRepository,
+     private RequestStack $requestStack,
+     #[Autowire('%env(GOOGLE_RECAPTCHA_SECRET_KEY)%')] private string $recaptchaSecretKey) {}
 
-        return new Passport(
-            new UserBadge($email),
-            new PasswordCredentials($request->getPayload()->getString('password')),
-            [
-                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
-            ]
-        );
-    }
+        public function authenticate(Request $request): Passport
+        {
+
+            $recaptchaResponse = $request->request->get('g-recaptcha-response');
+
+            // Valider reCAPTCHA
+            $recaptcha = new ReCaptcha($this->recaptchaSecretKey);
+            $resp = $recaptcha->verify($recaptchaResponse, $request->getClientIp());
+
+            if (!$resp->isSuccess()) {
+                // Si reCAPTCHA n'est pas valide, ajouter un message flash
+                $session = $this->requestStack->getSession();
+                $session->getFlashBag()->add('error', 'Veuillez cocher le reCAPTCHA.');
+        
+                
+                return new Passport(
+                    new UserBadge(''), // L'utilisateur ne sera pas authentifié
+                    new PasswordCredentials(''), // Aucun mot de passe
+                    [] // Aucune autre information
+                );
+            }
+
+            
+            $email = $request->getPayload()->getString('email');
+            $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
+
+            return new Passport(
+                new UserBadge($email),
+                new PasswordCredentials($request->getPayload()->getString('password')),
+                [
+                    new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+                ]
+            );
+        }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
     {
