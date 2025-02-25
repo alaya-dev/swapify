@@ -59,13 +59,7 @@
                             <i class="fa fa-fw fa-bars"></i>
                         </button>
 
-                        <!-- App Search-->
-                        <form class="app-search d-none d-lg-block">
-                            <div class="position-relative">
-                                <input type="text" class="form-control" placeholder="Search...">
-                                <span class="bx bx-search-alt"></span>
-                            </div>
-                        </form>
+                        
 
                         
                     </div>
@@ -179,9 +173,9 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-1.jpg"
+                                <img class="rounded-circle header-profile-user" src="/assets/images/users/"
                                     alt="Header Avatar">
-                                <span class="d-none d-xl-inline-block ms-1" key="t-henry">Henry</span>
+                                <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{app.user.email}}</span>
                                 <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
@@ -278,6 +272,27 @@
                                 </ul></li>
                                 <li>
 
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="bx bx-news"></i>
+                                    <span >Article</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="#" >La liste des articles</a></li>
+                                   
+                                </ul></li>
+                                <li>
+                                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                        <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
+                                        <span >souk</span>
+                                    </a>
+                                    <ul class="sub-menu" aria-expanded="false">
+                                        <li><a href="{{path('app_souk_new')}}" >ajouter</a></li>
+                                    </ul>
+                                    <ul class="sub-menu" aria-expanded="false">
+                                        <li><a href="{{path('app_souk_index')}}" >liste</a></li>
+                                    </ul>
+                                </li>
+                                <li>
                                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                                         <i class="bx bx-news"></i>
                                         <span >Blogs</span>
@@ -292,10 +307,11 @@
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="bx bx-calendar-event"></i>
                                     <span >Evénement</span>
+                                   
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="#" >La liste des événements</a></li>
-                                   
+                                    <li><a href="{{path('app_admin_events')}}" >La liste des événements</a></li>
+                                    <li><a href="{{path('app_admin_event_history')}}"> Historique des demande de validation des événements</a></li>
                                 </ul></li>
                                 <li>
                                     
@@ -304,23 +320,38 @@
                                     <span >Réclamation</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/liste-contact" >La liste des réclamations</a></li>
+                                    <li><a href="{{path('app_reclamation_index') }}" >La liste des réclamations</a></li>
                                    
                 
                                     <li>
-                                    
-                                    
-    
                                 </li>
-
                                 </ul></li>
-
+								<li>
+									<a href="javascript:void(0);" class="has-arrow waves-effect">
+										<i class="fas fa-truck"></i>
+										<span>Livraisons</span>
+									</a>
+									<ul class="sub-menu" aria-expanded="false">
+										<li>
+											<a href="/liste_livraisons">Liste des livraisons</a>
+										</li>
+										<li>
+											<a href="/livreur/new">Ajouter livreur</a>
+	
+										</li>
+										<li>
+											<a href="/livreur">Liste Des livreurs</a>
+	
+										</li>
+									</ul>
+								</li>
+	
 
                             
 
                                 <li>
-                                    <a href="/logout">
-                                        Se déconnecter
+                                    <a href="/logout" >
+                                        <i class="bx bx-log-out"></i> Se déconnecter
                                     </a>
 
                                     <form id="logout-form" action="{{ path('app_logout') }}" method="post" class="d-none">
@@ -439,7 +470,7 @@
         <script src="/assets/libs/metismenu/metisMenu.min.js"></script>
         <script src="/assets/libs/simplebar/simplebar.min.js"></script>
         <script src="/assets/libs/node-waves/waves.min.js"></script>
-        <script defer src="bundle.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v84a3a4012de94ce1a686ba8c167c359c1696973893317" integrity="sha512-euoFGowhlaLqXsPWQ48qSkBSCFs3DPRyiwVu3FjR96cMPx+Fr+gpWRhIafcHwqwCqWS42RZhIudOvEI+Ckf6MA==" data-cf-beacon='{"rayId":"8661348cbf29f1a8","version":"2024.2.4","r":1,"token":"67f7a278e3374824ae6dd92295d38f77","b":1}' crossorigin="anonymous"></script>
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v84a3a4012de94ce1a686ba8c167c359c1696973893317" integrity="sha512-euoFGowhlaLqXsPWQ48qSkBSCFs3DPRyiwVu3FjR96cMPx+Fr+gpWRhIafcHwqwCqWS42RZhIudOvEI+Ckf6MA==" data-cf-beacon='{"rayId":"8661348cbf29f1a8","version":"2024.2.4","r":1,"token":"67f7a278e3374824ae6dd92295d38f77","b":1}' crossorigin="anonymous"></script>
 
         <!-- Required datatable js -->
         <script src="/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>

@@ -89,18 +89,6 @@
             "ref": "e5a4aa21f2e98d7440ae9aab6b56e307f99dd084"
         }
     },
-    "karser/karser-recaptcha3-bundle": {
-        "version": "0.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "0.1",
-            "ref": "c51ce07c10331d506762efe25b6f5843c1a5ea17"
-        },
-        "files": [
-            "./config/packages/karser_recaptcha3.yaml"
-        ]
-    },
     "laminas/laminas-code": {
         "version": "4.5.2"
     },
@@ -132,6 +120,15 @@
     },
     "psr/log": {
         "version": "3.0.0"
+    },
+    "pusher/pusher-php-server": {
+        "version": "7.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "8dd3ea817217453e14ab596317177465211e01d2"
+        }
     },
     "scheb/2fa": {
         "version": "v6.6.0"

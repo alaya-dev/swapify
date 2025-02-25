@@ -1,21 +1,32 @@
-<div class="bg-white p-6 rounded-lg shadow-lg md:col-span-4">
-    <h2 class="text-xl font-bold mb-4">Modifier Détails</h2>
-    <form action="#" method="POST">
-        <!-- Form Fields -->
-        {% set formFields = [
-            { id: 'nom', label: 'Nom', type: 'text', value: 'charchour' },
-            { id: 'prenom', label: 'Prénom', type: 'text', value: 'charchour' },
-            { id: 'email', label: 'Email', type: 'email', value: 'test@salman.tn' },
-            { id: 'dob', label: 'Date de naissance', type: 'date', value: '2013-05-08' }
-        ] %}
-        {% for field in formFields %}
-            <label for="{{ field.id }}" class="block text-gray-700 font-semibold">{{ field.label }}</label>
-            <input type="{{ field.type }}" id="{{ field.id }}" name="{{ field.id }}" value="{{ field.value }}"
-                   class="w-full p-2 border border-gray-300 rounded-md mb-4">
+    <div class="bg-white p-6 rounded-lg shadow-lg md:col-span-4 mt-4">
+        <h2 class="text-xl font-bold mb-4">Modifier Détails</h2>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
         {% endfor %}
-        <!-- Submit Button -->
-        <button type="submit" class="px-4 py-2 bg-black text-white font-semibold rounded-md border border-black">
-            Enregistrer
-        </button>
-    </form>
-</div>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+        {% set formFields = [
+            { id: 'nom', label: 'Nom', widget: form.nom },
+            { id: 'prenom', label: 'Prénom', widget: form.prenom },
+            { id: 'tel', label: 'Téléphone', widget: form.tel },
+            { id: 'adresse', label: 'Adresse', widget: form.adresse },
+            { id: 'password_first', label: 'Nouveau mot de passe', widget: form.password.first },
+            { id: 'password_second', label: 'Confirmez le mot de passe', widget: form.password.second }
+        ] %}
+
+        {% for field in formFields %}
+            <div class="mb-4">
+                <label for="{{ field.id }}" class="block text-gray-700 font-semibold">{{ field.label }}</label>
+                {{ form_widget(field.widget, {'attr': {'class': 'w-full p-2 border border-gray-300 rounded-md'}}) }}
+                <div class="text-danger">{{ form_errors(field.widget) }}</div>
+            </div>
+        
+     {% endfor %}
+
+
+
+
+        {{ form_end(form) }}
+    </div>

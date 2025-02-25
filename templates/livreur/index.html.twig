@@ -1,0 +1,71 @@
+{% extends 'include.html.twig' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- Start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0 font-size-18">Liste des Livreurs</h4>
+                </div>
+            </div>
+        </div>
+        <!-- End page title -->
+
+        <!-- Start table section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Liste des Livreurs</h4>
+
+                        <!-- Messages de succès -->
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Table des livreurs -->
+                        <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Société</th>
+                                    <th>Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for livreur in livreurs %}
+                                    <tr>
+                                        <td class="fw-medium">{{ livreur.id }}</td>
+                                        <td>{{ livreur.nom }}</td>
+                                        <td>{{ livreur.societe }}</td>
+                                        <td>{{ livreur.contact }}</td>
+                                        <td>
+                                            <a href="{{ path('app_livreur_edit', { id: livreur.id }) }}" class="btn btn-warning btn-sm">
+                                                Modifier
+                                            </a>
+                                            <a href="{{ path('app_livreur_delete', { id: livreur.id }) }}" class="btn btn-danger btn-sm" 
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livreur ?');">
+                                                Supprimer
+                                            </a>
+                                        <a href="{{ path('app_livreur_show', {'id': livreur.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5">Aucun livreur trouvé.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,296 @@
+{% extends 'include.html.twig' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
+
+<!-- OpenLayers JS -->
+<script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+
+	<style>
+		/* ✅ Affichage correct du modal sans Bootstrap */
+		dialog {
+			border: none;
+			border-radius: 10px;
+			padding: 20px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+	</style>
+	<div
+		class="container-fluid">
+		<!-- Start page title -->
+		<div class="row">
+			<div class="col-12">
+				<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+					<h4 class="mb-sm-0 font-size-18">Liste des Administrateurs</h4>
+				</div>
+			</div>
+		</div>
+		<!-- End page title -->
+
+		<!-- Start table section -->
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+
+						<h4 class="card-title">Liste des Administrateurs</h4>
+
+						<!-- Display success messages -->
+						{% for message in app.flashes('success') %}
+							<div class="alert alert-success" role="alert">
+								{{ message }}
+							</div>
+						{% endfor %}
+
+						<!-- Table for listing admins -->
+
+						<table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>livreur</th>
+									<th>Expiditeur</th>
+									<th>Destinataire</th>
+									<th>Statut</th>
+									<th>payment_Expiditeur</th>
+									<th>payment_distinataire</th>
+									<th>Telephone_expiditeur</th>
+									<th>Telephone_Detinataire</th>
+									<th>location</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for l in livraisons %}
+									<tr>
+										<td class="fw-medium">{{ l.id }}</td>
+										<td>{{ l.livreur ? l.livreur.nom : 'Non attribué' }}</td>
+										<td>{{ l.idExpediteur.nom }}</td>
+										<td>{{ l.idDistinataire.nom }}</td>
+										<td>{{ l.statut }}</td>
+										<td>{{ l.paymentExp }}</td>
+										<td>{{ l.paymentDist }}</td>
+										<td>{{ l.telephoneExpediteur }}</td>
+										<td>{{ l.telephoneDestinataire }}</td>
+
+										<td>
+											<button class="btn btn-info btn-sm" onclick="openMapModal({{ l.localisationExpediteurLat }}, {{ l.localisationExpediteurLng }}, {{ l.localisationDestinataireLat }}, {{ l.localisationDestinataireLng }},{{l.codePostalDestinataire}},{{l.codePostalExpediteur}})">
+												Voir la carte
+											</button>
+										</td>
+										<td>
+
+											<button class="btn btn-primary btn-sm" onclick="openAssignModal({{ l.id }})">
+												Attribuer un livreur
+											</button>
+											<a href="{{ path('livraison_delete', {id: l.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet administrateur ?');">
+												Supprimer
+											</a>
+										</td>
+
+
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="9">Aucunce livraison.</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End table section -->
+</div>
+<dialog id="assignModal">
+	<h5 class="modal-title">Attribuer un livreur</h5>
+	<form id="assignForm">
+		<input type="hidden" id="livraisonId">
+		<div class="mb-3">
+			<label for="livreurSelect" class="form-label">Choisir un livreur</label>
+			<select id="livreurSelect" class="form-control">
+				{% for livreur in livreurs %}
+					<option value="{{ livreur.id }}">{{ livreur.nom }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<button type="button" class="btn btn-primary" onclick="assignLivreur()">Attribuer</button>
+		<button type="button" class="btn btn-danger" onclick="closeModal()">Annuler</button>
+	</form>
+</dialog>
+
+<!-- ✅ Scripts -->
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+console.log("🔄 Page chargée.");
+
+// ✅ Ouvrir le modal sans Bootstrap
+window.openAssignModal = function (livraisonId) {
+console.log("📌 Ouverture du modal pour livraison ID:", livraisonId);
+
+let modal = document.getElementById('assignModal');
+if (! modal) {
+console.error("❌ Erreur : Le modal assignModal n'existe pas !");
+return;
+}
+
+document.getElementById('livraisonId').value = livraisonId;
+
+// ✅ Afficher le modal en natif
+modal.showModal();
+};
+
+// ✅ Fermer le modal
+window.closeModal = function () {
+document.getElementById('assignModal').close();
+};
+
+// ✅ Envoyer l'assignation
+window.assignLivreur = function () {
+let livraisonId = document.getElementById('livraisonId').value;
+let livreurId = document.getElementById('livreurSelect').value;
+
+if (! livraisonId || ! livreurId) {
+alert("❌ Veuillez sélectionner un livreur.");
+return;
+}
+
+fetch('/livraison/assign/' + livraisonId + '/' + livreurId, {
+method: 'POST',
+headers: {
+'X-Requested-With': 'XMLHttpRequest',
+'Content-Type': 'application/json'
+}
+}).then(response => response.json()).then(data => {
+if (data.success) {
+alert("✅ Livreur attribué avec succès !");
+location.reload();
+} else {
+alert("❌ Erreur lors de l'attribution du livreur.");
+}
+}).catch(error => console.error("Erreur :", error));
+};
+});
+</script>
+<!-- Modal pour afficher la carte -->
+<div id="mapModal" class="modal fade" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Localisation de la livraison</h5>
+
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body">
+				<div id="codePostalInfo" class="alert alert-info"></div>
+
+				<div id="map" style="width: 100%; height: 400px;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	function openMapModal(latExp, lngExp, latDest, lngDest, codePostalDestinataire, codePostalExpediteur) {
+var modal = new bootstrap.Modal(document.getElementById('mapModal'));
+document.getElementById("codePostalInfo").innerHTML = `
+        <p><strong>Code Postal Expéditeur :</strong> ${codePostalExpediteur}</p>
+        <p><strong>Code Postal Destinataire :</strong> ${codePostalDestinataire}</p>
+    `;
+
+modal.show();
+
+setTimeout(() => { // Vérifier si une carte existe déjà et la supprimer
+var mapElement = document.getElementById('map');
+mapElement.innerHTML = "";
+// Efface le contenu précédent pour éviter les doublons
+
+// Initialisation de la carte
+var map = new ol.Map({
+target: 'map',
+layers: [new ol.layer.Tile(
+{source: new ol.source.OSM()}
+)],
+view: new ol.View(
+{
+center: ol.proj.fromLonLat(
+[
+(lngExp + lngDest) / 2,
+(latExp + latDest) / 2
+]
+),
+zoom: 10
+}
+)
+});
+
+// Création des marqueurs pour l'expéditeur et le destinataire
+var expMarker = new ol.Feature({
+geometry: new ol.geom.Point(ol.proj.fromLonLat([lngExp, latExp]))
+});
+
+var destMarker = new ol.Feature({
+geometry: new ol.geom.Point(ol.proj.fromLonLat([lngDest, latDest]))
+});
+
+var vectorSource = new ol.source.Vector({
+features: [expMarker, destMarker]
+});
+
+var markerLayer = new ol.layer.Vector({
+source: vectorSource,
+style: new ol.style.Style(
+{
+image: new ol.style.Icon(
+{
+anchor: [
+0.5, 1
+],
+src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+}
+)
+}
+)
+});
+
+// Tracé de la route entre expéditeur et destinataire
+var route = new ol.Feature({
+geometry: new ol.geom.LineString(
+[
+ol.proj.fromLonLat(
+[lngExp, latExp]
+),
+ol.proj.fromLonLat(
+[lngDest, latDest]
+)
+]
+)
+});
+
+route.setStyle(new ol.style.Style({
+stroke: new ol.style.Stroke(
+{color: '#ff0000', width: 2}
+)
+}));
+
+var routeLayer = new ol.layer.Vector({
+source: new ol.source.Vector(
+{features: [route]}
+)
+});
+
+// Ajout des couches à la carte
+map.addLayer(markerLayer);
+map.addLayer(routeLayer);
+}, 500);
+}
+</script></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
+
+<!-- OpenLayers JS -->
+<script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+{% endblock %}

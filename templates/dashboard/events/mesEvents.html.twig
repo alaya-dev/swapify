@@ -1,0 +1,254 @@
+{% extends 'dashBord_user.html.twig' %} {% block content %}
+
+<style>
+  .hl{
+    content:"";
+  }
+  </style>
+
+{% for type,messages
+in app.flashes %} 
+{% for message in messages %}
+<div
+  class=" msg px-4 py-3 mb-4 text-white rounded-md {% if type == 'success' %}bg-green-500{% elseif type == 'warning' %}bg-yellow-500{% elseif type == 'error' %}bg-red-500{% endif %}"
+>
+  {{ message }}
+</div>
+{% endfor %} 
+
+{% endfor %}
+
+<div class="mb-5 flex space-x-2">
+  <a
+    href="{{ path('my_events', { filter: 'all' }) }}"
+    class="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-semibold py-2 px-4 rounded"
+    >Toutes</a
+  >
+  <a
+    href="{{ path('my_events', { filter: 'pending' }) }}"
+    class="border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white font-semibold py-2 px-4 rounded"
+    >En attente</a
+  >
+  <a
+    href="{{ path('my_events', { filter: 'active' }) }}"
+    class="border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white font-semibold py-2 px-4 rounded"
+    >Acceptées</a
+  >
+  <a
+    href="{{ path('my_events', { filter: 'inactive' }) }}"
+    class="border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-semibold py-2 px-4 rounded"
+    >Rejetées</a
+  >
+</div>
+
+{% if events is empty %}
+<div class="text-center p-4 bg-gray-100 rounded-md">
+  Vous n'avez aucune événement pour le moment.
+</div>
+{% else %}
+<div class="overflow-x-auto">
+  <table class="min-w-full border-collapse border border-gray-300">
+    <thead class="bg-gray-100">
+      <tr class="border border-gray-300">
+        <th class="px-4 py-2 text-left text-gray-700">Titre</th>
+        <th class="px-4 py-2 text-left text-gray-700">Date Début</th>
+        <th class="px-4 py-2 text-left text-gray-700">Date Fin</th>
+        <th class="px-4 py-2 text-left text-gray-700">Max participants</th>
+        <th class="px-4 py-2 text-left text-gray-700">Nbr session</th>
+        <th class="px-4 py-2 text-left text-gray-700">Status</th>
+        <th class="px-4 py-2 text-left text-gray-700">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      {% for event in events %}
+      <tr class="border border-gray-300">
+        <td class="px-4 py-2 flex items-center space-x-3">
+          <img
+            class="h-10 w-10 rounded-full"
+            src="{{ asset('uploads/images/' ~ event.image) }}"
+            alt=""
+          />
+          <div>
+            <div class="text-gray-900 font-semibold">{{ event.title }}</div>
+            <div class="text-gray-500 text-sm">{{ event.orgniser.email }}</div>
+          </div>
+        </td>
+        <td class="px-4 py-2 text-gray-600">
+          {{ event.dateDebut|date('d M, Y') }}
+        </td>
+        <td class="px-4 py-2 text-gray-600">
+          {{ event.dateFin|date('d M, Y') }}
+        </td>
+        <td class="px-4 py-2 text-gray-600">{{ event.maxParticipant }}</td>
+        <td class="px-4 py-2 text-gray-600">
+          {{ event.sessions | length }} sessions
+        </td>
+        <td class="px-4 py-2">
+          <span
+            class="px-2 py-1 text-xs font-semibold rounded-full {% if event.status == 'Acceptée' %}bg-green-100 text-green-600{% elseif event.status == 'Rejetée' %}bg-red-100 text-red-600{% else %}bg-yellow-100 text-yellow-600{% endif %}"
+            >{{ event.status }}</span
+          >
+        </td>
+        <td class="px-4 py-2 space-x-2">
+          <a
+            href="{{ path('app_event_show', { id: event.id }) }}"
+            class="text-teal-600 hover:text-teal-800"
+            >Detail</a
+          >
+          <a
+            href="{{ path('app_event_edit', { id: event.id }) }}"
+            class="text-indigo-600 hover:text-indigo-800"
+            >Edit</a
+          >
+          <button
+            class="text-red-600 hover:text-red-800 "
+            data-modal-toggle="deleteModal-{{ event.id }}"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      <div
+        id="deleteModal-{{ event.id }}"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden"
+      >
+        <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+          <h2 class="text-lg font-semibold mb-4">Confirmer la suppression</h2>
+          <p class="mb-4">Êtes-vous sûr de vouloir supprimer cet événement ?</p>
+          <div class="flex justify-end space-x-2">
+            <button
+              class="px-4 py-2 bg-gray-300 rounded"
+              data-modal-close="deleteModal-{{ event.id }}"
+            >
+              Annuler
+            </button>
+            <form
+              action="{{ path('app_event_delete', { id: event.id }) }}"
+              method="POST"
+              class="inline"
+            >
+              <input
+                type="hidden"
+                name="_token"
+                value="{{ csrf_token('delete' ~ event.id) }}"
+              />
+              <button
+                type="submit"
+                class="px-4 py-2 bg-red-600 text-white rounded"
+              >
+                Supprimer
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+
+
+
+
+<hr class="mt-6 border-t-2 border-t-gray-300">
+
+{% if participantsEvent is empty %}
+<div class="text-center p-4 bg-gray-100 rounded-md">
+  Vous n'êtes pas enregistré dans aucun événement.
+</div>
+{% else %}
+<div class="overflow-x-auto">
+  <table class="min-w-full border-collapse border border-gray-300">
+    <thead class="bg-gray-100">
+      <tr class="border border-gray-300">
+        <th class="px-4 py-2 text-left text-gray-700">Titre</th>
+        <th class="px-4 py-2 text-left text-gray-700">Date Début</th>
+        <th class="px-4 py-2 text-left text-gray-700">Date Fin</th>
+        <th class="px-4 py-2 text-left text-gray-700">Nbr session</th>
+        <th class="px-4 py-2 text-left text-gray-700">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+   
+      {% for event in allEvents %}
+      <tr class="border border-gray-300">
+        <td class="px-4 py-2 flex items-center space-x-3">
+          <img
+            class="h-10 w-10 rounded-full"
+            src="{{ asset('uploads/images/' ~ event.image) }}"
+            alt=""
+          />
+          <div>
+            <div class="text-gray-900 font-semibold">{{ event.title }}</div>
+            <div class="text-gray-500 text-sm">{{ event.orgniser.email }}</div>
+          </div>
+        </td>
+        <td class="px-4 py-2 text-gray-600">
+          {{ event.dateDebut|date('d M, Y') }}
+        </td>
+        <td class="px-4 py-2 text-gray-600">
+          {{ event.dateFin|date('d M, Y') }}
+        </td>
+        <td class="px-4 py-2 text-gray-600">
+          {{ event.sessions | length }} sessions
+        </td>
+        <td class="px-4 py-2 space-x-2">
+          <a
+            href="{{ path('user_planning', { id: event.id }) }}"
+            class="text-teal-600 hover:text-teal-800"
+            >vérifier le plan</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<script>
+
+document.querySelectorAll('.msg').forEach(message => {
+    setTimeout(() => {
+        message.remove();
+    }, 3000);
+});
+
+// Improved modal handling for delete actions
+document.querySelectorAll("[data-modal-toggle]").forEach((button) => {
+    button.addEventListener("click", function (e) {
+        e.preventDefault();
+        const modalId = this.getAttribute("data-modal-toggle");
+        const modal = document.getElementById(modalId);
+        modal.classList.remove("hidden");
+    });
+});
+
+document.querySelectorAll("[data-modal-close]").forEach((button) => {
+    button.addEventListener("click", function (e) {
+        e.preventDefault();
+        const modalId = this.getAttribute("data-modal-close");
+        const modal = document.getElementById(modalId);
+        modal.classList.add("hidden");
+    });
+});
+
+// Event delegation for modal background clicks
+document.addEventListener("click", function(e) {
+    if (e.target.matches('[id^="deleteModal-"]')) {
+        e.target.classList.add("hidden");
+    }
+});
+
+document.querySelectorAll('form[method="POST"]').forEach((form) => {
+    form.addEventListener("submit", function(e) {
+        const modalElement = this.closest('[id^="deleteModal-"]');
+        if (modalElement) {
+            modalElement.classList.add("hidden");
+        }
+    });
+});
+</script>
+
+{% endblock %}
