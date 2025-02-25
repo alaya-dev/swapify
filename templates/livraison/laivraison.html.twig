@@ -1,0 +1,42 @@
+{% extends 'souk_base.html.twig' %}
+
+{% block body %}
+    {{ include('layout/navBar/auth_nav.html.twig') }}
+    <div class="flex flex-wrap justify-center items-center h-auto p-5 pl-[6%] pt-[9%]">
+        <div class="w-full md:w-2/5 p-4">
+          <h2 class="text-xl md:text-7xl font-semibold mb-5">SwiftDrop</h2>
+          <form class="space-y-4">
+            <div>
+              <input type="text" id="fullName" name="fullName" placeholder='Full Name' class="mt-1 p-4 w-full border rounded-md" />
+            </div>
+            <div>
+              <input type="email" id="email" name="email" placeholder='Email' class="mt-1 p-4 w-full border rounded-md" />
+            </div>
+            <div>
+              <textarea id="message" name="message" placeholder='Message' class="mt-1 p-4 w-full border rounded-md" rows="4"></textarea>
+            </div>
+            <button type="submit" class="px-8 py-4 bg-black text-white hover:bg-blue-700 relative overflow-hidden">
+                Submit
+            </button>
+          </form>
+        </div>
+        <div class="w-full md:w-1/2 p-4 flex justify-center">
+          <div class="rounded-full overflow-hidden w-[35rem] h-[35rem]">
+            <div id="leaflet-map" class="w-[35rem] h-[35rem]"></div>
+          </div>
+        </div>
+      </div>
+      
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+      var map = L.map('leaflet-map').setView([40.7128, -74.0060], 10);  
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      L.marker([40.7128, -74.0060]).addTo(map)
+        .bindPopup('New York City')
+        .openPopup();
+
+    </script>
+{% endblock %}

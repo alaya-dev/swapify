@@ -10,17 +10,42 @@
             Profile
         </a>
         <a href="{{ path('check_certificate_eligibility') }}" data-turbo="false" 
-           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
+           class="flex items-center py-4 pl-6 nav-item no-underline text-white transition-colors duration-200">
             <i class="fas fa-chart-line mr-3"></i>
             Statistique
         </a>
 
         <!-- Souk Link -->
-        <a href="#" data-turbo="false" 
+        <a href="{{path('souk')}}" data-turbo="false" 
            class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'souk' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
             <i class="fas fa-store mr-3"></i>
             Souk
         </a>
+
+         <div x-data="{ isOpen: false }" class="w-full">
+            <button @click="isOpen = !isOpen" 
+                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
+                <div class="flex items-center">
+                    <i class="fas fa-product-hunt mr-3"></i>
+                    Produits
+                </div>
+                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+                   :class="{'rotate-180': isOpen}"></i>
+            </button>
+            <div x-show="isOpen" 
+                 x-transition:enter="transition ease-out duration-200" 
+                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
+                 x-transition:enter-end="opacity-100 transform translate-y-0" 
+                 x-transition:leave="transition ease-in duration-200" 
+                 x-transition:leave-start="opacity-100 transform translate-y-0" 
+                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
+                 class="bg-gray-700">
+                <a href="{{path('app_product_new')}}"  data-turbo="false"
+                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+                    ajouter produits
+                </a>
+            </div>
+        </div>
 
         <!-- Annonce Dropdown -->
         <div x-data="{ isOpen: false }" class="w-full" >
@@ -45,11 +70,10 @@
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     mes annonces
                 </a>
-                      <a href="{{path('wishlist_show')}}" 
+                <a href="{{path('wishlist_show')}}" 
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     mes favoris
                 </a>
-                <a href="{{path('app_annonce_new')}}" 
                 <a href="{{path('app_annonce_new')}}" data-turbo="false"
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     ajouter annonce
@@ -115,8 +139,6 @@
                     ajouter evenements
                 </a>
             </div>
-
-             
         </div>
 
         <!-- Livraison Link -->
@@ -127,24 +149,15 @@
         </a>
 
         <!-- Conversation Link -->
+        {% set conversations = conversations|default([]) %}
+        {% if conversations|filter(x => x is not empty)|length > 0 %}
         <a href="{{ path('conversation') }}" data-turbo="false" 
            class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'conversation' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
             <i class="fa fa-comments mr-3" aria-hidden="true"></i>
             Conversation
         </a>
-
-
-          
-
-                  <div class="flex items-center block py-4 pl-6 hover:bg-green-800 transition-colors duration-200">
-                        <a href="{{path('app_reclamation_new')}}" >
-                    Envoyée reclamation
-                </a>
-                    
-                </div>
-
+        {% endif %}
     </nav>
-
 </aside>
 
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>

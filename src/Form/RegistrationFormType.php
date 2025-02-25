@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Regex;
 
 
@@ -28,70 +29,68 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            
-        ->add('nom', TextType::class, [
-            'label' => 'Nom *',
-            'attr' => ['class' => 'input-field', 'placeholder' => 'Votre nom']
-        ])
 
-        ->add('prenom', TextType::class, [
-            'label' => 'Prénom *',
-            'attr' => ['class' => 'input-field', 'placeholder' => 'Votre prénom']
-        ])
+            ->add('nom', TextType::class, [
+                'label' => 'Nom *',
+                'attr' => ['class' => 'input-field', 'placeholder' => 'Votre nom']
+            ])
 
-        ->add('email', EmailType::class, [
-            'label' => 'E-mail *',
-            'attr' => ['class' => 'input-field', 'placeholder' => 'Votre email']
-        ])
+            ->add('prenom', TextType::class, [
+                'label' => 'Prénom *',
+                'attr' => ['class' => 'input-field', 'placeholder' => 'Votre prénom']
+            ])
 
-        
-        ->add('dateNaissance', DateType::class, [
-            'widget' => 'single_text',
-            'attr' => ['class' => 'input-field', 'placeholder' => 'Votre date de naissance'],
-            'label' => 'Date de naissance *',
-            'constraints' => [
-                new Assert\NotBlank([
-                    'message' => "La date de naissance ne peut pas être vide."
-                ]),
-                new Assert\Callback([$this, 'validateAge'])  // Ajout de la contrainte de validation personnalisée
-            ]
-        ])
-        
-           
-        ->add('tel', TextType::class, [
-            'label' => 'Téléphone *',
-            'attr' => ['class' => 'input-field', 'placeholder' => 'Votre numéro de téléphone']
-        ])        
-            
-        ->add('adresse', TextType::class, [
-            'label' => 'Adresse',
-            'required' => false,
-            'attr' => ['class' => 'input-field', 'placeholder' => 'Votre adresse'],
-        ])
+            ->add('email', EmailType::class, [
+                'label' => 'E-mail *',
+                'attr' => ['class' => 'input-field', 'placeholder' => 'Votre email']
+            ])
 
-        
-        ->add('password', RepeatedType::class, [
-            'type' => PasswordType::class,
-            'first_options' => [
-                'label' => 'Mot de passe *',
-                'attr' => ['class' => 'input-field', 'placeholder' => '***********']
-            ],
-            'second_options' => [
-                'label' => 'Confirmer votre mot de passe *',
-                'attr' => ['class' => 'input-field', 'placeholder' => '***********']
-            ],
-            'invalid_message' => 'Les mots de passe doivent correspondre.',
-        ])
-        ->add('consent', CheckboxType::class, [
-            'mapped' => false,
-            'label' => "En m'inscrivant, j'accepte les conditions d'utilisation",
-            'label_attr' => ['style' => 'margin-right: 10px;'],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\IsTrue([
-                    'message' => 'Vous devez accepter les conditions.'
-                ])
-            ]
-        ]);
+
+            ->add('dateNaissance', DateType::class, [
+                'widget' => 'single_text',
+                'attr' => ['class' => 'input-field', 'placeholder' => 'Votre date de naissance'],
+                'label' => 'Date de naissance *',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "La date de naissance ne peut pas être vide."
+                    ]),
+                    new Assert\Callback([$this, 'validateAge'])  // Ajout de la contrainte de validation personnalisée
+                ]
+            ])
+
+
+            ->add('tel', TextType::class, [
+                'label' => 'Téléphone *',
+                'attr' => ['class' => 'input-field', 'placeholder' => 'Votre numéro de téléphone']
+            ])
+
+            ->add('adresse', TextType::class, [
+                'label' => 'Adresse',
+                'required' => false,
+                'attr' => ['class' => 'input-field', 'placeholder' => 'Votre adresse'],
+            ])
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'first_options' => [
+                    'label' => 'Mot de passe *',
+                    'attr' => ['class' => 'input-field', 'placeholder' => '***********']
+                ],
+                'second_options' => [
+                    'label' => 'Confirmer votre mot de passe *',
+                    'attr' => ['class' => 'input-field', 'placeholder' => '***********']
+                ],
+                'invalid_message' => 'Les mots de passe doivent correspondre.',
+            ])
+            ->add('consent', CheckboxType::class, [
+                'mapped' => false,
+                'label' => "En m'inscrivant, j'accepte les conditions d'utilisation",
+                'label_attr' => ['style' => 'margin-right: 10px;'],
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\IsTrue([
+                        'message' => 'Vous devez accepter les conditions.'
+                    ])
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -126,5 +125,4 @@ class RegistrationFormType extends AbstractType
                 ->addViolation();
         }
     }
-    
 }
