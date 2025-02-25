@@ -1,0 +1,86 @@
+{% extends 'include.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .fade-out {
+            animation: fadeOut 5s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% for type, messages in app.flashes %}
+        {% if type == 'success' %}
+            {% for message in messages %}
+                <div class="alert alert-success fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'warning' %}
+            {% for message in messages %}
+                <div class="alert alert-warning fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'error' %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0 font-size-18">Détails de la Réclamation</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Détails de la Réclamation</h4>
+
+                        <table class="table table-bordered dt-responsive nowrap w-100">
+                            <tbody>
+                                <tr>
+                                    <th class="text-left text-sm font-medium text-gray-500 uppercase">Envoyée par :</th>
+                                    <td class="text-sm text-gray-900">{{ reclamation.user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-left text-sm font-medium text-gray-500 uppercase">Objet</th>
+                                    <td class="text-sm text-gray-900">{{ reclamation.objet }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-left text-sm font-medium text-gray-500 uppercase">Contenu</th>
+<td class="text-sm text-gray-900">
+    <div class="w-full p-2 border border-gray-300 rounded-lg whitespace-pre-wrap break-words max-w-[400px] overflow-auto" style="min-height: 50px;">
+        {{ reclamation.contenu }}
+    </div>
+</td>                     </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-4">
+                            <a href="{{ path('app_reclamation_index') }}" class="btn btn-primary">
+                                <i class="fas fa-arrow-left me-1"></i> Retour à la liste des réclamations
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

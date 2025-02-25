@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class EventRegistationController extends AbstractController
 {
-    
+
     #[Route('/event/{id}/register', name: 'app_event_registration')]
     public function event_register(Request $request, Event $event, EntityManagerInterface $entityManager, $id)
     {
@@ -41,7 +41,7 @@ final class EventRegistationController extends AbstractController
         return $this->redirectToRoute('app_event_index');
     }
 
-    #[Route("planning\{id}", name: "user_planning")]
+    #[Route("planning/{id}", name: "user_planning", requirements: ['id' => '\d+'])]
     function planning(Event $event, SessionRepository $sessionRepository)
     {
         $user = $this->getUser();

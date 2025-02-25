@@ -35,9 +35,8 @@ composer create-project symfony/skeleton symfony_login
 # Accéder au dossier du projet
 cd swapify-main
 
-# Installer les dépendances essentielles
-composer require twig orm security mailer form validator maker \
-symfonycasts/reset-password-bundle symfonycasts/verify-email-bundle
+# Création du super administrateur à partir de l'invite de commande
+php bin/console app:create-super-admin
 
 
 
