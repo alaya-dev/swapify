@@ -9,26 +9,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ErrorController extends AbstractController
 {
-    /**
-     * @Route("/error403", name="error403")
-     */
-    public function error403()
+    #[Route('/error403', name: 'error403')]
+    public function error403(): Response
     {
         return $this->render('bundles/TwigBundle/Exception/error403.html.twig');
     }
 
-    /**
-     * @Route("/error404", name="error404")
-     */
-    public function error404()
+    #[Route('/error404', name: 'error404')]
+    public function error404(): Response
     {
         return $this->render('bundles/TwigBundle/Exception/error404.html.twig');
     }
 
-    /**
-     * @Route("/error500", name="error500")
-     */
-    public function error500()
+    #[Route('/error500', name: 'error500')]
+    public function error500(): Response
     {
         return $this->render('bundles/TwigBundle/Exception/error500.html.twig');
     }

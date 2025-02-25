@@ -331,6 +331,112 @@
 						<!-- Assurez-vous d'inclure la bibliothèque jQuery -->
 						<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<!-- JavaScript pour actualiser automatiquement les notifications -->
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-1.jpg"
+                                    alt="Header Avatar">
+                                <span class="d-none d-xl-inline-block ms-1" key="t-henry">Henry</span>
+                                <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <!-- item-->
+                                <a class="dropdown-item" href="/profile"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
+                                <a class="dropdown-item" href="#"><i class="bx bx-wallet font-size-16 align-middle me-1"></i> <span key="t-my-wallet">My Wallet</span></a>
+                                <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end">11</span><i class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>
+                                <a class="dropdown-item" href="#"><i class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href=""><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></a>
+                            </div>
+                        </div>
+
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
+                                <i class="bx bx-cog bx-spin"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+
+            <!-- ========== Left Sidebar Start ========== -->
+            <div class="vertical-menu">
+
+                <div data-simplebar class="h-100">
+
+                    <!--- Sidemenu -->
+                    <div id="sidebar-menu">
+                        <!-- Left Menu Start -->
+                        <ul class="metismenu list-unstyled" id="side-menu">
+                            <li class="menu-title" key="t-menu">Menu</li>
+
+                                <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                    <i class="bx bx-home-circle"></i>
+                                    <span>Home</span>
+                                </a>
+                               
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="/dashboard" >Dashboard</a></li>
+                                   
+                                </ul></li>
+                                <li>
+                                
+                               
+                                <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="fas fa-user"></i>
+                                    <span >Client</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="/client/liste" >La iste des clients</a></li>
+                                   
+                                </ul></li>
+                                <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="bx bx-store"></i>
+                                    <span >Annonce</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="/liste-annonce" >La liste des annonces</a></li>
+                                   
+                                </ul></li>
+                                <li>
+
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="bx bx-news"></i>
+                                    <span >Article</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="/liste-annonce" >La liste des articles</a></li>
+                                   
+                                </ul>
+                                </li>
+
+                                <li>
+                                
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="bx bx-calendar-event"></i>
+                                    <span >Evénement</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="/liste-annonce" >La liste des événements</a></li>
+                                   
+                                </ul></li>
+                                <li>
+                                    
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                    <i class="fas fa-envelope"></i>
+                                    <span >Réclamation</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="/liste-contact" >La liste des réclamations</a>
+                                    </li>
+                                </ul>
+                                </li>
+
 						<!-- Votre code HTML pour les notifications -->
 						<div class="dropdown d-inline-block">
 							<button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

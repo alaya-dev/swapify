@@ -223,9 +223,9 @@
                         {% endfor %}
                         {% if app.user != event.orgniser %}
                             {% if isRegistered %}
-                                <button class="bg-gray-700 text-white font-semibold py-2 px-6 rounded-full transition">
+                                <a href='{{path('user_planning',{'id' : app.user.id })}}'    class="bg-gray-700 text-white font-semibold py-2 px-6 rounded-full transition">
                                     Voir planning
-                                </button>
+                                </a>
                             {% else %}
                                 <a href="{{ path('app_event_registration',{'id':event.id}) }}" class="bg-gray-600 text-white font-semibold py-2 px-6 rounded-full transition mr-3">
                                     Réservez ta place

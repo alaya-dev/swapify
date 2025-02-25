@@ -1,46 +1,67 @@
 <div class="bg-white p-6 rounded-lg shadow-lg md:col-span-3">
     <h2 class="text-xl font-bold mb-4">My Offers</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="flex flex-col gap-6">
         <!-- Sent Offers -->
         <div class="bg-gray-100 p-4 rounded-lg shadow">
             <h3 class="text-lg font-semibold text-blue-600">Sent Offers</h3>
             <p class="text-gray-600 mb-2">Here are the offers you have sent.</p>
             <div class="h-64 overflow-y-auto">
-                {% set sentOffers = [
-                    { name: 'Oliver Jake', email: 'info@oliver.com', image: 'https://i.pravatar.cc/100?img=1' },
-                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' },
-                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' },
-                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' },
-                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' },
-                    { name: 'Jack Connor', email: 'info@jack.com', image: 'https://i.pravatar.cc/100?img=2' }
-                ] %}
-                {% for offer in sentOffers %}
-                    <div class="flex items-center space-x-4 mt-4">
-                        <img class="w-10 h-10 rounded-full" src="{{ offer.image }}" alt="Profile">
-                        <div>
-                            <h4 class="font-semibold">{{ offer.name }}</h4>
-                            <p class="text-gray-500 text-sm">{{ offer.email }}</p>
+                {% for offer in my_offers %}
+                    <div class="flex items-center space-x-4 mt-4 justify-between w-full">
+                        <div class="flex items-center space-x-4">
+                            <img class="w-10 h-10 rounded-full" src="https://i.pravatar.cc/100?img=1" alt="Profile">
+                            <div>
+                                <h4 class="font-semibold">{{ offer.offerMaker.email }}</h4>
+                                <form id="form-{{ offer.id }}" action="{{ path('offer_update', {'id': offer.id}) }}" method="POST">
+                                    <input id="offer-description-{{ offer.id }}" name="description" type="text" class="text-gray-500 text-sm border-none outline-none bg-transparent p-0" value="{{ offer.description }}" readonly>
+                                </form>
+                            </div>
+                            {% if offer.status == "pending"  %}
+                                <p class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 ">{{ offer.status }}</p>
+                            {% elseif  offer.status == "accepted"  %}
+                                <p class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300">{{ offer.status }}</p>
+                            {% else %}
+                                <p class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-red-900 dark:text-red-300">{{ offer.status }}</p>
+                            {% endif  %}
+                        </div>
+                        <div class="flex space-x-2">
+                            {% if offer.status == "pending"  %}
+                                <button class="text-blue-500 hover:text-blue-700" onclick="toggleEdit({{ offer.id }})"><i class="fas fa-edit"></i> Edit</button>
+                            {% endif  %}
+                            <button id="update-button-{{ offer.id }}" class="text-green-500 hover:text-green-700" style="display: none;" onclick="saveEdit({{ offer.id }})"><i class="fas fa-save"></i> Save</button>
+                            <form action="{{ path('offer_delete', {'id': offer.id}) }}" method="POST">
+                                <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i> Delete</button>
+                            </form>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
-
         <!-- Received Offers -->
         <div class="bg-gray-100 p-4 rounded-lg shadow">
             <h3 class="text-lg font-semibold text-green-600">Received Offers</h3>
             <p class="text-gray-600 mb-2">Here are the offers you have received.</p>
             <div class="h-64 overflow-y-auto">
-                {% set receivedOffers = [
-                    { name: 'Harry Callum', email: 'info@harry.com', image: 'https://i.pravatar.cc/100?img=3' },
-                    { name: 'Jacob Reece', email: 'info@jacob.com', image: 'https://i.pravatar.cc/100?img=4' }
-                ] %}
-                {% for offer in receivedOffers %}
-                    <div class="flex items-center space-x-4 mt-4">
-                        <img class="w-10 h-10 rounded-full" src="{{ offer.image }}" alt="Profile">
-                        <div>
-                            <h4 class="font-semibold">{{ offer.name }}</h4>
-                            <p class="text-gray-500 text-sm">{{ offer.email }}</p>
+                {% for offer in other_offers %}
+                    <div class="flex items-center space-x-4 mt-4 justify-between w-full">
+                        <div class="flex items-center space-x-4">
+                            <img class="w-10 h-10 rounded-full" src="https://i.pravatar.cc/100?img=1" alt="Profile">
+                            <div>
+                                <h4 class="font-semibold">{{ offer.offerMaker.email }}</h4>
+                                <p class="text-gray-500 text-sm">{{ offer.description }}</p>
+                            </div>
+                            <p class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm {{ offer.status == "pending" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 " : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" }}">{{ offer.status }}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            {% if offer.status == "accepted"  %}
+                            {% else %}
+                            <form action="{{path('offer_accepte',{'id' : offer.id})}}" method='POST'>
+                                <button class="text-green-500 hover:text-green-700"><i class="fas fa-check"></i> accept</button>
+                            </form>
+                            <form action="{{ path('offer_delete', {'id': offer.id}) }}" method="POST">
+                                <button type="submit" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i> refuse</button>
+                            </form>
+                            {% endif %} 
                         </div>
                     </div>
                 {% endfor %}
@@ -48,3 +69,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    function toggleEdit(offerId) {
+        const inputField = document.getElementById(`offer-description-${offerId}`);
+        const saveButton = document.getElementById(`update-button-${offerId}`);
+        if (inputField.readOnly) {
+            inputField.readOnly = false;
+            inputField.focus();
+            saveButton.style.display = 'inline-block';
+        } else {
+            inputField.readOnly = true;
+            saveButton.style.display = 'none';
+        }
+    }
+
+    function saveEdit(offerId) {
+        const form = document.getElementById(`form-${offerId}`);
+        form.submit();
+    }
+</script>

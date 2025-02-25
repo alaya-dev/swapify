@@ -32,16 +32,12 @@ class LivraisonType extends AbstractType
             ->add('adresseExpediteur')
             ->add('adresseDestiniataire')
 
-            
+
             ->add('livreur', EntityType::class, [
                 'class' => Livreur::class,
                 'choice_label' => 'id',
             ])
-           
-            ->add('id_distinataire', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
+
         ;
     }
 
