@@ -7,6 +7,7 @@ use App\Form\LivraisonType;
 use Endroid\QrCode\Writer\PngWriter;
 use App\Repository\LivraisonRepository;
 use App\Repository\LivreurRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Endroid\QrCode\QrCode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -122,14 +123,21 @@ class LivraisonController extends AbstractController
 
         return new JsonResponse(['success' => true]);
     }
-    #[Route('/livraison/new', name: 'livraison_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em): Response
+
+
+    #[Route('/livraison/new/{id}', name: 'livraison_create', methods: ['POST','GET'])]
+    public function create(Request $request, EntityManagerInterface $em,$id,UserRepository $ur ): Response
     {
+
+        $userDestinataire=$ur->find($id) ;
 
         $livraison = new Livraison();
         $livraison->setIdExpediteur($this->getUser()); // Associer l'expéditeur connecté
         $livraison->setStatut('En attente de localisation du destinataire');
         $livraison->setDate(new \DateTime());
+
+
+        $livraison->setIdDistinataire($userDestinataire);
         $livraison->setPaymentExp('non payé');
         $form = $this->createForm(LivraisonType::class, $livraison);
         // Supprimer les champs inutiles pour l'expéditeur

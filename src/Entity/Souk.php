@@ -45,7 +45,7 @@ class Souk
     /**
      * @var Collection<int, Product>
      */
-    #[ORM\OneToMany(mappedBy: 'souk', targetEntity: Product::class)]
+    #[ORM\OneToMany(mappedBy: 'souk', targetEntity: Product::class,cascade:['remove'])]
     private Collection $products;
 
     public function __construct()

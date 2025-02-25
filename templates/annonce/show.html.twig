@@ -12,7 +12,7 @@
 
     {# Annonce title section with gradient background and animation #}
     <h3 class="mb-4 text-white fw-bold text-uppercase py-3 px-4 rounded-lg shadow-lg" style="
-      background: linear-gradient(135deg, rgb(25, 109, 60), rgb(72, 212, 142));
+      background: linear-gradient(135deg, rgb(72, 212, 142), rgb(25, 109, 60));
       position: relative;
       overflow: hidden;
     ">
@@ -54,24 +54,6 @@
         {% endif %}
       </div>
 
-      <div class="card mb-4 shadow">
-        <div class="card-body">
-          <h4 class="alert-heading">Publiée par : </h4>
-          <h5 class="card-title"><strong>{{ annonce.user.nom }} {{ annonce.user.prenom }}</strong></h5>
-          <div class="star-rating mb-3" style="--rating: 4;"></div>
-          {% if app.user != annonce.user %}
-            <a href="{{ path('conversation.show', {'recipient': annonce.user.id}) }}" class="btn btn-success btn-sm">
-              <i class="fas fa-paper-plane"></i> contact User
-            </a>
-          {% endif %}
-        </div>
-      </div>
-
-      <!-- Added Section: Description and Details -->
-      <div class="row mt-4">
-        <div class="col-md-12">
-          <h2 class="mb-3">Description :</h2>
-          <p class="lead">{{ annonce.description }}</p>
       {# Thumbnail images section #}
       {% if images|length > 1 %}
         <div class="col-md-5 ms-3">
@@ -110,10 +92,10 @@
         <h4 class="alert-heading">Publiée par : </h4>
         <h5 class="card-title"><strong>{{ annonce.user.nom }} {{ annonce.user.prenom }}</strong></h5>
         <a href="{{ path('profil_user', {'id': annonce.user.id}) }}" class="btn btn-outline-primary btn-sm mb-2">Voir profil</a>
-        <div class="star-rating mb-3" style="--rating: {{rating}};"></div>
+        <div class="star-rating mb-3" style="--rating: {{ rating }};"></div>
 
         {# Actions for logged-in users #}
-        {% if app.user != annonce.user %}
+        {% if app.user and app.user != annonce.user %}
           <a class="btn btn-success btn-sm mb-2" href="{{ path('wishlist_add', {'id': annonce.id}) }}">
             <i class="fas fa-heart me-2"></i> Ajouter favoris
           </a>
@@ -160,7 +142,7 @@
     <div class="row mt-4">
       <div class="col-md-12">
         <h2>Dernières annonces publiées :</h2>
-        <div class="d-flex overflow-auto">
+        <div class="d-flex overflow-auto custom-scrollbar">
           {% for annonce in annonces|slice(0,5) %} 
             {% if annonce.id != anID %} 
               <div class="card mx-2 shadow-sm" style="width: 18rem;">
@@ -239,6 +221,30 @@
 
     .cursor-pointer {
       cursor: pointer;
+    }
+
+    .custom-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: #888 #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #555;
     }
   </style>
 {% endblock %}
