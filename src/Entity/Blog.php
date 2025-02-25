@@ -8,9 +8,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert; 
 
 #[ORM\Entity(repositoryClass: BlogRepository::class)]
-#[ORM\HasLifecycleCallbacks] // Enable lifecycle callbacks
+#[ORM\HasLifecycleCallbacks] 
+#[Vich\Uploadable] // Indicates this entity is uploadable
+
 class Blog
 {
     #[ORM\Id]
@@ -19,9 +24,19 @@ class Blog
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le contenu ne peut pas être vide.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le contenu ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $Contenu = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $Titre = null;
 
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
@@ -46,41 +61,44 @@ class Blog
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[Vich\UploadableField(mapping: "blog_images", fileNameProperty: "image")]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null; // Automatically set on creation
 
-
     #[ORM\ManyToMany(targetEntity: User::class)]
-#[ORM\JoinTable(name: 'blog_user_ratings')]
-private Collection $ratedByUsers;
+    #[ORM\JoinTable(name: 'blog_user_ratings')]
+    private Collection $ratedByUsers;
 
-public function __construct()
-{
-    $this->listeCommentaires = new ArrayCollection();
-    $this->ratedByUsers = new ArrayCollection(); // Initialize the collection
-}
-
-// Add a method to check if a user has rated the blog
-public function hasUserRated(User $user): bool
-{
-    return $this->ratedByUsers->contains($user);
-}
-
-// Add a method to add a user to the ratedByUsers collection
-public function addRatedByUser(User $user): self
-{
-    if (!$this->ratedByUsers->contains($user)) {
-        $this->ratedByUsers->add($user);
+    public function __construct()
+    {
+        $this->listeCommentaires = new ArrayCollection();
+        $this->ratedByUsers = new ArrayCollection(); // Initialize the collection
     }
-    return $this;
-}
 
+    // Add a method to check if a user has rated the blog
+    public function hasUserRated(User $user): bool
+    {
+        return $this->ratedByUsers->contains($user);
+    }
+
+    // Add a method to add a user to the ratedByUsers collection
+    public function addRatedByUser(User $user): self
+    {
+        if (!$this->ratedByUsers->contains($user)) {
+            $this->ratedByUsers->add($user);
+        }
+        return $this;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
 
     public function getContenu(): ?string
     {
@@ -199,5 +217,25 @@ public function addRatedByUser(User $user): self
     {
         $this->image = $image;
         return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        // Obligatory to trigger update in DB
+        if ($imageFile) {
+            $this->updatedAt = new \DateTime();
+        }
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
     }
 }

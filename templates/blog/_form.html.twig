@@ -1,4 +1,52 @@
-{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="form-group mb-4">
+        {{ form_label(form.Titre, 'Titre du blog', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.Titre, {
+            'attr': {
+                'class': 'form-control',
+                'placeholder': 'Entrez un titre pour votre blog',
+                'required': true,
+                'maxlength': 255
+            }
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.Titre) }}
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        {{ form_label(form.Contenu, 'Contenu du blog', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.Contenu, {
+            'attr': {
+                'class': 'form-control',
+                'rows': 10,
+                'placeholder': 'Écrivez le contenu de votre blog ici',
+                'required': true,
+                'maxlength': 255
+            }
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.Contenu) }}
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        {{ form_label(form.imageFile, 'Image du blog', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.imageFile, {
+            'attr': {
+                'class': 'form-control-file',
+                'accept': 'image/*'
+            }
+        }) }}
+        <small class="form-text text-muted">Téléchargez une image pour votre blog (optionnel).</small>
+        <div class="invalid-feedback">
+            {{ form_errors(form.imageFile) }}
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-save me-2"></i>{{ button_label|default('Enregistrer') }}
+        </button>
+    </div>
 {{ form_end(form) }}

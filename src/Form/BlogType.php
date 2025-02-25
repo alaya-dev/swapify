@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class BlogType extends AbstractType
 {
@@ -15,7 +16,7 @@ class BlogType extends AbstractType
         $builder
         ->add('Titre')
         ->add('Contenu')
-        ->add('imageFile', FileType::class, [
+        ->add('imageFile', VichImageType::class, [
             'label' => 'Blog Image',
             'required' => false,
             'mapped' => false, // This field is not mapped to the entity

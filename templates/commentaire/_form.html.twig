@@ -1,4 +1,19 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="form-group mb-4">
+        {{ form_label(form.ContenuCmt, 'Votre commentaire', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.ContenuCmt, {
+            'attr': {
+                'class': 'form-control',
+                'placeholder': 'Écrivez votre commentaire ici...',
+                'rows': 5
+            }
+        }) }}
+        {{ form_errors(form.ContenuCmt) }}
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">
+            {{ button_label|default('Poster le commentaire') }}
+        </button>
+    </div>
 {{ form_end(form) }}

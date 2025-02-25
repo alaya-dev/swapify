@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CommentaireRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert; 
+
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 #[ORM\HasLifecycleCallbacks] // Enable lifecycle callbacks
@@ -15,6 +17,7 @@ class Commentaire
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le contenu ne peut pas être vide.")]
     private ?string $ContenuCmt = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
