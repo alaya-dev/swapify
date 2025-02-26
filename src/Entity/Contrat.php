@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\ContratRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;  
+
 
 #[ORM\Entity(repositoryClass: ContratRepository::class)]
 class Contrat
@@ -19,13 +21,22 @@ class Contrat
 
     #[ORM\OneToOne(inversedBy: 'contrat', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: "Vous devez sélectionner une offre acceptée.")]
     private ?Offre $offre = null;
 
     #[ORM\Column]
-    private ?bool $signeeOwnerAnnonce = null;
+    private ?bool $signeeOwnerAnnonce = false;
 
     #[ORM\Column]
-    private ?bool $signeeOffreMaker = null;
+    private ?bool $signeeOffreMaker = false;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateCreation = null;
+
+    public function __construct()
+    {
+        $this->dateCreation = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -76,6 +87,18 @@ class Contrat
     public function setSigneeOffreMaker(bool $signeeOffreMaker): static
     {
         $this->signeeOffreMaker = $signeeOffreMaker;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    {
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }

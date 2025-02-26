@@ -1,0 +1,103 @@
+    {% for type, messages in app.flashes %}
+        {% if type == 'success' %}
+            {% for message in messages %}
+                <div class="alert alert-success fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'warning' %}
+            {% for message in messages %}
+                <div class="alert alert-warning fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'error' %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{{ form_start(form, {'attr': {'class': 'my-custom-form bg-light p-4 rounded shadow','novalidate': 'novalidate'}}) }}
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">{{ form_label(form.offre) }}</label>
+        {{ form_widget(form.offre, {'attr': {'class': 'form-select'}}) }}
+        <div class="form-text">Veuillez sélectionner une offre acceptée.</div>
+    </div>
+</div>
+
+    <button type="button" id="signerButton" class="btn btn-warning">
+        <i class="fas fa-signature"></i> Signer
+    </button>
+    <div id="signatureContainer" class="text-center mt-3" style="display: none;font-family: 'Times New Roman', Times, serif; ">
+    <h5>Signature:</h5>
+          <div id="signature">
+        <span>{{app.user.nom}} {{app.user.prenom}}</span>
+      </div>
+</div>
+
+  
+<div class="text-center mt-3">
+
+  <button type="submit" class="btn btn-success">
+        <i class="fas fa-save"></i> {{ button_label|default('Sauvegarder') }}
+    </button>
+    </div>
+
+
+
+
+{{ form_end(form) }}
+
+<style>
+#signature {
+  font-size: 26px;
+  font-family: 'Brush Script MT', cursive; 
+  color: #333; 
+  position: relative;
+  display: inline-block;
+    letter-spacing:2px;
+
+    border: 2px solid #000;
+    padding: 10px;
+    margin-top: 1%;
+
+}
+
+.signature-line {
+  position: absolute;
+  top: -20px; 
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #333; 
+}
+
+#signature span {
+  margin-right: 5px;
+   text-decoration: underline;
+}
+
+</style>
+<script>
+document.getElementById('signerButton').addEventListener('click', function() {
+    const offreValue = document.querySelector('.form-select').value;
+    if (offreValue) {
+        const signatureContainer = document.getElementById('signatureContainer');
+        signatureContainer.style.display = 'block';
+
+const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'signer';
+        hiddenInput.value = '1';
+          const form = document.querySelector('form');
+        form.appendChild(hiddenInput);
+
+    } else {
+        alert('Veuillez sélectionner une offre acceptée.');
+    }
+});
+</script>

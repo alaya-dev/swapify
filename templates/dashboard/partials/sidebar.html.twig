@@ -181,15 +181,15 @@
                  x-transition:leave-start="opacity-100 transform translate-y-0" 
                  x-transition:leave-end="opacity-0 transform -translate-y-2" 
                  class="bg-gray-700" >
-                <a href="{{path('app_home')}}"  data-turbo="false"
+                <a href="{{path('app_mesContrats')}}"  data-turbo="false"
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     mes contrats
                 </a>
-                <a href="{{path('app_home')}}" 
+                <a href="{{path('app_mesContratsAsignee')}}" 
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                       contrat à signée 
+                       contrat à signée demandé par créateur annonce
                 </a>
-                <a href="{{path('app_home')}}" data-turbo="false"
+                <a href="{{path('app_contrat_new')}}" data-turbo="false"
                    class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
                     crée contrat
                 </a>

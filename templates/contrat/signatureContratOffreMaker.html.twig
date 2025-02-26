@@ -1,0 +1,15 @@
+
+{% block title %}Signer le Contrat{% endblock %}
+
+{% block body %}
+    <h1>Signer le Contrat</h1>
+
+    <p>Vous êtes sur le point de signer le contrat pour l'offre : <strong>{{ contrat.offre.titre }}</strong>.</p>
+    <p>Veuillez confirmer votre signature en cliquant sur le bouton ci-dessous.</p>
+
+    <form method="post">
+        <button type="submit" class="btn btn-success">Confirmer la signature</button>
+    </form>
+
+    <a href="{{ path('app_mesContrats') }}" class="btn btn-secondary mt-3">Retour à la liste des contrats</a>
+{% endblock %}
