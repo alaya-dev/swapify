@@ -9,6 +9,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\AnnonceRepository;
 use App\Repository\CategorieRepository;
 use App\Repository\EventRepository;
+use App\Service\mailerMailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -181,12 +182,36 @@ public function listAdmins(UserRepository $userRepository): Response
     #[Route('/admin/annonce/{id}/validate', name: 'admin_annonce_validate')]
      //#[IsGranted('ROLE_ADMIN')]
      #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
-    public function validate(Annonce $annonce, EntityManagerInterface $entityManager): RedirectResponse
+    public function validate(Annonce $annonce, EntityManagerInterface $entityManager, mailerMailJetService $mj): RedirectResponse
     {
         $annonce->setStatut('Acceptee');
         $entityManager->flush();
 
         $this->addFlash('success', 'Annonce validated successfully!');
+
+        //notifier par mail le user qui a postulé l'annonce$
+  
+
+        $mj->sendEmail(
+            $annonce->getUser()->getEmail(), 
+            "Confirmation de publication de votre annonce", 
+            "
+            <html>
+            <body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+                <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;'>
+                    <h2 style='color: #4CAF50; text-align: center;'>Confirmation de publication de votre annonce</h2>
+                    <p>Bonjour <strong>" . $annonce->getUser()->getNom() . " " . $annonce->getUser()->getPrenom() . "</strong>,</p>
+                    <p>Nous sommes heureux de vous informer que votre annonce intitulée <strong>\"" . $annonce->getTitre() . "\"</strong> a été validée et publiée avec succès sur notre plateforme.</p>
+                    <p>Vous pouvez la consulter à tout moment.</p>
+                    <p>N'hésitez pas à nous contacter si vous avez des questions ou besoin d'assistance.</p>
+                    <p>Cordialement,</p>
+                </div>
+            </body>
+            </html>
+            "
+        );
+
+
         return $this->redirectToRoute('app_admin_annonces');
     }
     #[Route('/admin/event/{id}/validate', name: 'admin_event_validate')]
@@ -205,12 +230,34 @@ public function listAdmins(UserRepository $userRepository): Response
     #[Route('/admin/annonce/{id}/reject', name: 'admin_annonce_reject')]
     //#[IsGranted('ROLE_ADMIN')]
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
-    public function reject(Annonce $annonce, EntityManagerInterface $entityManager): RedirectResponse
+    public function reject(Annonce $annonce, EntityManagerInterface $entityManager, mailerMailJetService $mj): RedirectResponse
     {
         $annonce->setStatut('Rejetee');
         $entityManager->flush();
 
         $this->addFlash('success', 'Annonce rejected successfully!');
+
+
+        //notifier par mail le user qui a postulé l'annonce$ en cas de rejet
+
+        $mj->sendEmail(
+            $annonce->getUser()->getEmail(), 
+            "Demande de publication de votre annonce", 
+            "
+            <html>
+            <body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+                <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;'>
+                    <h2 style='color:rgb(233, 6, 6); text-align: center;'>Confirmation de publication de votre annonce</h2>
+                    <p>Bonjour <strong>" . $annonce->getUser()->getNom() . " " . $annonce->getUser()->getPrenom() . "</strong>,</p>
+                    <p>Nous sommes désolé de vous informer que votre annonce intitulée <strong>\"" . $annonce->getTitre() . "\"</strong> n'a pas été validée sur notre plateforme.</p>
+                    <p>N'hésitez pas à nous contacter si vous avez des questions ou besoin d'assistance.</p>
+                    <p>Cordialement,</p>
+                </div>
+            </body>
+            </html>
+            "
+        );
+
         return $this->redirectToRoute('app_admin_annonces');
     }
     

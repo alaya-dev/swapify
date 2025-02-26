@@ -14,6 +14,7 @@ use App\Repository\FavorisRepository;
 use App\Repository\ImageRepository;
 use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
+use App\Service\mailerMailJetService;
 use App\Service\RecommandationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -234,4 +235,9 @@ final class AnnonceController extends AbstractController
     
         return $this->redirectToRoute('mesAnnonces', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+
+     
 }

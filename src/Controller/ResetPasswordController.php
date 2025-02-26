@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
+use App\Service\mailerMailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
@@ -26,18 +28,23 @@ class ResetPasswordController extends AbstractController
 
     private ResetPasswordHelperInterface $resetPasswordHelper;
     private EntityManagerInterface $entityManager;
+    private mailerMailJetService $mailerMailJetService;
 
-    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, EntityManagerInterface $entityManager)
+
+    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, EntityManagerInterface $entityManager,        mailerMailJetService $mailerMailJetService
+    )
     {
         $this->resetPasswordHelper = $resetPasswordHelper;
         $this->entityManager = $entityManager;
+        $this->mailerMailJetService = $mailerMailJetService;
+
     }
 
     /**
      * Display & process form to request a password reset.
      */
     #[Route('', name: 'app_forgot_password_request')]
-    public function request(Request $request, MailerInterface $mailer): Response
+    public function request(Request $request, mailerMailJetService $mj): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
@@ -45,7 +52,7 @@ class ResetPasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->processSendingPasswordResetEmail(
                 $form->get('email')->getData(),
-                $mailer
+                $mj
             );
         }
 
@@ -70,6 +77,11 @@ class ResetPasswordController extends AbstractController
             'resetToken' => $resetToken,
         ]);
     }
+
+
+
+
+
 
     /**
      * Validates and process the reset URL that the user clicked in their email.
@@ -133,6 +145,8 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
+
+    /* old youssef
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer): RedirectResponse
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
@@ -176,5 +190,52 @@ class ResetPasswordController extends AbstractController
         $this->setTokenObjectInSession($resetToken);
 
         return $this->redirectToRoute('app_check_email');
+    }*/
+    
+      
+    //new logic with mailJet par Karim.M
+    private function processSendingPasswordResetEmail(string $emailFormData, mailerMailJetService $mailer): RedirectResponse
+    {
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([
+            'email' => $emailFormData,
+        ]);
+    
+        // Do not reveal whether a user account was found or not.
+        if (!$user) {
+            return $this->redirectToRoute('app_check_email');
+        }
+    
+        try {
+            $resetToken = $this->resetPasswordHelper->generateResetToken($user);
+        } catch (ResetPasswordExceptionInterface $e) {
+            return $this->redirectToRoute('app_check_email');
+        }
+    
+        // Construct email content manually for MailJet
+        $resetUrl = $this->generateUrl('app_reset_password', ['token' => $resetToken->getToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+
+        $subject = 'Votre demande de réinitialisation du mot de passe';
+        $content = sprintf(
+            "Vous avez demandé la réinitialisation de votre mot de passe.<br>
+            Cliquez sur le lien suivant pour le réinitialiser : <a href='%s'>Réinitialiser mon mot de passe</a>.<br>
+            Ce lien expirera bientôt.",
+            $resetUrl
+        );
+    
+        // Ensure we use MailJet instead of Symfony Mailer
+        if ($mailer instanceof \App\Service\mailerMailJetService) {
+            $mailer->sendEmail($user->getEmail(), $subject, $content);
+        } else {
+            throw new \LogicException('Expected mailerMailJetService as MailerInterface implementation.');
+        }
+    
+        // Store the token object in session for retrieval in check-email route.
+        $this->setTokenObjectInSession($resetToken);
+    
+        return $this->redirectToRoute('app_check_email');
     }
+    
+
+
 }
