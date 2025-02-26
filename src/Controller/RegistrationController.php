@@ -17,6 +17,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+
 
 class RegistrationController extends AbstractController
 {
@@ -55,6 +57,22 @@ class RegistrationController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
+
+        // Gestion de l'image (si présente)
+        $imageFile = $form->get('imageUrl')->getData();
+        if ($imageFile) {
+            // Générez un nom unique pour l'image
+            $imageFileName = md5(uniqid()) . '.' . $imageFile->guessExtension();
+
+            // Déplacez l'image dans le répertoire 'public/uploads/images'
+            $imageFile->move(
+                $this->getParameter('images_directory'), // Définir 'images_directory' dans config/services.yaml
+                $imageFileName
+            );
+
+            // Enregistrez l'URL de l'image dans le champ imageUrl de l'utilisateur
+            $user->setImageUrl('/uploads/images/' . $imageFileName);
+        }
 
             // Attribution du rôle par défaut
             $user->setRoles(['ROLE_CLIENT']);
