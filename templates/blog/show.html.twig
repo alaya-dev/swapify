@@ -213,7 +213,7 @@
             {% if blog.image %}
                 <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}" class="img-fluid">
             {% endif %}
-            <p>{{ blog.Contenu }}</p>
+            <p>{{ blog.Contenu|raw }}</p>
         </div>
         <div class="blog-status">
             <span class="badge btn-{{ blog.statut.value == 'enAttente' ? 'warning' : 'success' }}">
@@ -235,6 +235,7 @@
                 </form>
             </div>
         {% endif %}
+        <a href="{{ path('linkedin_share', {'id': blog.id}) }}" class="btn btn-primary">Share on LinkedIn</a>
 
         <a href="{{ path('app_blog_index') }}" class="btn btn-primary">
             <i class="fas fa-arrow-left"></i> Retourner aux Blogs

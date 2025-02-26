@@ -38,7 +38,8 @@
           </div>
         </div>
       </a>
-    
+      {% if blogs|length > 0 %}
+
       <!-- Featured Post 2 (Right, Smaller) -->
       <a class="w-full md:w-1/3 relative rounded" style="height: 28em;" href="{{ path('app_blog_show', {'id': blogs[1].id}) }}">
         <div class="absolute left-0 top-0 w-full h-full z-10"
@@ -55,6 +56,7 @@
           </div>
         </div>
       </a>
+      {% endif %}
     </div>
 
     <!-- Blog Posts Section -->

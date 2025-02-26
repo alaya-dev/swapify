@@ -1,0 +1,11 @@
+fos_ck_editor:
+    default_config: default
+    configs:
+        default:
+            toolbar:
+                - ['Bold', 'Italic', 'Underline', 'Strike']
+                - ['NumberedList', 'BulletedList']
+                - ['Link', 'Unlink']
+                - ['Image', 'Table']
+                - ['Styles', 'Format']
+            stylesSet: 'my_styles' # Name of the custom styles set

@@ -240,7 +240,7 @@
                 <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}">
 
                 {% endif %}
-                <p>{{ blog.Contenu }}</p>
+                <p>{{ blog.Contenu|raw }}</p>
             </div>
             <div class="blog-status">
                 <span class="badge btn-{{ blog.statut.value == 'enAttente' ? 'warning' : 'success' }}">

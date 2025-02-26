@@ -7,20 +7,25 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Vich\UploaderBundle\Form\Type\VichImageType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType; // Add this line
 
 class BlogType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('Titre')
-        ->add('Contenu')
-        ->add('imageFile', VichImageType::class, [
-            'label' => 'Blog Image',
-            'required' => false,
-            'mapped' => false, // This field is not mapped to the entity
-        ]);
+            ->add('Titre')
+            ->add('Contenu', CKEditorType::class, [ // Replace the textarea with CKEditor
+                'config' => [
+                    'uiColor' => '#ffffff', // Optional: Customize the editor's UI color
+                    'toolbar' => 'full',   // Optional: Use the full toolbar
+                ],
+            ])
+            ->add('imageFile', FileType::class, [
+                'label' => 'Blog Image',
+                'required' => false,
+                'mapped' => false, // This field is not mapped to the entity
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
