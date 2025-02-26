@@ -1,5 +1,29 @@
 {% extends 'include.html.twig' %}
+
 {% block content %}
-    <h1>Bienvenue dans votre espace d'administration</h1>
-    <p>Cet espace est réservé en fonction de vos rôles.</p>
+    {% block body %}
+        <h1 text-align="center">Dashboard Admin</h1>
+
+       
+        <!-- Graphique -->
+        <div style="width: 70%; margin: auto;">
+            <canvas id="dashboardChart" width="400" height="400"></canvas>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var ctx = document.getElementById('dashboardChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar', // Type de graphique
+                    data: {{ chartData | json_encode() | raw }}, // Utilisation des données envoyées par le contrôleur
+                    options: {{ chartOptions | json_encode() | raw }} // Utilisation des options envoyées par le contrôleur
+                });
+            });
+        </script>
+
+
+    
+
+    {% endblock %}
 {% endblock %}

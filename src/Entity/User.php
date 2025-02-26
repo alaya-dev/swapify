@@ -49,7 +49,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     private ?\DateTimeInterface $dateNaissance;
 
 
-
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $imageUrl = null;
 
 
     #[ORM\Column(type: 'string', length: 8, unique: true)]
@@ -537,6 +538,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             }
         }
 
+        return $this;
+    }
+
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
         return $this;
     }
 }
