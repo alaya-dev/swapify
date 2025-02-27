@@ -17,6 +17,9 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
+
     
 class ProfileType extends AbstractType
 {
@@ -48,6 +51,23 @@ class ProfileType extends AbstractType
                 'invalid_message' => 'Les mots de passe doivent correspondre.',
                 'mapped' => false,
             ])
+
+
+
+            ->add('imageUrl', FileType::class, [
+                'label' => 'Image de profil (optionnel)',
+                'required' => false,  
+                'multiple' => false,  
+                'attr' => ['class' => 'input-field'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',  
+                        'mimeTypes' => ['image/jpeg', 'image/png'],  
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG)',
+                    ])
+                ]
+            ])
+            
             ->add('submit', SubmitType::class, [
                 'label' => 'Mettre à jour',
                 'attr' => ['class' => 'btn btn-primary']
