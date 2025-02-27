@@ -1,29 +1,142 @@
 {% extends 'include.html.twig' %}
 
 {% block content %}
-    {% block body %}
-        <h1 text-align="center">Dashboard Admin</h1>
+{% block body %}
+<div class="container mt-1">
+    <h2 class="text-center">Dashboard Administrateur</h2>
+    
+    <!-- Widgets -->
+    <div class="row">
+    <div class="col-md-4">
+        <div class="card text-dark bg-info-subtle mb-3">
+            <div class="card-header">Total Admins</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[0] }}</h5>
+            </div>
+        </div>
+    </div>
 
-       
-        <!-- Graphique -->
-        <div style="width: 70%; margin: auto;">
-            <canvas id="dashboardChart" width="400" height="400"></canvas>
+    <div class="col-md-4">
+        <div class="card text-dark bg-primary-subtle mb-3">
+            <div class="card-header">Total Clients</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[1] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-success-subtle mb-3">
+            <div class="card-header">Clients Vérifiés</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[2] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-warning-subtle mb-3">
+            <div class="card-header">Clients Non Vérifiés</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[3] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-danger-subtle mb-3">
+            <div class="card-header">Clients Bannis</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[4] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-secondary-subtle mb-3">
+            <div class="card-header">Clients Non Bannis</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[5] }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bar Chart and Other Stats -->
+    <div class="row mt-4">
+        <!-- Bar Chart Column -->
+        <div class="col-md-6">
+            <canvas id="barChart" class="small-chart"></canvas>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var ctx = document.getElementById('dashboardChart').getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'bar', // Type de graphique
-                    data: {{ chartData | json_encode() | raw }}, // Utilisation des données envoyées par le contrôleur
-                    options: {{ chartOptions | json_encode() | raw }} // Utilisation des options envoyées par le contrôleur
-                });
-            });
-        </script>
+        <!-- Colonne droite : Autres Statistiques (Pie Chart + Infos) -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Graphique en camembert -->
+                    <div class="d-flex justify-content-center mb-3">
+                        <canvas id="pieChart" style="max-width: 300px;"></canvas>
+                    </div>
 
+            </div>
+        </div>
+    </div>
+</div>
 
-    
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Bar Chart
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        const chartData = {{ chartData|json_encode|raw }};
+        const chartOptions = {{ chartOptions|json_encode|raw }};
 
-    {% endblock %}
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: chartData,
+            options: chartOptions
+        });
+
+        // Pie Chart
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        const pieData = {
+            labels: chartData.labels, // Utilisez les mêmes étiquettes que le bar chart
+            datasets: [{
+                data: chartData.datasets[0].data, // Utilisez les mêmes données que le bar chart
+                backgroundColor: [
+                    '#85d6ff', // info (bleu clair)
+                    '#a3d8ff', // primary (bleu clair)
+                    '#b8f2b8', // success (vert clair)
+                    '#ff9a9a', // danger (rouge clair)
+                    '#d3d3d3', // dark (gris clair)
+                    '#ffffff'  // secondary (gris plus clair)
+                ]
+            }]
+        };
+
+        new Chart(ctxPie, {
+            type: 'pie',
+            data: pieData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom', // Position de la légende
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+<!-- Custom CSS -->
+<style>
+    .small-chart {
+        width: 100% !important;
+        height: 300px !important; /* Ajustez la hauteur selon vos besoins */
+    }
+</style>
+{% endblock %}
 {% endblock %}

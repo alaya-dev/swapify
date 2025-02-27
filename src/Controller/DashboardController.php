@@ -12,13 +12,13 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class DashboardController extends AbstractController
 {
-    //#[Route('/dashboard', name: 'app_dashboard')]
-    //public function index(): Response
-    //{
-      //  return $this->render('include.html.twig', [
-        //    'controller_name' => 'DashboardController',
-        //]);
-    //}
+    #[Route('/statist', name: 'statistique')]
+    public function index(): Response
+    {
+     return $this->render('statistique.html.twig', [
+        'controller_name' => 'DashboardController',
+    ]);
+    }
 
     #[Route('/profileDetails', name: 'profile')]
     public function profile1(): Response
@@ -105,8 +105,8 @@ class DashboardController extends AbstractController
                 [
                     'label' => 'Total',
                     'data' => [$totalAdmins, $totalClients, $verifiedClients, $unverifiedClients, $bannedClients, $unbannedClients],
-                    'backgroundColor' => ['#FF5733', '#33C3FF', '#28a745', '#dc3545', '#6c757d', '#17a2b8'],
-                    'borderColor' => ['#FF5733', '#33C3FF', '#28a745', '#dc3545', '#6c757d', '#17a2b8'],
+                    'backgroundColor' => ['#ffcc99', '#a3d8ff', '#b8f2b8', '#ff9a9a', '#d3d3d3', '#f0e68c '],
+                    'borderColor' => ['#ffcc99', '#a3d8ff', '#b8f2b8', '#ff9a9a', '#d3d3d3', '#f0e68c '],
                     'borderWidth' => 1,
                 ]
             ]

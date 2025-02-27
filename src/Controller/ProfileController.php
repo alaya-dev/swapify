@@ -10,11 +10,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError; 
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
+
 
 class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
-    public function editProfile(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function editProfile(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,SluggerInterface $slugger): Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
@@ -40,6 +44,27 @@ class ProfileController extends AbstractController
 
             // Si le formulaire est valide, on le traite
             if ($form->isValid()) {
+
+
+                // Gestion de l'image
+                /** @var UploadedFile|null $imageFile */
+            $imageFile = $form->get('imageUrl')->getData();
+            if ($imageFile) {
+                $imageFileName = md5(uniqid()) . '.' . $imageFile->guessExtension();
+                try {
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $imageFileName
+                    );
+                    $user->setImageUrl('/uploads/images/' . $imageFileName);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l’image : ' . $e->getMessage());
+                    return $this->render('profile/profil.html.twig', [
+                        'form' => $form->createView(),
+                    ]);
+                }
+            }
+        
                 // Vérifier si un mot de passe a été fourni et si ce n'est pas vide
                 $newPassword = $form->get('password')->getData();
                 if ($newPassword !== null && $newPassword !== '') {

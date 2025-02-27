@@ -20,6 +20,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 
+
     
 class ProfileType extends AbstractType
 {
@@ -55,9 +56,10 @@ class ProfileType extends AbstractType
 
 
             ->add('imageUrl', FileType::class, [
-                'label' => 'Image de profil (optionnel)',
+                'label' => 'Image de profil',
                 'required' => false,  
                 'multiple' => false,  
+                'mapped' => false,
                 'attr' => ['class' => 'input-field'],
                 'constraints' => [
                     new File([
