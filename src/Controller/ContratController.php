@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 #[Route('/contrat')]
 final class ContratController extends AbstractController
 {
@@ -22,21 +25,22 @@ final class ContratController extends AbstractController
             'contrats' => $contratRepository->findAll(),
         ]);
     }
-
-    #[Route('/mesContrats', name: 'app_mesContrats', methods: ['GET'])]
-    public function mesContratsOA(ContratRepository $contratRepository): Response
+    #[Route('/mesContrats/signed', name: 'app_mesContratsSigned', methods: ['GET'])]
+    public function mesContratsSigned(ContratRepository $contratRepository): Response
     {
         $user = $this->getUser();
     
         $contrats = $contratRepository->createQueryBuilder('c')
             ->leftJoin('c.offre', 'o')
-            ->where('o.annonceOwner = :user OR o.offerMaker = :user')
+            ->where('(o.offerMaker = :user AND c.signeeOffreMaker = true)')
+            ->orWhere('(o.annonceOwner = :user AND c.signeeOwnerAnnonce = true)')
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
-            foreach ($contrats as $contrat) {
-                $contrat->decodedClauses = json_decode($contrat->getClauses(), true);
-            }
+    
+        foreach ($contrats as $contrat) {
+            $contrat->decodedClauses = json_decode($contrat->getClauses(), true);
+        }
     
         return $this->render('contrat/mesContrats.html.twig', [
             'contrats' => $contrats,
@@ -51,8 +55,37 @@ final class ContratController extends AbstractController
     
         $contrats = $contratRepository->createQueryBuilder('c')
             ->leftJoin('c.offre', 'o')
+            ->where('(o.offerMaker = :user AND c.signeeOffreMaker = false)')
+            ->orWhere('(o.annonceOwner = :user AND c.signeeOwnerAnnonce = false)')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    
+        foreach ($contrats as $contrat) {
+            $contrat->decodedClauses = json_decode($contrat->getClauses(), true);
+        }
+    
+        return $this->render('contrat/mesContrats.html.twig', [
+            'contrats' => $contrats,
+        ]);
+    }
+    
+
+      
+
+
+
+    #[Route('/mesContrats/pret', name: 'app_mesContratsPret', methods: ['GET'])]
+    public function mesContratsPret(ContratRepository $contratRepository): Response
+    {
+        $user = $this->getUser();
+    
+        $contrats = $contratRepository->createQueryBuilder('c')
+            ->leftJoin('c.offre', 'o')
             ->Where('o.offerMaker = :user')
-            ->andWhere('c.signeeOffreMaker = false')
+            ->orWhere('o.annonceOwner = :user')
+            ->andWhere('c.signeeOffreMaker = true')
+            ->andWhere('c.signeeOwnerAnnonce = true')
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
@@ -66,7 +99,7 @@ final class ContratController extends AbstractController
         ]);
     }
     
-    
+
 
 
 
@@ -107,27 +140,31 @@ final class ContratController extends AbstractController
             $entityManager->flush();
 
 
-    /*
-        // Construct email content manually for MailJet
-        $signURL ="" ;
+ // Construct email content MailJet
+$subject = 'Signature de votre contrat';
+
+$content = sprintf(
+    "Bonjour %s,\n\n".
+    "Nous vous informons qu'un contrat a été ajouté en lien avec votre offre. " .
+    "Nous vous invitons à vous rendre dans votre espace personnel sur notre plateforme pour consulter et signer ce contrat.\n\n" .
+    "Nous restons à votre disposition pour toute question.\n\n" .
+    "Cordialement,\n" .
+    "L’équipe de la swapify",
+    $offre->getOfferMaker()->getEmail(),
+    'https://127.0.0.1:8000/' 
+);
+
+if ($mailer instanceof \App\Service\mailerMailJetService) {
+    $mailer->sendEmail($offre->getOfferMaker()->getEmail(), $subject, $content);
+} else {
+    throw new \LogicException('Expected mailerMailJetService as MailerInterface implementation.');
+}
 
 
-        $subject = 'Signature de contrat';
-        $content = sprintf(
-            "contenu",
-            $signURL
-        );
     
-        // send email to the offreMaker
-        if ($mailer instanceof \App\Service\mailerMailJetService) {
-            $mailer->sendEmail($offre->getOfferMaker()->getEmail(), $subject, $content);
-        } else {
-            throw new \LogicException('Expected mailerMailJetService as MailerInterface implementation.');
-        }
-    */
     
             $this->addFlash('success', 'Le contrat est crée avec succée .');
-            return $this->redirectToRoute('app_mesContrats', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_mesContratsSigned', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('contrat/new.html.twig', [
@@ -181,7 +218,7 @@ final class ContratController extends AbstractController
         $user = $this->getUser();
         if ($user !== $contrat->getOffre()->getAnnonceOwner()) {
             $this->addFlash('error', 'Vous ne pouvez pas signer ce contrat.');
-            return $this->redirectToRoute('app_mesContrats');
+            return $this->redirectToRoute('app_mesContratsPret');
         }
     
         // Changer le statut de signature
@@ -190,7 +227,59 @@ final class ContratController extends AbstractController
         $entityManager->flush();
     
         $this->addFlash('success', 'Contrat signé avec succès.');
-        return $this->redirectToRoute('app_mesContrats');
+        return $this->redirectToRoute('app_mesContratsPret');
     }
+
+
+    #[Route('/contrat/signeeOM/{id}', name: 'app_signeMonContratOM', methods: ['POST'])]
+    public function app_signeMonContratOM(Contrat $contrat, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($user !== $contrat->getOffre()->getOfferMaker()) {
+            $this->addFlash('error', 'Vous ne pouvez pas signer ce contrat.');
+            return $this->redirectToRoute('app_mesContratsPret');
+        }
     
+        // Changer le statut de signature
+        $contrat->setSigneeOffreMaker(true);
+        $entityManager->persist($contrat);
+        $entityManager->flush();
+    
+        $this->addFlash('success', 'Contrat signé avec succès.');
+        return $this->redirectToRoute('app_mesContratsPret');
+    }
+ 
+
+
+
+
+/**
+ * @Route("/contrat/{id}/download-pdf", name="app_download_pdfContrat")
+ */
+public function downloadPdf(Contrat $contrat): Response
+{
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $dompdf = new Dompdf($options);
+
+    $html = $this->renderView('contrat/pdf_template.html.twig', [
+        'contrat' => $contrat,
+    ]);
+
+    $dompdf->loadHtml($html);
+
+    $dompdf->setPaper('A4', 'portrait');
+
+    $dompdf->render();
+
+    return new Response(
+        $dompdf->output(),
+        200,
+        [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="contrat_' . $contrat->getId() . '.pdf"'
+        ]
+    );
+}
+
 }
