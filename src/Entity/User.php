@@ -67,6 +67,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     private ?string $adresse = null;
 
     #[ORM\Column(type: 'boolean')]
+    private $isBanned = false;
+
+    #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -550,6 +553,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setImageUrl(string $imageUrl): self
     {
         $this->imageUrl = $imageUrl;
+        return $this;
+    }
+
+    public function getIsBanned(): ?bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned(bool $isBanned): self
+    {
+        $this->isBanned = $isBanned;
         return $this;
     }
 }
