@@ -26,7 +26,7 @@ class Blog
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le contenu ne peut pas être vide.")]
     #[Assert\Length(
-        max: 255,
+        max: 500,
         maxMessage: "Le contenu ne peut pas dépasser {{ limit }} caractères."
     )]
     private ?string $Contenu = null;
@@ -73,6 +73,9 @@ class Blog
     #[ORM\ManyToMany(targetEntity: User::class)]
     #[ORM\JoinTable(name: 'blog_user_ratings')]
     private Collection $ratedByUsers;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $views = null;
 
     public function __construct()
     {
@@ -237,5 +240,24 @@ class Blog
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
+    }
+
+    public function getViews(): ?int
+    {
+        return $this->views;
+    }
+
+    public function setViews(?int $views): static
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+    
+    // Method to increment views
+    public function incrementViews(): self
+    {
+        $this->views++;
+        return $this;
     }
 }

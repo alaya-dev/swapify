@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use FOS\CKEditorBundle\Form\Type\CKEditorType; // Add this line
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class BlogType extends AbstractType
 {
@@ -26,6 +27,8 @@ class BlogType extends AbstractType
                 'required' => false,
                 'mapped' => false, // This field is not mapped to the entity
             ]);
+            // ->add('save', SubmitType::class, ['label' => 'Save'])
+            // ->add('saveAsDraft', SubmitType::class, ['label' => 'Save as Draft']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -78,7 +78,27 @@ final class BlogController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
     
-    
+    #[Route('/drafts', name: 'app_blog_drafts', methods: ['GET'])]
+public function drafts(EntityManagerInterface $entityManager): Response
+{
+    // Ensure the user is logged in
+    $this->denyAccessUnlessGranted('ROLE_USER');
+
+    // Fetch the currently logged-in user
+    $user = $this->getUser();
+
+    // Fetch drafts for the current user
+    $drafts = $entityManager->getRepository(Blog::class)->findBy([
+        'user' => $user,
+        'statut' => EtatEnum::Draft, // Fetch only drafts
+    ], ['id' => 'DESC']); // Order by ID in descending order
+
+    // Render the drafts template
+    return $this->render('blog/draft.html.twig', [
+        'drafts' => $drafts,
+    ]);
+}
+
     
     #[Route('/new', name: 'app_blog_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -87,11 +107,15 @@ final class BlogController extends AbstractController
         
         $blog = new Blog();
         $blog->setUser($this->getUser());
-           
+        $blog->setStatut(EtatEnum::enAttente); // Default status is "enAttente"
+
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($request->request->has('saveAsDraft')) {
+                $blog->setStatut(EtatEnum::Draft);
+            }
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('imageFile')->getData();
         
@@ -122,37 +146,50 @@ final class BlogController extends AbstractController
     
 
     #[Route('/{id}', name: 'app_blog_show', methods: ['GET'])]
-    public function show(Blog $blog, Security $security): Response
-    {
-        $user = $security->getUser();
-    
-        // Check if the user is an admin or super admin
-        if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->render('blog/show_admin.html.twig', [
+    public function show(Blog $blog, Security $security, EntityManagerInterface $entityManager, Request $request): Response
+{
+    $session = $request->getSession();
+    $sessionKey = 'blog_' . $blog->getId();
+
+    if (!$session->has($sessionKey)) {
+        // Increment the view count
+        $blog->incrementViews();
+        $entityManager->persist($blog);
+        $entityManager->flush();
+
+        // Mark the blog as viewed in the session
+        $session->set($sessionKey, true);
+    }
+
+    $user = $security->getUser();
+
+    // Check if the user is an admin or super admin
+    if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')) {
+        return $this->render('blog/show_admin.html.twig', [
+            'blog' => $blog,
+        ]);
+    }
+
+    // Check if the user is a client
+    if ($this->isGranted('ROLE_CLIENT')) {
+        // If the client is viewing their own blog
+        if ($blog->getUser() === $user) {
+            return $this->render('blog/show_my_blog.html.twig', [
                 'blog' => $blog,
             ]);
         }
-    
-        // Check if the user is a client
-        if ($this->isGranted('ROLE_CLIENT')) {
-            // If the client is viewing their own blog
-            if ($blog->getUser() === $user) {
-                return $this->render('blog/show_my_blog.html.twig', [
-                    'blog' => $blog,
-                ]);
-            }
-    
-            // If the client is viewing another user's blog
-            return $this->render('blog/show.html.twig', [
-                'blog' => $blog,
-            ]);
-        }
-    
-        // Redirect if the user is not authorized
+
+        // If the client is viewing another user's blog
         return $this->render('blog/show.html.twig', [
             'blog' => $blog,
         ]);
     }
+
+    // Redirect if the user is not authorized
+    return $this->render('blog/show.html.twig', [
+        'blog' => $blog,
+    ]);
+}
     
 
     #[Route('/{id}/edit', name: 'app_blog_edit', methods: ['GET', 'POST'])]
@@ -312,63 +349,6 @@ public function rateBlog(Request $request, Blog $blog, EntityManagerInterface $e
     return $this->redirectToRoute('app_blog_index');
 }
 
-
-#[Route('/my-blogs', name: 'app_user_blogs', methods: ['GET'])]
-public function displayUserBlogs(EntityManagerInterface $entityManager, UserInterface $user): Response
-{
-    // Fetch the blogs of the currently logged-in user
-
-            // Fetch the blogs sorted by their status for the currently logged-in user
-            $acceptedBlogs = $entityManager->getRepository(Blog::class)->findBy(
-                ['statut' => 'Acceptée', 'user' => $user], // Filter by accepted status and user
-                ['id' => 'DESC'] // Sort by the id in descending order
-            );
-            
-            $pendingBlogs = $entityManager->getRepository(Blog::class)->findBy(
-                ['statut' => 'enAttente', 'user' => $user], // Filter by pending status and user
-                ['id' => 'DESC']
-            );
-            
-            $rejectedBlogs = $entityManager->getRepository(Blog::class)->findBy(
-                ['statut' => 'Rejetée', 'user' => $user], // Filter by rejected status and user
-                ['id' => 'DESC']
-            );
-    
-            // Return the view and pass the sorted blogs to the template
-            return $this->render('blog/my_blogs.html.twig', [
-                'acceptedBlogs' => $acceptedBlogs,
-                'pendingBlogs' => $pendingBlogs,
-                'rejectedBlogs' => $rejectedBlogs,
-            ]);
-        }
-    
-// In BlogController.php
-#[Route('/stats', name: 'app_blog_stats', methods: ['GET'])]
-public function blogStats(EntityManagerInterface $entityManager): Response
-{
-    // Get the total number of blogs
-    $totalBlogs = $entityManager->getRepository(Blog::class)->count([]);
-
-    // Get the total number of comments
-    $totalComments = $entityManager->createQueryBuilder()
-        ->select('COUNT(c.id)')
-        ->from('App\Entity\Commentaire', 'c')
-        ->getQuery()
-        ->getSingleScalarResult();
-
-    // Get the total number of rates
-    $totalRates = $entityManager->createQueryBuilder()
-        ->select('SUM(b.totalRates)') // Assuming 'totalRates' stores the sum of ratings
-        ->from('App\Entity\Blog', 'b')
-        ->getQuery()
-        ->getSingleScalarResult() ?? 0;
-
-    return $this->render('blog/stats.html.twig', [
-        'totalBlogs' => $totalBlogs,
-        'totalComments' => $totalComments,
-        'totalRates' => $totalRates,
-    ]);
-}
 
 }
 
