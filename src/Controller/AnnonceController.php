@@ -63,6 +63,12 @@ final class AnnonceController extends AbstractController
               //  dd( $annonces );
             }
         }
+
+
+
+
+        
+
     
         // Render the template
         return $this->render('annonce/listAnnonces.html.twig', [
