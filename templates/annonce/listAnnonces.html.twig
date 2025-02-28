@@ -12,7 +12,6 @@
     <h3 class="text-center text-2xl font-bold py-4 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg shadow-md">
       Liste des Annonces
     </h3>
-
     <div class="grid md:grid-cols-2 gap-6 mt-6">
       <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto max-h-[800px]">
         <!-- Search Form -->
@@ -95,13 +94,34 @@
                 </div>
               </div>
             </div>
+              {# Modal Overlay and Form #}
+            <div id="overlay-{{ annonce.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50">
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-100 p-[50px] rounded-md bg-white">
+                <div class="relative">
+                  <div id="btnClose-{{ annonce.id }}">
+                    <i class="fa fa-times absolute top-[-30px] left-[-30px]" aria-hidden="true"></i>
+                  </div>
+
+                  <form id="offerForm-{{ annonce.id }}" method="POST">
+                    <div class="mb-5">
+                      <h1 class="text-3xl font-bold text-gray-800">{{ annonce.titre }}</h1>
+                    </div>
+                    <div class="mb-3">
+                      <label for="offerDescription-{{ annonce.id }}" class="form-label">Votre offre</label>
+                      <textarea class="form-control" id="offerDescription-{{ annonce.id }}" rows="3"></textarea>
+                    </div>
+                    <input type="hidden" id="annonceId-{{ annonce.id }}" value="{{ annonce.id }}">
+                    <button type="submit" class="btn btn-success w-100">Envoyer l'Offre</button>
+                  </form>
+                </div>
+              </div>
+            </div>
           {% endfor %}
         {% else %}
           <div class="text-center text-gray-500">Aucune annonce disponible.</div>
         {% endif %}
       </div>
-
-      <div class="bg-white rounded-lg shadow-lg">
+      <div class="bg-white rounded-lg shadow-lg z-20">
         <div id="map" class="h-[800px]"></div>
       </div>
     </div>
@@ -119,6 +139,7 @@
           if (layer instanceof L.Marker) {
             map.removeLayer(layer);
           }
+
         });
 
         {% for item in annonces %}
@@ -139,6 +160,67 @@
         event.preventDefault();
         setTimeout(updateMapMarkers, 500); 
       });
+
+      {% for annonce in annonces %}
+        const overlay{{ annonce.id }} = document.getElementById('overlay-{{ annonce.id }}');
+        const openButton{{ annonce.id }} = document.getElementById('openButton-{{ annonce.id }}');
+        const closebtn{{ annonce.id }} = document.getElementById('btnClose-{{ annonce.id }}');
+        // Open the modal for the clicked annonce
+        openButton{{ annonce.id }}.addEventListener('click', () => {
+          overlay{{ annonce.id }}.classList.remove('hidden');
+
+        });
+
+        {% for item in annonces %}
+          L.marker([{{ item.x }}, {{ item.y }}])
+            .addTo(map)
+            .bindPopup("<b>{{ item.user.email }}</b>")
+            .openPopup();
+        {% endfor %}
+      }
+
+      updateMapMarkers();
+
+
+          if (!description) {
+            alert("Veuillez remplir la description de l'offre.");
+            return;
+          }
+          try {
+            const response = await fetch("/offre/new", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
+              },
+              body: JSON.stringify({
+                description: description,
+                annonceId: annonceId
+              })
+            });
+            const result = await response.json();
+            if (result.ok) {
+              alert('Votre offre a été envoyée avec succès. Vous pouvez contacter l’utilisateur.');
+            }
+          } catch (error) {
+            alert("Une erreur s'est produite lors de l'envoi de l'offre.");
+          } finally {
+            overlay{{ annonce.id }}.classList.add('hidden');
+          }
+        });
+      {% endfor %}
+
+
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+
+      document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        setTimeout(updateMapMarkers, 500); 
+      });
     });
+
+
   </script>
 {% endblock %}

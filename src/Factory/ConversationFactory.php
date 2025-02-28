@@ -17,7 +17,6 @@ class ConversationFactory
         $conversation->addUser($sender);
         $conversation->addUser($recipient);
         $this->conversationRepository->save($conversation);
-
         return $conversation;
     }
 }
