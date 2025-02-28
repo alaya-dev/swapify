@@ -10,6 +10,7 @@ use App\Repository\AnnonceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Enum\etat;
 use App\Form\AnnoncesFilterType;
+use App\Repository\CategorieRepository;
 use App\Repository\FavorisRepository;
 use App\Repository\ImageRepository;
 use App\Repository\RatingRepository;
@@ -34,13 +35,13 @@ final class AnnonceController extends AbstractController
         $this->recommendationService = $recommendationService;
     }
 
-
     #[Route(name: 'app_annonce_index', methods: ['GET', 'POST'])]
     public function index(
         Request $request, 
         AnnonceRepository $annonceRepository, 
         ImageRepository $imageRepository, 
-        FavorisRepository $favorisRepository
+        FavorisRepository $favorisRepository,
+        CategorieRepository $categorieRepository
     ) {
         $user = $this->getUser();
         $form = $this->createForm(AnnoncesFilterType::class);
@@ -49,29 +50,33 @@ final class AnnonceController extends AbstractController
         $images = $imageRepository->findAll();
         $favoris = $user ? $favorisRepository->findBy(['user' => $user]) : [];
     
-        $annonces = $annonceRepository->findValiderAnnonces(); 
- 
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $titre = $form->get('titre')->getData();
-            $categorie = $form->get('categorie')->getData();
-            $region = $form->get('Region')->getData();
-            $dateCreation = $form->get('dateCreation')->getData();
-    
-            if ($titre || $categorie || $region || $dateCreation) {
-                $annonces = $this->handleFilter($titre, $categorie, $region, $dateCreation, $annonceRepository);
-              //  dd( $annonces );
-            }
+        $titre = $request->query->get('titre');
+        $categorie = $request->query->get('categorie');
+        $region = $request->query->get('region');
+        $dateCreation = $request->query->get('date');
+
+        if ($titre || $categorie || $region || $dateCreation) {
+            $annonces = $annonceRepository->findFilteredAnnonces($titre, $categorie, $region, $dateCreation);
+        } else {
+            $annonces = $annonceRepository->findValiderAnnonces(); 
         }
+
+        $categories = $categorieRepository->findAll();
     
         // Render the template
         return $this->render('annonce/listAnnonces.html.twig', [
             'form' => $form->createView(),
             'annonces' => $annonces,
             'images' => $images,
-            'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris)
+            'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris),
+            'categories' => $categories,
+            'regions' => [
+                'Tunis',
+              'Ariana','Ben Arous','Manouba','Sousse','Sfax','Nabeul','Kairouan','Monastir','Kasserine','Gabès','Medenine','Tozeur','Béja','Jendouba','Le Kef','Siliana','Mahdia','Zaghouan','Tataouine','Gafsa','Sidi Bouzid','Nefta','Douz'
+            ]
         ]);
     }
+
     
 
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')")]
@@ -101,7 +106,6 @@ final class AnnonceController extends AbstractController
             return $annonceRepository->findFilteredAnnonces($titre, $cat, $region, $date);
         }
     
-        return $annonceRepository->findValiderAnnonces();
     }
 
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')")]
