@@ -16,6 +16,7 @@ parameters:
     videosdk_api_key: '%env(VIDEOSDK_API_KEY)%'
     VIDEOSDK_SECRET_KEY: '%env(VIDEOSDK_SECRET_KEY)%'
     images_directory: '%kernel.project_dir%/public/uploads/images'
+    swapifyAdminEmail: 'swapifyMailer199@gmail.com'
 
 services:
     App\Service\CertificateGeneratorService:
@@ -28,9 +29,17 @@ services:
             $attendanceRepository: '@App\Repository\AttendanceRepository'
             $sessionRepository: '@App\Repository\SessionRepository'
             $participantEventRepository: '@App\Repository\ParticipantEventRepository'
-    App\Service\CacheService:
+   
+   
+    # RecommandationAnnonce service
+    App\Service\RecommandationService:
         arguments:
-            $cache: '@cache.app' 
+            $client: '@http_client'
+
+    #mailer mailJet service 
+    App\Service\mailerMailJetService:
+        autowire: true
+        autoconfigure: true
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

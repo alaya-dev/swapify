@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrat d'Échange </title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        h1, h4, h5 {
+            text-align: center;
+        }
+        .signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 24px;
+            color: #333;
+            display: inline-block;
+            border-bottom: 2px solid #000;
+            padding: 5px 20px;
+            margin-top: 5px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .card {
+            border-radius: 10px;
+        }
+        .badge {
+            font-size: 0.9rem;
+            padding: 0.5em 0.75em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contrat d'Échange </h1>
+
+        <h4>Entre les soussignés :</h4>
+        <div>
+            <strong>Le Propriétaire de l'Annonce:</strong> {{ contrat.offre.annonceOwner.nom }} {{ contrat.offre.annonceOwner.prenom }}
+        </div>
+        <div>
+            <strong>Le Propriétaire de l'Offre:</strong> {{ contrat.offre.offerMaker.nom }} {{ contrat.offre.offerMaker.prenom }}
+        </div>
+
+        <hr>
+        <h5>Offre :</h5>
+        <p>{{ contrat.offre.description }}</p>
+
+        <h5>Article 1 - Objet du Contrat</h5>
+        <p>Le présent contrat a pour objet l’échange de biens entre les parties mentionnées ci-dessus, conformément aux descriptions fournies sur la plateforme.</p>
+
+        <h5>Article 2 - État des Biens</h5>
+        <p>Les biens échangés doivent être conformes à leur description respective. Chaque partie reconnaît avoir eu l’opportunité de vérifier l’état du bien avant l’échange.</p>
+
+        <h5>Article 3 - Obligations des Parties</h5>
+        <ul>
+            <li><strong>Authenticité et Propriété :</strong> Chaque partie garantit être propriétaire du bien échangé et avoir le droit légal de l’échanger.</li>
+            <li><strong>Conformité :</strong> Les biens doivent être livrés dans l’état annoncé, sans défaut majeur non signalé.</li>
+        </ul>
+
+        <h5>Article 4 - Annulation de l'Échange</h5>
+        <p>Toute annulation doit être signalée par écrit avant la réalisation de l’échange. Aucune responsabilité ne sera engagée en cas d’annulation justifiée.</p>
+
+        <h5>Article 5 - Responsabilité</h5>
+        <p>La plateforme mettant en relation les parties décline toute responsabilité en cas de litige lié à l’échange. Les parties conviennent de résoudre tout différend à l’amiable.</p>
+
+        <h5>Article 6 - Droit Applicable et Litiges</h5>
+        <p>Le présent contrat est régi par la loi tunisienne. En cas de litige, les parties s’efforceront de trouver une solution amiable. À défaut, le tribunal compétent de Tunis sera saisi.</p>
+
+        <hr>
+
+        <div class="signature">
+            <h6>Signature du Propriétaire de l'Annonce :</h6>
+            {% if contrat.signeeOwnerAnnonce %}
+                <div>{{ contrat.offre.annonceOwner.nom }} {{ contrat.offre.annonceOwner.prenom }}</div>
+            {% else %}
+                <span class="badge bg-warning">Non signé</span>
+            {% endif %}
+        </div>
+
+        <div class="signature">
+            <h6>Signature du Propriétaire de l'Offre :</h6>
+            {% if contrat.signeeOffreMaker %}
+                <div>{{ contrat.offre.offerMaker.nom }} {{ contrat.offre.offerMaker.prenom }}</div>
+            {% else %}
+                <span class="badge bg-warning">Non signé</span>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
