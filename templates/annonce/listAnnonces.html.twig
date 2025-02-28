@@ -139,6 +139,7 @@
           if (layer instanceof L.Marker) {
             map.removeLayer(layer);
           }
+
         });
 
         {% for item in annonces %}
@@ -167,18 +168,19 @@
         // Open the modal for the clicked annonce
         openButton{{ annonce.id }}.addEventListener('click', () => {
           overlay{{ annonce.id }}.classList.remove('hidden');
+
         });
 
-        // Close the modal
-        closebtn{{ annonce.id }}.addEventListener('click', () => {
-          overlay{{ annonce.id }}.classList.add('hidden');
-        });
+        {% for item in annonces %}
+          L.marker([{{ item.x }}, {{ item.y }}])
+            .addTo(map)
+            .bindPopup("<b>{{ item.user.email }}</b>")
+            .openPopup();
+        {% endfor %}
+      }
 
-        // Post request for sending offer
-        document.getElementById("offerForm-{{ annonce.id }}").addEventListener("submit", async function (event) {
-          event.preventDefault();
-          const description = document.getElementById("offerDescription-{{ annonce.id }}").value;
-          const annonceId = document.getElementById("annonceId-{{ annonce.id }}").value;
+      updateMapMarkers();
+
 
           if (!description) {
             alert("Veuillez remplir la description de l'offre.");
@@ -208,6 +210,15 @@
         });
       {% endfor %}
 
+
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+
+      document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        setTimeout(updateMapMarkers, 500); 
+      });
     });
 
 
