@@ -3,7 +3,6 @@ import "./styles/app.css";
 Pusher.logToConsole = true;
 
 console.log("charhcour 🎉");
-
 const pusher = new Pusher("7f4f9c9d2b396ad6ec87", { cluster: "eu" });
 const Btn = document.querySelector("#send");
 const input = document.querySelector("#content");
@@ -76,3 +75,5 @@ channel.bind("message-created", (data) => {
   msgs.appendChild(parent);
   msgs.scrollTo(0, msgs.scrollHeight);
 });
+
+ 
