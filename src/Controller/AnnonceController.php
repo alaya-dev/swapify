@@ -36,29 +36,35 @@ final class AnnonceController extends AbstractController
 
 
     #[Route(name: 'app_annonce_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, AnnonceRepository $annonceRepository, ImageRepository $imageRepository, FavorisRepository $favorisRepository)
-    {
-
+    public function index(
+        Request $request, 
+        AnnonceRepository $annonceRepository, 
+        ImageRepository $imageRepository, 
+        FavorisRepository $favorisRepository
+    ) {
         $user = $this->getUser();
-
         $form = $this->createForm(AnnoncesFilterType::class);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirectToRoute('app_annonce_index', [
-                'titre' => $form->get('titre')->getData(),
-                'categorie' => $form->get('categorie')->getData(),
-                'Region' => $form->get('Region')->getData(),
-                'dateCreation' => $form->get('dateCreation')->getData(),
-            ]);
-        }
-
-        $annonces = $this->handleFilter($request, $annonceRepository);
+    
         $images = $imageRepository->findAll();
-
         $favoris = $user ? $favorisRepository->findBy(['user' => $user]) : [];
-
-
+    
+        $annonces = $annonceRepository->findValiderAnnonces(); 
+ 
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $titre = $form->get('titre')->getData();
+            $categorie = $form->get('categorie')->getData();
+            $region = $form->get('Region')->getData();
+            $dateCreation = $form->get('dateCreation')->getData();
+    
+            if ($titre || $categorie || $region || $dateCreation) {
+                $annonces = $this->handleFilter($titre, $categorie, $region, $dateCreation, $annonceRepository);
+              //  dd( $annonces );
+            }
+        }
+    
+        // Render the template
         return $this->render('annonce/listAnnonces.html.twig', [
             'form' => $form->createView(),
             'annonces' => $annonces,
@@ -66,7 +72,7 @@ final class AnnonceController extends AbstractController
             'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris)
         ]);
     }
-
+    
 
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')")]
     #[Route('/mesAnnonces', name: 'mesAnnonces', methods: ['GET', 'POST'])]
@@ -89,20 +95,14 @@ final class AnnonceController extends AbstractController
     }
 
 
-    private function handleFilter(Request $request, AnnonceRepository $annonceRepository)
+    private function handleFilter($titre, $cat, $region, $date, AnnonceRepository $annonceRepository)
     {
-        $titre = $request->query->get('titre');
-        $cat = $request->query->get('categorie');
-        $region = $request->query->get('Region');
-        $date = $request->query->get('dateCreation');
-
         if ($titre || $cat || $region || $date) {
             return $annonceRepository->findFilteredAnnonces($titre, $cat, $region, $date);
         }
-
+    
         return $annonceRepository->findValiderAnnonces();
     }
-
 
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')")]
     #[Route('/new', name: 'app_annonce_new', methods: ['GET', 'POST'])]
