@@ -28,6 +28,9 @@ services:
             $attendanceRepository: '@App\Repository\AttendanceRepository'
             $sessionRepository: '@App\Repository\SessionRepository'
             $participantEventRepository: '@App\Repository\ParticipantEventRepository'
+    App\Service\CacheService:
+        arguments:
+            $cache: '@cache.app' 
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
