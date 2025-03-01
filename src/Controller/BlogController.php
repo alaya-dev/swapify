@@ -239,41 +239,49 @@ final class BlogController extends AbstractController
 }
     
 
-    #[Route('/{id}/edit', name: 'app_blog_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Blog $blog, EntityManagerInterface $entityManager): Response
-    {
-        // Ensure the user is either the blog owner or an admin
-        $this->denyAccessUnlessGranted('ROLE_USER');  // Basic check for regular users
-    
-        // If the user is an admin, automatically accept the blog
-        if ($this->isGranted('ROLE_ADMIN')) {
-            $blog->setStatut(EtatEnum::Acceptée);  // Admin automatically accepts the blog
-        } else {
-            // Ensure only the blog owner can access the edit page
-            if ($blog->getUser() !== $this->getUser()) {
-                throw $this->createAccessDeniedException('You are not allowed to edit this blog.');
-            }
-            
-            // Set the blog status to 'enAttente' when it is edited by a regular user
-            $blog->setStatut(EtatEnum::enAttente);  // Set status to "pending" for approval by admin
-        }
-    
-        $form = $this->createForm(BlogType::class, $blog);
-        $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-        
-            // Redirect to the index page or any other page you wish after updating
-            $this->addFlash('success', 'Blog updated successfully!');
-            return $this->redirectToRoute('app_blog_index');
-        }
-        
-        return $this->render('blog/edit.html.twig', [
-            'blog' => $blog,
-            'form' => $form,
-        ]);
+#[Route('/{id}/edit', name: 'app_blog_edit', methods: ['GET', 'POST'])]
+public function edit(Request $request, Blog $blog, EntityManagerInterface $entityManager, BadWordFilter $badWordFilter): Response
+{
+    // Ensure the user is either the blog owner or an admin
+    $this->denyAccessUnlessGranted('ROLE_USER');  // Basic check for regular users
+
+    // Ensure only the blog owner can access the edit page
+    if ($blog->getUser() !== $this->getUser()) {
+        throw $this->createAccessDeniedException('You are not allowed to edit this blog.');
     }
+
+    // Set the blog status to 'enAttente' when it is edited
+    $blog->setStatut(EtatEnum::enAttente);  // Set status to "pending" for approval by admin
+
+    $form = $this->createForm(BlogType::class, $blog);
+    $form->handleRequest($request);
+    
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Check for bad words in the title
+        if ($badWordFilter->containsBadWords($blog->getTitre())) {
+            $this->addFlash('error', 'The blog title contains inappropriate language and cannot be published.');
+            return $this->redirectToRoute('app_blog_edit', ['id' => $blog->getId()]);
+        }
+
+        // Check for bad words in the content
+        if ($badWordFilter->containsBadWords($blog->getContenu())) {
+            $this->addFlash('error', 'The blog content contains inappropriate language and cannot be published.');
+            return $this->redirectToRoute('app_blog_edit', ['id' => $blog->getId()]);
+        }
+
+        // Save the blog to the database
+        $entityManager->flush();
+    
+        // Redirect to the index page or any other page you wish after updating
+        $this->addFlash('success', 'Blog updated successfully!');
+        return $this->redirectToRoute('app_blog_index');
+    }
+    
+    return $this->render('blog/edit.html.twig', [
+        'blog' => $blog,
+        'form' => $form,
+    ]);
+}
     
 
 
