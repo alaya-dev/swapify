@@ -285,7 +285,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): static
     {
         $this->nom = $nom;
         return $this;
@@ -296,7 +296,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(?string $prenom): static
     {
         $this->prenom = $prenom;
         return $this;
@@ -322,7 +322,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->tel;
     }
 
-    public function setTel(string $tel): static
+    public function setTel(?string $tel): static
     {
         $this->tel = $tel;
         return $this;

@@ -43,6 +43,8 @@ class AdminController extends AbstractController
     $user = new User();
     $form = $this->createForm(RegistrationFormType::class, $user);
 
+    $form->remove('imageUrl');
+
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {

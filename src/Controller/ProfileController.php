@@ -29,19 +29,7 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            // Vérifier si les champs nom, prénom et téléphone sont vides
-            if (empty($user->getNom())) {
-                $form->get('nom')->addError(new FormError('Le nom ne peut pas être vide.'));
-            }
-
-            if (empty($user->getPrenom())) {
-                $form->get('prenom')->addError(new FormError('Le prénom ne peut pas être vide.'));
-            }
-
-            if (empty($user->getTel())) {
-                $form->get('tel')->addError(new FormError('Le numéro de téléphone ne peut pas être vide.'));
-            }
-
+           
             // Si le formulaire est valide, on le traite
             if ($form->isValid()) {
 
