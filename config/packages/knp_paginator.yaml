@@ -1,0 +1,4 @@
+# config/packages/knp_paginator.yaml
+knp_paginator:
+    template:
+        pagination: 'pagination/custom_pagination.html.twig' # Path to your custom template

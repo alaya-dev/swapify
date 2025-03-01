@@ -160,22 +160,12 @@
       </div>
     </div>
 
-    <!-- Subscribe to Newsletter Section (Bottom of the Page) -->
-    <div class="w-full mt-10">
-      <div class="bg-white rounded-lg shadow-lg p-6 max-w-screen-md mx-auto"> <!-- Centré et largeur limitée -->
-        <h2 class="text-xl font-bold mb-4">Subscribe to Newsletter</h2>
-        <p class="text-gray-700 mb-4">Recevez les dernières actualités et mises à jour directement dans votre boîte de réception.</p>
-        <form action="#" method="POST">
-          <div class="mb-4">
-            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-            <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Votre adresse email" required>
-          </div>
-          <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">S'abonner</button>
-        </form>
-      </div>
-    </div>
+  </div>
+  <div class="navigation">
+    {{ knp_pagination_render(blogs) }}
+  </div>
   </main>
-</div>
+
 
 <script>
   // Interactive Star Rating

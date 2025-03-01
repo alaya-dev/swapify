@@ -9,8 +9,11 @@ parameters:
     videosdk_api_key: '%env(VIDEOSDK_API_KEY)%'
     VIDEOSDK_SECRET_KEY: '%env(VIDEOSDK_SECRET_KEY)%'
     images_directory: '%kernel.project_dir%/public/uploads/images'
-    linkedin_client_id: '%env(LINKEDIN_CLIENT_ID)%'
-    linkedin_client_secret: '%env(LINKEDIN_CLIENT_SECRET)%'
+    bad_words:
+        - badword1
+        - badword2
+        - badword3
+
 
 services:
     App\Service\CertificateGeneratorService:
@@ -44,3 +47,7 @@ services:
     App\EventListener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+    
+    App\Service\BadWordFilter:
+        arguments:
+            $badWords: '%bad_words%'  # Pass the bad words list from parameters

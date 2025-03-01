@@ -1,0 +1,38 @@
+{# templates/pagination/custom_pagination.html.twig #}
+
+{% if pageCount > 1 %}
+    <div class="pagination" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 20px 0;">
+        {# Previous Page Link #}
+        {% if previous is defined %}
+            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}" 
+               class="previous" 
+               style="padding: 8px 16px; text-decoration: none; color: #007bff; border: 1px solid #007bff; border-radius: 4px; transition: background-color 0.3s, color 0.3s;">
+                Previous
+            </a>
+        {% endif %}
+
+        {# Page Numbers #}
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <a href="{{ path(route, query|merge({(pageParameterName): page})) }}" 
+                   style="padding: 8px 12px; text-decoration: none; color: #007bff; border: 1px solid #007bff; border-radius: 4px; transition: background-color 0.3s, color 0.3s;">
+                    {{ page }}
+                </a>
+            {% else %}
+                <span class="current" 
+                      style="padding: 8px 12px; color: white; background-color: #007bff; border: 1px solid #007bff; border-radius: 4px;">
+                    {{ page }}
+                </span>
+            {% endif %}
+        {% endfor %}
+
+        {# Next Page Link #}
+        {% if next is defined %}
+            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}" 
+               class="next" 
+               style="padding: 8px 16px; text-decoration: none; color: #007bff; border: 1px solid #007bff; border-radius: 4px; transition: background-color 0.3s, color 0.3s;">
+                Next
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
