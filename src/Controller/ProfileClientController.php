@@ -26,6 +26,26 @@ public function editProfile(
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
+
+        // Gestion de l'image
+                /** @var UploadedFile|null $imageFile */
+                $imageFile = $form->get('imageUrl')->getData();
+                if ($imageFile) {
+                    $imageFileName = md5(uniqid()) . '.' . $imageFile->guessExtension();
+                    try {
+                        $imageFile->move(
+                            $this->getParameter('images_directory'),
+                            $imageFileName
+                        );
+                        $user->setImageUrl('/uploads/images/' . $imageFileName);
+                    } catch (FileException $e) {
+                        $this->addFlash('error', 'Erreur lors du téléchargement de l’image : ' . $e->getMessage());
+                        return $this->render('dashboard/accueil_client.twig', [
+                            'form' => $form->createView(),
+                        ]);
+                    }
+                }
+
         $newPassword = $form->get('password')->getData();
         
         if (!empty($newPassword)) {
@@ -39,7 +59,7 @@ public function editProfile(
         return $this->redirectToRoute('app_dashboard_client');
     }
 
-    return $this->render('dashboard/profile_user/profile.html.twig', [
+    return $this->render('dashboard/accueil_client.html.twig', [
         'form' => $form->createView(),
     ]);
 }

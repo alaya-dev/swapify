@@ -1,9 +1,7 @@
 {% extends 'dashBord_user.html.twig' %}
 
 {% block content %}
-    {% if form is defined %}
+    {% if form  %}
         {{ include('dashboard/profile_user/profile.html.twig') }}
-    {% else %}
-        <p>Erreur : formulaire non disponible.</p>
     {% endif %}
 {% endblock %}

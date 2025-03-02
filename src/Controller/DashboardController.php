@@ -12,13 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class DashboardController extends AbstractController
 {
-    #[Route('/statist', name: 'statistique')]
-    public function index(): Response
-    {
-     return $this->render('statistique.html.twig', [
-        'controller_name' => 'DashboardController',
-    ]);
-    }
 
     #[Route('/profileDetails', name: 'profile')]
     public function profile1(): Response
