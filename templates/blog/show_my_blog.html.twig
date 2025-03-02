@@ -271,6 +271,26 @@
                 <a href="{{ path('app_blog_all') }}" class="btn btn-primary">
                     <i class="fas fa-arrow-left"></i> Retourner aux Blogs
                 </a>
+
+                        {# Social Media Sharing Buttons #}
+        <div class="social-sharing mt-4">
+            <p class="mb-2">Partager ce blog :</p>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url(path('app_blog_show', {'id': blog.id})) }}" target="_blank" class="btn btn-primary btn-sm me-2">
+                <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+            <a href="https://twitter.com/intent/tweet?url={{ absolute_url(path('app_blog_show', {'id': blog.id})) }}&text={{ blog.Titre|url_encode }}" target="_blank" class="btn btn-info btn-sm me-2">
+                <i class="fab fa-twitter"></i> Twitter
+            </a>
+            <a href="https://www.linkedin.com/shareArticle?url={{ absolute_url(path('app_blog_show', {'id': blog.id})) }}&title={{ blog.Titre|url_encode }}" target="_blank" class="btn btn-secondary btn-sm me-2">
+                <i class="fab fa-linkedin-in"></i> LinkedIn
+            </a>
+            <a href="https://wa.me/?text={{ ('Check out this blog: ' ~ blog.Titre ~ ' - ' ~ absolute_url(path('app_blog_show', {'id': blog.id})))|url_encode }}" target="_blank" class="btn btn-success btn-sm">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <button class="btn btn-light btn-sm me-2" onclick="copyToClipboard('{{ absolute_url(path('app_blog_show', {'id': blog.id})) }}')">
+                <i class="fas fa-copy"></i> Copy Link
+            </button>
+        </div>
             {% endif %}
 
             {# Ratings Section #}
@@ -412,5 +432,13 @@
             });
         });
     });
+        // Copy to Clipboard Functionality
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
     </script>
 {% endblock %}
