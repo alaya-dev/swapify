@@ -1,5 +1,6 @@
 import "./bootstrap.js";
 import "./styles/app.css";
+
 Pusher.logToConsole = true;
 
 console.log("charhcour 🎉");
@@ -33,6 +34,7 @@ const sendMessage = async () => {
   try {
     await fetch("/messages", {
       method: "POST",
+      
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

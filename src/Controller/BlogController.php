@@ -7,6 +7,7 @@ use App\Entity\Blog;
 use App\Form\BlogType;
 use App\Repository\BlogRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,16 +22,20 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class BlogController extends AbstractController
 {
     #[Route('/blogs', name: 'app_blog_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager,PaginatorInterface $paginator,Request $request): Response
     {
         $acceptedBlogs = $entityManager->getRepository(Blog::class)->findBy(
             ['statut' => EtatEnum::Acceptée],
-            ['id' => 'DESC'] // Order by id in descending order
+            ['id' => 'DESC'] 
         );
-        
+        $blogs = $paginator->paginate(
+            $acceptedBlogs, // Query or array
+            $request->query->getInt('page', 1), // Page number
+            4 // Items per page
+        );
     
         return $this->render('blog/index.html.twig', [
-            'blogs' => $acceptedBlogs,
+            'blogs' => $blogs,
         ]);
     }
     #[Route('/all', name: 'app_blog_all', methods: ['GET'])]
@@ -122,10 +127,11 @@ final class BlogController extends AbstractController
     
 
     #[Route('/{id}', name: 'app_blog_show', methods: ['GET'])]
-    public function show(Blog $blog, Security $security): Response
+    public function show(Blog $blog, BlogRepository $blogRepository): Response
     {
-        $user = $security->getUser();
-    
+        $user = $this->getUser();
+        $blogs = $blogRepository->findBy(['user' => $user]);
+        
         // Check if the user is an admin or super admin
         if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->render('blog/show_admin.html.twig', [
@@ -139,18 +145,21 @@ final class BlogController extends AbstractController
             if ($blog->getUser() === $user) {
                 return $this->render('blog/show_my_blog.html.twig', [
                     'blog' => $blog,
+                    'blogs'=>$blogs
                 ]);
             }
     
             // If the client is viewing another user's blog
             return $this->render('blog/show.html.twig', [
                 'blog' => $blog,
+                'all_blogs'=>$blogRepository->findAll(),
             ]);
         }
     
         // Redirect if the user is not authorized
         return $this->render('blog/show.html.twig', [
             'blog' => $blog,
+            
         ]);
     }
     
@@ -158,31 +167,39 @@ final class BlogController extends AbstractController
     #[Route('/{id}/edit', name: 'app_blog_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Blog $blog, EntityManagerInterface $entityManager): Response
     {
-        // Ensure the user is either the blog owner or an admin
-        $this->denyAccessUnlessGranted('ROLE_USER');  // Basic check for regular users
-    
-        // If the user is an admin, automatically accept the blog
+        $this->denyAccessUnlessGranted('ROLE_USER');  
         if ($this->isGranted('ROLE_ADMIN')) {
-            $blog->setStatut(EtatEnum::Acceptée);  // Admin automatically accepts the blog
+            $blog->setStatut(EtatEnum::Acceptée);
         } else {
-            // Ensure only the blog owner can access the edit page
             if ($blog->getUser() !== $this->getUser()) {
                 throw $this->createAccessDeniedException('You are not allowed to edit this blog.');
             }
-            
-            // Set the blog status to 'enAttente' when it is edited by a regular user
-            $blog->setStatut(EtatEnum::enAttente);  // Set status to "pending" for approval by admin
+            $blog->setStatut(EtatEnum::enAttente);  
         }
     
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+                        /** @var UploadedFile $imageFile */
+                        $imageFile = $form->get('imageFile')->getData();
         
-            // Redirect to the index page or any other page you wish after updating
+                        if ($imageFile) {
+                            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                    
+                            // Move the file to the directory where images are stored
+                            $imageFile->move(
+                                $this->getParameter('uploads_directory'),
+                                $newFilename
+                            );
+                    
+                            // Update the 'image' property to store the file name
+                            $blog->setImage($newFilename);
+                        }
+            $entityManager->flush();
+    
             $this->addFlash('success', 'Blog updated successfully!');
-            return $this->redirectToRoute('app_blog_index');
+            return $this->redirectToRoute('app_blog_all');
         }
         
         return $this->render('blog/edit.html.twig', [
@@ -196,7 +213,6 @@ final class BlogController extends AbstractController
     #[Route('/{id}', name: 'app_blog_delete', methods: ['POST'])]
     public function delete(Request $request, Blog $blog, EntityManagerInterface $entityManager): Response
     {
-        // Ensure only the blog owner can delete the blog
         if ($blog->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException('You are not allowed to delete this blog.');
         }
@@ -212,7 +228,7 @@ final class BlogController extends AbstractController
             $entityManager->flush();
         }
     
-        return $this->redirectToRoute('app_blog_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_blog_all', [], Response::HTTP_SEE_OTHER);
     }
     
     #[Route('/admin/pending-blogs', name: 'admin_pending_blogs')]
@@ -314,31 +330,22 @@ public function rateBlog(Request $request, Blog $blog, EntityManagerInterface $e
 
 
 #[Route('/my-blogs', name: 'app_user_blogs', methods: ['GET'])]
-public function displayUserBlogs(EntityManagerInterface $entityManager, UserInterface $user): Response
+public function displayUserBlogs(BlogRepository $blogRepository,Request $request): Response
 {
-    // Fetch the blogs of the currently logged-in user
+   
 
-            // Fetch the blogs sorted by their status for the currently logged-in user
-            $acceptedBlogs = $entityManager->getRepository(Blog::class)->findBy(
-                ['statut' => 'Acceptée', 'user' => $user], // Filter by accepted status and user
-                ['id' => 'DESC'] // Sort by the id in descending order
-            );
+            $filter = $request->query->get('filter', 'all');
+            $blogs = match ($filter) {
+                'pending' => $blogRepository->findBy(['statut' => 'enAttente', 'user' => $this->getUser()]),
+                'active' => $blogRepository->findBy(['statut' => 'Acceptée', 'user' => $this->getUser()]),
+                'inactive' => $blogRepository->findBy(['statut' => 'Rejetée', 'user' => $this->getUser()]),
+                default => $blogRepository->findBy(['user' => $this->getUser()]),
+            };
             
-            $pendingBlogs = $entityManager->getRepository(Blog::class)->findBy(
-                ['statut' => 'enAttente', 'user' => $user], // Filter by pending status and user
-                ['id' => 'DESC']
-            );
-            
-            $rejectedBlogs = $entityManager->getRepository(Blog::class)->findBy(
-                ['statut' => 'Rejetée', 'user' => $user], // Filter by rejected status and user
-                ['id' => 'DESC']
-            );
     
-            // Return the view and pass the sorted blogs to the template
             return $this->render('blog/my_blogs.html.twig', [
-                'acceptedBlogs' => $acceptedBlogs,
-                'pendingBlogs' => $pendingBlogs,
-                'rejectedBlogs' => $rejectedBlogs,
+                'blogs' => $blogs,
+                
             ]);
         }
     

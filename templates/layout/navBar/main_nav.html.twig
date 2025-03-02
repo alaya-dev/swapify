@@ -13,8 +13,8 @@
     </div>
     <div class="hidden lg:flex lg:gap-x-8">
       <a href="{{ path('app_home') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Acceuil</a>
-      <a href="#"  data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">À Propos</a>
-      <a href="/annonce" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
+      <a href="{{path('app_home')}}#aboutus"  data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">À Propos</a>
+      <a href="{{path('app_annonce_index')}}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
       <a href="{{ path('app_event_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Evenement</a>
       <a href="{{ path('app_blog_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
       <a href="{{path('app_home')}}#contact" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Contact</a>
@@ -51,9 +51,9 @@
       </button>
     </div>
     <div class="mt-6 space-y-4">
-      <a href="#" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Acceuil</a>
-      <a href="#" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">À Propos</a>
-      <a href="/annonce" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
+      <a href="{{path('app_home')}}" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Acceuil</a>
+      <a href="{{path('app_home')}}#aboutus" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">À Propos</a>
+      <a href="{{path('app_annonce_index')}}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Liste des annonces</a>
       <a href="{{ path('app_event_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Evenement</a>
       <a href="{{ path('app_blog_index') }}" data-turbo="false" class="text-sm font-semibold text-gray-900 hover:text-gray-600">Blog</a>
       <a href="{{ path('app_home') }}#contact" data-turbo="false" class="block text-base font-semibold text-gray-900 hover:bg-gray-50 p-2 rounded-lg" data-turbo="false">Contact</a>
