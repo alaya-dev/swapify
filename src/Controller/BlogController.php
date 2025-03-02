@@ -6,6 +6,7 @@ use App\Enum\EtatEnum;
 use App\Entity\Blog;
 use App\Form\BlogType;
 use App\Repository\BlogRepository;
+use App\Service\BadWordFilter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +40,7 @@ final class BlogController extends AbstractController
         ]);
     }
     #[Route('/all', name: 'app_blog_all', methods: ['GET'])]
-    public function display(EntityManagerInterface $entityManager, Security $security): Response
+    public function display(EntityManagerInterface $entityManager, Security $security,BlogRepository $blogRepository ,Request $request): Response
     {
         $user = $security->getUser();
     
@@ -67,11 +68,15 @@ final class BlogController extends AbstractController
                 'blogs' => $blogs,
             ]);
         } elseif ($this->isGranted('ROLE_CLIENT')) {
-            // Fetch only the client's blogs
-            $blogs = $entityManager->getRepository(Blog::class)->findBy(
-                ['user' => $user],
-                ['id' => 'DESC']
-            );
+            $filter = $request->query->get('filter', 'all');
+
+            $blogs = match ($filter) {
+                'pending' => $blogRepository->findBy(['statut' => EtatEnum::enAttente]),
+                'draft' => $blogRepository->findBy(['statut' => EtatEnum::Draft]),
+                'active' => $blogRepository->findBy(['statut' => EtatEnum::Acceptée]),
+                'inactive' => $blogRepository->findBy(['statut' => EtatEnum::Rejetée]),
+                default => $blogRepository->findAll(),
+            };
     
             // Redirect to the client Twig file
             return $this->render('blog/myblogs.html.twig', [
@@ -83,10 +88,37 @@ final class BlogController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
     
-    
+    #[Route('/drafts', name: 'app_blog_drafts', methods: ['GET'])]
+    public function drafts(EntityManagerInterface $entityManager, Request $request,PaginatorInterface $paginator): Response {
+        // Ensure the user is logged in
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        // Fetch the currently logged-in user
+        $user = $this->getUser();
+
+        // Fetch drafts for the current user
+        $query = $entityManager->getRepository(Blog::class)->createQueryBuilder('b')
+            ->where('b.user = :user')
+            ->andWhere('b.statut = :statut')
+            ->setParameter('user', $user)
+            ->setParameter('statut', EtatEnum::Draft)
+            ->orderBy('b.id', 'DESC')
+            ->getQuery();
+
+        // Paginate the results
+        $drafts = $paginator->paginate(
+            $query, // Query to paginate
+            $request->query->getInt('page', 1), // Current page number, default to 1
+            10 // Items per page
+        );
+
+        return $this->render('blog/draft.html.twig', [
+            'drafts' => $drafts,
+        ]);
+    }
     
     #[Route('/new', name: 'app_blog_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, BadWordFilter $badWordFilter): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         
@@ -97,6 +129,22 @@ final class BlogController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($badWordFilter->containsBadWords($blog->getTitre())) {
+                $this->addFlash('error', 'The blog title contains inappropriate language and cannot be published.');
+                return $this->redirectToRoute('app_blog_new');
+            }
+    
+            // Check for bad words in the content
+            if ($badWordFilter->containsBadWords($blog->getContenu())) {
+                $this->addFlash('error', 'The blog content contains inappropriate language and cannot be published.');
+                return $this->redirectToRoute('app_blog_new');
+            }
+    
+            // Handle "Save as Draft" button
+            if ($request->request->has('saveAsDraft')) {
+                $blog->setStatut(EtatEnum::Draft);
+            }
+
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('imageFile')->getData();
         
@@ -127,15 +175,31 @@ final class BlogController extends AbstractController
     
 
     #[Route('/{id}', name: 'app_blog_show', methods: ['GET'])]
-    public function show(Blog $blog, BlogRepository $blogRepository): Response
+    public function show(Blog $blog, BlogRepository $blogRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
+        $session = $request->getSession();
+        $sessionKey = 'blog_' . $blog->getId();
+    
+        if (!$session->has($sessionKey)) {
+            // Increment the view count
+            $blog->incrementViews();
+            $entityManager->persist($blog);
+            $entityManager->flush();
+    
+            // Mark the blog as viewed in the session
+            $session->set($sessionKey, true);
+        }
+    
         $user = $this->getUser();
         $blogs = $blogRepository->findBy(['user' => $user]);
-        
+        $all_blogs = $blogRepository->findAll(); // Initialize all_blogs here
+    
         // Check if the user is an admin or super admin
         if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->render('blog/show_admin.html.twig', [
                 'blog' => $blog,
+                'all_blogs' => $all_blogs, // Pass all_blogs to the template
+                'blogs' => $blogs, // Pass blogs to the template
             ]);
         }
     
@@ -145,42 +209,55 @@ final class BlogController extends AbstractController
             if ($blog->getUser() === $user) {
                 return $this->render('blog/show_my_blog.html.twig', [
                     'blog' => $blog,
-                    'blogs'=>$blogs
+                    'blogs' => $blogs,
+                    'all_blogs' => $all_blogs, // Pass all_blogs to the template
                 ]);
             }
     
             // If the client is viewing another user's blog
             return $this->render('blog/show.html.twig', [
                 'blog' => $blog,
-                'all_blogs'=>$blogRepository->findAll(),
+                'all_blogs' => $all_blogs,
+                'blogs' => $blogs, // Pass blogs to the template
             ]);
         }
     
         // Redirect if the user is not authorized
         return $this->render('blog/show.html.twig', [
             'blog' => $blog,
-            
+            'all_blogs' => $all_blogs, // Pass all_blogs to the template
+            'blogs' => $blogs, // Pass blogs to the template
         ]);
     }
     
 
     #[Route('/{id}/edit', name: 'app_blog_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Blog $blog, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Blog $blog, EntityManagerInterface $entityManager, BadWordFilter $badWordFilter): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');  
-        if ($this->isGranted('ROLE_ADMIN')) {
-            $blog->setStatut(EtatEnum::Acceptée);
-        } else {
-            if ($blog->getUser() !== $this->getUser()) {
-                throw $this->createAccessDeniedException('You are not allowed to edit this blog.');
-            }
-            $blog->setStatut(EtatEnum::enAttente);  
+        if ($blog->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('You are not allowed to edit this blog.');
         }
+    
+        // Set the blog status to 'enAttente' when it is edited
+        $blog->setStatut(EtatEnum::enAttente);
     
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+
+                                // Check for bad words in the title
+                        if ($badWordFilter->containsBadWords($blog->getTitre())) {
+                            $this->addFlash('error', 'The blog title contains inappropriate language and cannot be published.');
+                            return $this->redirectToRoute('app_blog_edit', ['id' => $blog->getId()]);
+                        }
+
+                        // Check for bad words in the content
+                        if ($badWordFilter->containsBadWords($blog->getContenu())) {
+                            $this->addFlash('error', 'The blog content contains inappropriate language and cannot be published.');
+                            return $this->redirectToRoute('app_blog_edit', ['id' => $blog->getId()]);
+                        }
                         /** @var UploadedFile $imageFile */
                         $imageFile = $form->get('imageFile')->getData();
         

@@ -8,6 +8,14 @@
         <div class="flex flex-col space-y-6">
             <!-- Form -->
             <div class="w-full">
+                {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
                 <div class="leading-loose">
                     {{ form_start(form, {'attr': {'class': 'p-10 bg-white rounded shadow-xl space-y-4', 'novalidate': 'novalidate'}}) }}                    
                     <div>
@@ -34,6 +42,7 @@
                         {% endfor %}
                     </div>
                     <button type="submit" class="px-4 py-1 text-white font-light tracking-wider bg-gray-700 rounded">Enregistrer l'article</button>
+                    <button type="submit" name="saveAsDraft" class="px-4 py-1 text-white font-light tracking-wider bg-gray-700 rounded">Enregistrer comme Brouillon</button>
                     {{ form_end(form) }}
                 </div>
             </div>

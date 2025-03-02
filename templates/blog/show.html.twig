@@ -70,6 +70,7 @@
                     {# Ratings Section - improved styling #}
                    <!-- Ratings Display Section -->
 <div class="rating-section mb-6">
+    <h6 class="text-gray-700 text-base font-semibold mb-2">Vues ({{ blog.Views }})</h6>
     <h6 class="text-gray-500 text-base font-semibold mb-2">Ratings ({{ blog.rateCount }})</h6>
     {% if blog.getRate() > 0.0 %}
         <div class="rating flex items-center space-x-2">

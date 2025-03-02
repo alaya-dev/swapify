@@ -242,6 +242,7 @@
 
         {# Ratings Section #}
         <div class="rating-section">
+            <h6>Vues ({{ blog.Views }})</h6>
             <h6>Ratings ({{ blog.rateCount }})</h6>
             {% if blog.getRate() > 0.0 %}
                 <div class="rating">
