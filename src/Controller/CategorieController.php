@@ -43,8 +43,9 @@ final class CategorieController extends AbstractController
                 $fileName = uniqid() . '.' . $photo->guessExtension();
                 $destination = $photoDir . DIRECTORY_SEPARATOR . $fileName;
                 copy($photo->getPathname(), $destination);
+                $categorie->setImage($fileName);
             }
-            $categorie->setImage($fileName);
+
             $existingCategorie = $entityManager->getRepository(Categorie::class)
                 ->findOneBy(['libelle' => $libelle]);
 
