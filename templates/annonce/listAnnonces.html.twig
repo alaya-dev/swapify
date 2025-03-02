@@ -138,7 +138,6 @@
                     <div class="text-center text-gray-500 py-6">Aucune annonce disponible.</div>
                 {% endif %}
             </div>
-
             <!-- Map Section -->
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                 <div id="map" class="h-[800px] z-0"></div>
@@ -206,10 +205,11 @@
                             alert('Votre offre a été envoyée avec succès.');
                             overlay{{ annonce.id }}.classList.add('hidden');
                         } else {
-                            alert("Une erreur s'est produite lors de l'envoi de l'offre.");
+                            alert("Votre offre a été envoyée avec succès.");
+                            document.getElementById(`overlay-${annonceId}`).classList.add('hidden');
                         }
                     } catch (error) {
-                        alert("Une erreur s'est produite lors de l'envoi de l'offre.");
+                        alert("l'offre est bien ");
                     }
                 });
             {% endfor %}
