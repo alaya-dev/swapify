@@ -1,5 +1,5 @@
 {% if 'ROLE_ADMIN' in app.user.getRoles() %}
-    {% set template_to_extend = 'include.html.twig ' %}
+    {% set template_to_extend = 'include.html.twig' %}
     {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
     {% set template_to_extend = 'include.html.twig' %}
  
