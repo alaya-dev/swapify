@@ -3,168 +3,216 @@
 {% block title %}Liste des Annonces{% endblock %}
 
 {% block body %}
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    {# Flash Messages #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div id="Errro_msg" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ message }}</span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                    <svg id="closeBtn" class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+                    </svg>
+                </span>
+            </div>
+        {% endfor %}
+    {% endfor %}
 
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-teal-50 p-6" style="overflow-y-auto">
-    <h3 class="text-center text-2xl font-bold py-4 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg shadow-md" style="overflow-y-auto">
-      Liste des Annonces
-    </h3>
+    {# External Libraries #}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
 
-    <div class="grid md:grid-cols-2 gap-6 mt-6">
-      <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto max-h-[800px]">
-        {{ include('annonce/_formAnFilter.html.twig') }}
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-teal-50 p-6">
+        <h3 class="text-center text-3xl font-bold py-6 bg-gradient-to-r from-teal-600 to-teal-800 text-white rounded-lg shadow-lg">
+            Liste des Annonces
+        </h3>
 
-        {% if annonces is defined and annonces is not empty %}
-          {% for annonce in annonces %}
-            <div class="flex p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all mb-4 relative">
-              {% set isFavorited = app.user and favoris is not empty and annonce in favoris %}
-
-              {% if isFavorited %}
-                <div class="absolute top-2 right-2">
-                  <i class="fas fa-heart text-pink-500 text-2xl"></i>
-                </div>
-              {% endif %}
-
-              {# Annonce Image #}
-              <div class="mr-4">
-                {% for image in annonce.images %}
-                  {% if annonce.id == image.annonce.id and loop.first %}
-                    <img src="{{ asset('uploads/images/' ~ image.imageName) }}" alt="Annonce Image" class="w-32 h-32 object-cover rounded-lg">
-                  {% endif %}
-                {% endfor %}
-              </div>
-
-              {# Annonce Details #}
-              <div class="flex-1">
-                <div class="text-lg font-bold text-teal-700">{{ annonce.titre }}</div>
-                <div class="text-gray-600">Région: {{ annonce.region }}</div>
-                <div class="text-gray-600">Catégorie: {{ annonce.categorie.libelle }}</div>
-                <div class="text-gray-500 text-sm">Créé le: {{ annonce.dateCreation|date('j M Y') }}</div>
-
-                {# Buttons #}
-                <div class="mt-3 flex space-x-2">
-                  {% if app.user %}
-                    {% if app.user and app.user != annonce.user %}
-
-                      <button id="openButton-{{ annonce.id }}" class="bg-teal-500 hover:bg-teal-600 text-white px-3 py-1 rounded text-sm shadow transition-all">
-                            <i class="fas fa-paper-plane"></i> Envoyer Offre
+        <div class="grid mt-6 md:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto max-h-[800px]">
+                <!-- Search Form -->
+                <form method="GET" action="{{ path('app_annonce_index') }}" class="mb-6 p-6 bg-gray-50 rounded-lg shadow-sm">
+                    <div class="grid md:grid-cols-4 gap-4">
+                        <input type="text" name="titre" placeholder="Titre" value="{{ app.request.query.get('titre') }}" class="border p-2 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                        <select name="categorie" class="border p-2 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Toutes les catégories</option>
+                            {% for categorie in categories %}
+                                <option value="{{ categorie.id }}" {% if app.request.query.get('categorie') == categorie.id %}selected{% endif %}>
+                                    {{ categorie.libelle }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <select name="region" class="border p-2 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Toutes les régions</option>
+                            {% for region in regions %}
+                                <option value="{{ region }}" {% if app.request.query.get('region') == region %}selected{% endif %}>
+                                    {{ region }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <select name="date" class="border p-2 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Toutes les dates</option>
+                            <option value="today" {% if app.request.query.get('date') == 'today' %}selected{% endif %}>Aujourd'hui</option>
+                            <option value="last_week" {% if app.request.query.get('date') == 'last_week' %}selected{% endif %}>La semaine dernière</option>
+                            <option value="last_month" {% if app.request.query.get('date') == 'last_month' %}selected{% endif %}>Le mois dernier</option>
+                            <option value="older" {% if app.request.query.get('date') == 'older' %}selected{% endif %}>Plus ancien</option>
+                        </select>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg shadow-md transition-all">
+                            Rechercher
                         </button>
-                           {% endif %}
-                        <a href="{{ path('wishlist_add', {'id': annonce.id}) }}" class="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded text-sm shadow transition-all flex items-center">
-                          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                      Ajouter favoris
-                    </a>
-                  {% endif %}
-                  <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm shadow transition-all">
-                    <i class="fas fa-eye"></i> Voir Détails
-                  </a>
-                </div>
-              </div>
+                    </div>
+                </form>
+
+                <!-- Annonces List -->
+                {% if annonces is defined and annonces is not empty %}
+                    {% for annonce in annonces %}
+                        <div class="flex p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-all mb-6 relative">
+                            {% set isFavorited = app.user and favoris is not empty and annonce in favoris %}
+                            {% if isFavorited %}
+                                <div class="absolute top-4 right-4">
+                                    <i class="fas fa-heart text-pink-500 text-2xl"></i>
+                                </div>
+                            {% endif %}
+
+                            <!-- Annonce Image -->
+                            <div class="mr-6">
+                                {% for image in annonce.images %}
+                                    {% if annonce.id == image.annonce.id and loop.first %}
+                                        <img src="{{ asset('uploads/images/' ~ image.imageName) }}" alt="Annonce Image" class="w-32 h-32 object-cover rounded-lg">
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                            <!-- Annonce Details -->
+                            <div class="flex-1">
+                                <div class="text-xl font-bold text-teal-700">{{ annonce.titre }}</div>
+                                <div class="text-gray-600 mt-2">Région: {{ annonce.region }}</div>
+                                <div class="text-gray-600">Catégorie: {{ annonce.categorie.libelle }}</div>
+                                <div class="text-gray-500 text-sm mt-2">Créé le: {{ annonce.dateCreation|date('j M Y') }}</div>
+
+                                <!-- Buttons -->
+                                <div class="mt-4 flex space-x-3">
+                                    {% if app.user and app.user != annonce.user %}
+                                        <button id="openButton-{{ annonce.id }}" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg shadow-md transition-all">
+                                            <i class="fas fa-paper-plane"></i> Envoyer Offre
+                                        </button>
+                                    {% endif %}
+                                    {% if not isFavorited %}
+                                        <a href="{{ path('wishlist_add', {'id': annonce.id}) }}" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg shadow-md transition-all flex items-center">
+                                            <i class="fas fa-heart mr-2"></i> Ajouter favoris
+                                        </a>
+                                    {% endif %}
+                                    <a href="{{ path('app_annonce_show', {'id': annonce.id}) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-all">
+                                        <i class="fas fa-eye"></i> Voir Détails
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal for Sending Offer -->
+                        <div id="overlay-{{ annonce.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50">
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg w-11/12 max-w-md">
+                                <div class="relative">
+                                    <button id="btnClose-{{ annonce.id }}" class="absolute top-0 right-0 p-2 text-gray-600 hover:text-gray-900">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <h2 class="text-2xl font-bold text-teal-700 mb-4">Envoyer une Offre</h2>
+                                    <form id="offerForm-{{ annonce.id }}" class="space-y-4">
+                                        <div>
+                                            <label for="offerDescription-{{ annonce.id }}" class="block text-sm font-medium text-gray-700">Votre offre</label>
+                                            <textarea id="offerDescription-{{ annonce.id }}" rows="4" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"></textarea>
+                                        </div>
+                                        <input type="hidden" id="annonceId-{{ annonce.id }}" value="{{ annonce.id }}">
+                                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg shadow-md transition-all">
+                                            Envoyer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center text-gray-500 py-6">Aucune annonce disponible.</div>
+                {% endif %}
             </div>
 
-            {# Modal Overlay and Form #}
-            <div id="overlay-{{ annonce.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50">
-              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-100 p-[50px] rounded-md bg-white">
-                <div class="relative">
-                  <div id="btnClose-{{ annonce.id }}">
-                    <i class="fa fa-times absolute top-[-30px] left-[-30px]" aria-hidden="true"></i>
-                  </div>
-
-                  <form id="offerForm-{{ annonce.id }}" method="POST">
-                    <div class="mb-5">
-                      <h1 class="text-3xl font-bold text-gray-800">{{ annonce.titre }}</h1>
-                    </div>
-                    <div class="mb-3">
-                      <label for="offerDescription-{{ annonce.id }}" class="form-label">Votre offre</label>
-                      <textarea class="form-control" id="offerDescription-{{ annonce.id }}" rows="3"></textarea>
-                    </div>
-                    <input type="hidden" id="annonceId-{{ annonce.id }}" value="{{ annonce.id }}">
-                    <button type="submit" class="btn btn-success w-100">Envoyer l'Offre</button>
-                  </form>
-                </div>
-              </div>
+            <!-- Map Section -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div id="map" class="h-[800px] z-0"></div>
             </div>
-          {% endfor %}
-        {% else %}
-          <div class="text-center text-gray-500">Aucune annonce disponible.</div>
-        {% endif %}
-      </div>
-
-      <div class="bg-white rounded-lg shadow-lg z-1 ">
-        <div id="map" class="h-[800px]"></div>
-      </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var map = L.map('map').setView([36.8065, 10.1815], 12);
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Initialize the map
+            var map = L.map('map').setView([36.8065, 10.1815], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(map);
+            // Add markers for each annonce
+            {% for item in annonces %}
+                L.marker([{{ item.x }}, {{ item.y }}])
+                    .addTo(map)
+                    .bindPopup("<b>{{ item.user.email }}</b>")
+                    .openPopup();
+            {% endfor %}
 
-      {% for item in annonces %}
-        L.marker([{{ item.x }}, {{ item.y }}])
-          .addTo(map)
-          .bindPopup("<b>{{ item.user.email }}</b>")
-          .openPopup();
-      {% endfor %}
+            // Handle "Send Offer" modal logic
+            {% for annonce in annonces %}
+                const overlay{{ annonce.id }} = document.getElementById('overlay-{{ annonce.id }}');
+                const openButton{{ annonce.id }} = document.getElementById('openButton-{{ annonce.id }}');
+                const closeButton{{ annonce.id }} = document.getElementById('btnClose-{{ annonce.id }}');
 
-      // Add event listeners for each annonce
-      {% for annonce in annonces %}
-        const overlay{{ annonce.id }} = document.getElementById('overlay-{{ annonce.id }}');
-        const openButton{{ annonce.id }} = document.getElementById('openButton-{{ annonce.id }}');
-        const closebtn{{ annonce.id }} = document.getElementById('btnClose-{{ annonce.id }}');
+                // Open modal
+                openButton{{ annonce.id }}.addEventListener('click', () => {
+                    overlay{{ annonce.id }}.classList.remove('hidden');
+                });
 
-        // Open the modal for the clicked annonce
-        openButton{{ annonce.id }}.addEventListener('click', () => {
-          overlay{{ annonce.id }}.classList.remove('hidden');
+                // Close modal
+                closeButton{{ annonce.id }}.addEventListener('click', () => {
+                    overlay{{ annonce.id }}.classList.add('hidden');
+                });
+
+                // Handle form submission
+                document.getElementById('offerForm-{{ annonce.id }}').addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const description = document.getElementById('offerDescription-{{ annonce.id }}').value;
+                    const annonceId = document.getElementById('annonceId-{{ annonce.id }}').value;
+
+                    if (!description) {
+                        alert("Veuillez remplir la description de l'offre.");
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch("/offre/new", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-Requested-With": "XMLHttpRequest"
+                            },
+                            body: JSON.stringify({
+                                description: description,
+                                annonceId: annonceId
+                            })
+                        });
+                        const result = await response.json();
+                        if (result.ok) {
+                            alert('Votre offre a été envoyée avec succès.');
+                            overlay{{ annonce.id }}.classList.add('hidden');
+                        } else {
+                            alert("Une erreur s'est produite lors de l'envoi de l'offre.");
+                        }
+                    } catch (error) {
+                        alert("Une erreur s'est produite lors de l'envoi de l'offre.");
+                    }
+                });
+            {% endfor %}
         });
-
-        // Close the modal
-        closebtn{{ annonce.id }}.addEventListener('click', () => {
-          overlay{{ annonce.id }}.classList.add('hidden');
-        });
-
-        // Post request for sending offer
-        document.getElementById("offerForm-{{ annonce.id }}").addEventListener("submit", async function (event) {
-          event.preventDefault();
-          const description = document.getElementById("offerDescription-{{ annonce.id }}").value;
-          const annonceId = document.getElementById("annonceId-{{ annonce.id }}").value;
-
-          if (!description) {
-            alert("Veuillez remplir la description de l'offre.");
-            return;
-          }
-          try {
-            const response = await fetch("/offre/new", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-Requested-With": "XMLHttpRequest"
-              },
-              body: JSON.stringify({
-                description: description,
-                annonceId: annonceId
-              })
-            });
-            const result = await response.json();
-            if (result.ok) {
-              alert('Votre offre a été envoyée avec succès. Vous pouvez contacter l’utilisateur.');
-            }
-          } catch (error) {
-            alert("Une erreur s'est produite lors de l'envoi de l'offre.");
-          } finally {
-            overlay{{ annonce.id }}.classList.add('hidden');
-          }
-        });
-      {% endfor %}
-    });
-  </script>
+    </script>
 {% endblock %}

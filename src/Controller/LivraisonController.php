@@ -9,6 +9,8 @@ use App\Repository\LivraisonRepository;
 use App\Repository\LivreurRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\QrCode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,12 +67,22 @@ class LivraisonController extends AbstractController
             'livreurs' => $livreurs
         ]);
     }
-
-
-    #[Route('/livraison/{id}/qr', name: 'livraison_qr')]
+    #[Route('/livraison/{id}/qr/destinataire', name: 'livraison_qr_destinataire')]
     public function generateQrCode(Livraison $livraison): Response
     {
-        $url = 'http://172.20.10.3:8000/livraison/' . $livraison->getId() . '/confirmer';
+        $url = 'http://192.168.1.63:8000/livraison/' . $livraison->getId() . '/confirmer/destinataire';
+
+        $qrCode = new QrCode($url);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+
+        return new Response($result->getString(), 200, ['Content-Type' => 'image/png']);
+
+    }
+    #[Route('/livraison/{id}/qr/expediteur', name: 'livraison_qr_expediteur')]
+    public function generateQrCode2(Livraison $livraison): Response
+    {
+        $url = 'http://192.168.1.63:8000/livraison/' . $livraison->getId() . '/confirmer/expediteur';
 
         $qrCode = new QrCode($url);
         $writer = new PngWriter();
@@ -78,12 +90,34 @@ class LivraisonController extends AbstractController
 
         return new Response($result->getString(), 200, ['Content-Type' => 'image/png']);
     }
+    
+    #[Route('/livraison/{id}/confirmer/expediteur', name: 'livraison_confirmer_expediteur', methods: ['GET'])]
+    public function confirmerLivraison2(Livraison $livraison, EntityManagerInterface $em): Response
+    {
 
+        if ($livraison->getStatut() === 'En cours de livraison') {
+            $livraison->setStatut('Livrée pour l\'expéditeur');
+        } elseif ($livraison->getStatut() === 'Livrée pour le destinataire') {
+            $livraison->setStatut('Livrée pour les deux');
+        }
+        $em->persist($livraison);
+        $em->flush();
 
-    #[Route('/livraison/{id}/confirmer', name: 'livraison_confirmer', methods: ['GET'])]
+        return $this->render('livraison/confirmation.html.twig', [
+            'livraison' => $livraison
+        ]);
+    }
+
+    #[Route('/livraison/{id}/confirmer/destinataire', name: 'livraison_confirmer_destinataire', methods: ['GET'])]
     public function confirmerLivraison(Livraison $livraison, EntityManagerInterface $em): Response
     {
-        $livraison->setStatut('Livrée');
+
+
+        if ($livraison->getStatut() === 'En cours de livraison') {
+            $livraison->setStatut('Livrée pour le destinataire');
+        } elseif ($livraison->getStatut() === 'Livrée pour l\'expéditeur') {
+            $livraison->setStatut('Livrée pour les deux');
+        }
         $em->persist($livraison);
         $em->flush();
 
@@ -125,18 +159,15 @@ class LivraisonController extends AbstractController
     }
 
 
-    #[Route('/livraison/new/{id}', name: 'livraison_create', methods: ['POST','GET'])]
-    public function create(Request $request, EntityManagerInterface $em,$id,UserRepository $ur ): Response
+    #[Route('/livraison/new/{id}', name: 'livraison_create', methods: ['POST', 'GET'])]
+    public function create(Request $request, EntityManagerInterface $em, $id, UserRepository $ur): Response
     {
 
-        $userDestinataire=$ur->find($id) ;
-
+        $userDestinataire = $ur->find($id);
         $livraison = new Livraison();
         $livraison->setIdExpediteur($this->getUser()); // Associer l'expéditeur connecté
         $livraison->setStatut('En attente de localisation du destinataire');
         $livraison->setDate(new \DateTime());
-
-
         $livraison->setIdDistinataire($userDestinataire);
         $livraison->setPaymentExp('non payé');
         $form = $this->createForm(LivraisonType::class, $livraison);

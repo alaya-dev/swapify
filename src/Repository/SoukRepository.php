@@ -41,6 +41,8 @@ class SoukRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+     
+
     public function findByParticipant($user)
     {
         return $this->createQueryBuilder('s')

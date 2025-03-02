@@ -15,10 +15,11 @@ class AnnoncesFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre' , null,['required' => false])
+            ->add('titre', null, ['required' => false])
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => 'libelle',
+                'placeholder' => 'Sélectionnez une catégorie',
             ])
             ->add('Region', ChoiceType::class, [
                 'required' => true,
@@ -49,6 +50,7 @@ class AnnoncesFilterType extends AbstractType
                     'Nefta' => 'Nefta',
                     'Douz' => 'Douz',
                 ],
+                'placeholder' => 'Sélectionnez une région', 
             ])
             ->add('dateCreation', ChoiceType::class, [
                 'required' => true, 
@@ -60,22 +62,10 @@ class AnnoncesFilterType extends AbstractType
                     'Il y a 1 mois' => 'last_month',
                     'Plus d\'un mois' => 'older',
                 ],
-            ])
-           /* ->add('Rate', ChoiceType::class, [
-                'required' => true,
-                'label' => 'Rate',
-                'choices' => [
-                    '1 étoile' => '1',
-                    '2 étoiles' => '2',
-                    '3 étoiles' => '3',
-                    '4 étoiles' => '4',
-                    '5 étoiles' => '5'
-                ],
-            ])*/
-
-        ;
+                'placeholder' => 'Sélectionnez une période', 
+            ]);
     }
-
+    
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
