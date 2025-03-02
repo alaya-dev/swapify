@@ -2,197 +2,210 @@
 
 {% block title %}Éligibilité aux Certificats{% endblock %}
 
-
 {% block content %}
-
-
-
 <div class="container mx-auto px-4 py-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-gray-500 text-sm font-medium mb-1">Total d'Événements</h3>
-            <div class="flex items-baseline">
-                <span class="text-3xl font-bold text-gray-800">{{ participationStats|length }}</span>
-                <span class="ml-1 text-sm text-gray-500">événements</span>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-gray-500 text-sm font-medium mb-1">Certificats Éligibles</h3>
-            <div class="flex items-baseline">
-                {% set eligibleCount = 0 %}
-                {% for stat in participationStats %}
-                    {% if stat.stats is defined and stat.stats.isCertificateEligible %}
-                        {% set eligibleCount = eligibleCount + 1 %}
-                    {% endif %}
-                {% endfor %}
-                <span class="text-3xl font-bold text-gray-800">{{ eligibleCount }}</span>
-                <span class="ml-1 text-sm text-gray-500">disponibles</span>
-            </div>
-            {% if eligibleCount > 0 %}
-                <span class="inline-block mt-2 text-green-500 text-xs">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    {% if participationStats is empty %}
+        <!-- Info Alert for No Events -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 rounded-r-lg">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Nouveaux certificats prêts
-                </span>
-            {% endif %}
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-gray-500 text-sm font-medium mb-1">Présence Moyenne</h3>
-            <div class="flex items-baseline">
-                {% set totalAttendance = 0 %}
-                {% set eventsWithStats = 0 %}
-                {% for stat in participationStats %}
-                    {% if stat.stats is defined %}
-                        {% set totalAttendance = totalAttendance + stat.stats.percentage %}
-                        {% set eventsWithStats = eventsWithStats + 1 %}
-                    {% endif %}
-                {% endfor %}
-                {% set avgAttendance = eventsWithStats > 0 ? (totalAttendance / eventsWithStats)|round : 0 %}
-                <span class="text-3xl font-bold text-gray-800">{{ avgAttendance }}%</span>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-700">
+                        Vous n'êtes actuellement inscrit à aucun événement. Participez à des événements pour suivre votre éligibilité aux certificats !
+                    </p>
+                </div>
             </div>
         </div>
-        
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-gray-500 text-sm font-medium mb-1">Total des Sessions</h3>
-            <div class="flex items-baseline">
-                {% set totalSessions = 0 %}
-                {% set totalAttended = 0 %}
-                {% for stat in participationStats %}
-                    {% if stat.stats is defined %}
-                        {% set totalSessions = totalSessions + stat.stats.totalSessions %}
-                        {% set totalAttended = totalAttended + stat.stats.sessionsAttended %}
+    {% else %}
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Total d'Événements</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold text-gray-800">{{ participationStats|length }}</span>
+                    <span class="ml-1 text-sm text-gray-500">événements</span>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Certificats Éligibles</h3>
+                <div class="flex items-baseline">
+                    {% set eligibleCount = 0 %}
+                    {% for stat in participationStats %}
+                        {% if stat.stats is defined and stat.stats.isCertificateEligible %}
+                            {% set eligibleCount = eligibleCount + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    <span class="text-3xl font-bold text-gray-800">{{ eligibleCount }}</span>
+                    <span class="ml-1 text-sm text-gray-500">disponibles</span>
+                </div>
+                {% if eligibleCount > 0 %}
+                    <span class="inline-block mt-2 text-green-500 text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                        </svg>
+                        Nouveaux certificats prêts
+                    </span>
+                {% endif %}
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Présence Moyenne</h3>
+                <div class="flex items-baseline">
+                    {% set totalAttendance = 0 %}
+                    {% set eventsWithStats = 0 %}
+                    {% for stat in participationStats %}
+                        {% if stat.stats is defined %}
+                            {% set totalAttendance = totalAttendance + stat.stats.percentage %}
+                            {% set eventsWithStats = eventsWithStats + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if eventsWithStats > 0 %}
+                        {% set avgAttendance = (totalAttendance / eventsWithStats)|round %}
+                    {% else %}
+                        {% set avgAttendance = 0 %}
                     {% endif %}
-                {% endfor %}
-                <span class="text-3xl font-bold text-gray-800">{{ totalAttended }}</span>
-                <span class="ml-1 text-sm text-gray-500">/ {{ totalSessions }}</span>
+                    <span class="text-3xl font-bold text-gray-800">{{ avgAttendance }}%</span>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Total des Sessions</h3>
+                <div class="flex items-baseline">
+                    {% set totalSessions = 0 %}
+                    {% set totalAttended = 0 %}
+                    {% for stat in participationStats %}
+                        {% if stat.stats is defined %}
+                            {% set totalSessions = totalSessions + stat.stats.totalSessions %}
+                            {% set totalAttended = totalAttended + stat.stats.sessionsAttended %}
+                        {% endif %}
+                    {% endfor %}
+                    <span class="text-3xl font-bold text-gray-800">{{ totalAttended }}</span>
+                    <span class="ml-1 text-sm text-gray-500">/ {{ totalSessions }}</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Onglets -->
-    <div class="mb-3 rounded-lg p-3">
-        <div class="mb-6">
-            <div class="border-b px-6 py-4">
-                <h2 class="text-xl font-semibold text-gray-800">Vos Événements</h2>
-            </div>
-            <div class="px-6 pt-2 border-b">
-                <div class="flex space-x-4">
-                    <a href="{{ path('check_certificate_eligibility', {'filter': 'all'}) }}" class="px-4 py-2 text-sm font-medium {{ filter == 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}">Tous les Événements</a>
-                    <a href="{{ path('check_certificate_eligibility', {'filter': 'eligible'}) }}" class="px-4 py-2 text-sm font-medium {{ filter == 'eligible' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}">Éligible au Certificat</a>
-                    <a href="{{ path('check_certificate_eligibility', {'filter': 'not-eligible'}) }}" class="px-4 py-2 text-sm font-medium {{ filter == 'not-eligible' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}">Non Éligible</a>
+        <!-- Onglets -->
+        <div class="mb-3 rounded-lg p-3">
+            <div class="mb-6">
+                <div class="border-b px-6 py-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Vos Événements</h2>
+                </div>
+                <div class="px-6 pt-2 border-b">
+                    <div class="flex space-x-4">
+                        <a href="{{ path('check_certificate_eligibility', {'filter': 'all'}) }}" class="px-4 py-2 text-sm font-medium {{ filter == 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}">Tous les Événements</a>
+                        <a href="{{ path('check_certificate_eligibility', {'filter': 'eligible'}) }}" class="px-4 py-2 text-sm font-medium {{ filter == 'eligible' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}">Éligible au Certificat</a>
+                        <a href="{{ path('check_certificate_eligibility', {'filter': 'not-eligible'}) }}" class="px-4 py-2 text-sm font-medium {{ filter == 'not-eligible' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}">Non Éligible</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for participationStat in participationStats %}
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <!-- Entête de Carte -->
-                <div class="p-6 border-b">
-                    <h2 class="text-lg font-bold text-gray-800">{{ participationStat.event.title }}</h2>
-                    <p class="text-gray-600 text-sm mt-1 line-clamp-2">{{ participationStat.event.description }}</p>
-                </div>
-                
-                <!-- Statistiques de Carte -->
-                <div class="px-6 py-4">
-                    {% if participationStat.stats is defined %}
-                        <!-- Barre de Progression de Présence -->
-                        <div class="mb-4">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-sm font-medium text-gray-700">Présence</span>
-                                <span class="text-sm font-medium text-gray-700">{{ participationStat.stats.percentage }}%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                {% set percentage = participationStat.stats.percentage|default(0) %}
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        {% if percentage > 0 %}
-                                            <div class="bg-blue-600 h-2 rounded-full" style="width: {{ percentage }}%"></div>
-                                        {% else %}
-                                            <div class="h-2 rounded-full" style="width: 0%"></div>
-                                        {% endif %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for participationStat in participationStats %}
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <!-- Entête de Carte -->
+                    <div class="p-6 border-b">
+                        <h2 class="text-lg font-bold text-gray-800">{{ participationStat.event.title }}</h2>
+                        <p class="text-gray-600 text-sm mt-1 line-clamp-2">{{ participationStat.event.description }}</p>
+                    </div>
+                    
+                    <!-- Statistiques de Carte -->
+                    <div class="px-6 py-4">
+                        {% if participationStat.stats is defined %}
+                            <!-- Barre de Progression de Présence -->
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-medium text-gray-700">Présence</span>
+                                    <span class="text-sm font-medium text-gray-700">{{ participationStat.stats.percentage }}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    {% set percentage = participationStat.stats.percentage|default(0) %}
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ percentage }}%"></div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Statistiques Clés -->
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="bg-gray-50 rounded-lg p-3">
-                                <div class="text-sm text-gray-500">Sessions Assistées</div>
-                                <div class="font-bold text-xl">{{ participationStat.stats.sessionsAttended }} <span class="text-sm font-normal text-gray-500">/ {{ participationStat.stats.totalSessions }}</span></div>
+                            
+                            <!-- Statistiques Clés -->
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="text-sm text-gray-500">Sessions Assistées</div>
+                                    <div class="font-bold text-xl">{{ participationStat.stats.sessionsAttended }} <span class="text-sm font-normal text-gray-500">/ {{ participationStat.stats.totalSessions }}</span></div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="text-sm text-gray-500">Statut du Certificat</div>
+                                    {% if participationStat.stats.isCertificateEligible %}
+                                        <div class="text-green-500 font-medium">Éligible</div>
+                                    {% else %}
+                                        <div class="text-yellow-500 font-medium">Non Éligible</div>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="bg-gray-50 rounded-lg p-3">
-                                <div class="text-sm text-gray-500">Statut du Certificat</div>
-                                {% if participationStat.stats.isCertificateEligible %}
-                                    <div class="text-green-500 font-medium">Éligible</div>
-                                {% else %}
-                                    <div class="text-yellow-500 font-medium">Non Éligible</div>
-                                {% endif %}
+                            
+                            {% if participationStat.stats.message is defined %}
+                                <div class="p-3 bg-blue-50 text-blue-800 text-sm rounded-md mb-4">
+                                    <div class="flex">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <p>{{ participationStat.stats.message }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Graphique -->
+                            <div class="mb-4 mt-4">
+                                <canvas id="attendanceChart_{{ loop.index }}" 
+                                        data-chart='{"attended": {{ participationStat.stats.sessionsAttended|default(0) }}, 
+                                        "missed": {{ participationStat.stats.totalSessions|default(0) - participationStat.stats.sessionsAttended|default(0) }}}' 
+                                        class="w-full h-32">
+                                </canvas>
                             </div>
-                        </div>
-                        
-                        {% if participationStat.stats.message is defined %}
-                            <div class="p-3 bg-blue-50 text-blue-800 text-sm rounded-md mb-4">
+                        {% else %}
+                            <div class="p-3 bg-red-50 text-red-800 rounded-md">
                                 <div class="flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                     </svg>
-                                    <p>{{ participationStat.stats.message }}</p>
+                                    <p>Statistiques non disponibles pour cet événement.</p>
                                 </div>
                             </div>
                         {% endif %}
-                        
-                        <!-- Graphique -->
-                        <div class="mb-4 mt-4">
-                            <canvas id="attendanceChart_{{ loop.index }}" 
-                                    data-chart='{"attended": {{ participationStat.stats.sessionsAttended|default(0) }}, 
-                                    "missed": {{ participationStat.stats.totalSessions|default(0) - participationStat.stats.sessionsAttended|default(0) }}}' 
-                                    class="w-full h-32">
-                            </canvas>
-                        </div>
-                    {% else %}
-                        <div class="p-3 bg-red-50 text-red-800 rounded-md">
-                            <div class="flex">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </div>
+                    
+                    <!-- Pied de Carte -->
+                    <div class="px-6 py-4 bg-gray-50 border-t">
+                        {% if participationStat.isCertificateGenerated %}
+                            <a href="{{ path('app_certificate_view_existing', {'id': participationStat.event.id}) }}" class="w-full flex justify-center items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                 </svg>
-                                <p>Statistiques non disponibles pour cet événement.</p>
-                            </div>
-                        </div>
-                    {% endif %}
+                                Télécharger le Certificat
+                            </a>
+                        {% elseif participationStat.stats.isCertificateEligible %}
+                            <a href="{{ path('app_certificate_new', {'id': participationStat.event.id}) }}" class="w-full flex justify-center items-center bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Générer le Certificat
+                            </a>
+                        {% else %}
+                            <button disabled class="w-full flex justify-center items-center bg-gray-300 text-gray-600 px-4 py-2 rounded-md cursor-not-allowed">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                Non Éligible pour le Certificat
+                            </button>
+                        {% endif %}
+                    </div>
                 </div>
-                
-                <!-- Pied de Carte -->
-                <div class="px-6 py-4 bg-gray-50 border-t">
-                    {% if participationStat.isCertificateGenerated %}
-                        <a href="#" class="w-full flex justify-center items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                            Télécharger le Certificat
-                        </a>
-                    {% elseif participationStat.stats.isCertificateEligible %}
-                        <a href="{{path('app_certificate_new',{'id':participationStat.event.id})}}" class="w-full flex justify-center items-center bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Générer le Certificat
-                        </a>
-                    {% else %}
-                        <button disabled class="w-full flex justify-center items-center bg-gray-300 text-gray-600 px-4 py-2 rounded-md cursor-not-allowed">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
-                            Non Éligible pour le Certificat
-                        </button>
-                    {% endif %}
-                </div>
+            {% endfor %}
             </div>
-        {% endfor %}
-    </div>
-    </div>
+        </div>
+    {% endif %}
 </div>
 
 <!-- Chart.js -->

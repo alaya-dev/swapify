@@ -41,7 +41,7 @@ class EventType extends AbstractType
                 'label'=>'image',
                 'mapped'=>false,
                 'required'=>false,
-
+    
             ])
 
             

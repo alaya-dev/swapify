@@ -41,7 +41,7 @@ final class EventRegistationController extends AbstractController
         return $this->redirectToRoute('app_event_index');
     }
 
-    #[Route("planning/{id}", name: "user_planning", requirements: ['id' => '\d+'])]
+    #[Route("planning/{id}", name: "user_planning")]
     function planning(Event $event, SessionRepository $sessionRepository)
     {
         $user = $this->getUser();

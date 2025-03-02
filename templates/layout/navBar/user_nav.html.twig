@@ -1,6 +1,6 @@
 <nav class="bg-white">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-  <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+  <a href="{{path('app_home')}}" data-turbo="false" class="flex items-center space-x-3 rtl:space-x-reverse">
       <img src="{{ asset('assets/images/logo.png') }}" class="h-11 w-11" alt="swapify Logo" />
   </a>
   <div class="relative flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -9,7 +9,7 @@
         <img class="w-8 h-8 rounded-full" src="{{ asset('assets/images/contact.png') }}" alt="user photo">
       </button>
       <!-- Dropdown menu -->
-      <div class="z-100 absolute top-[18px] right-[18px] hidden my-4 text-base list-none bg-white divide-y divide-gray-100  rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown" style="z-index: 100;"> 
+      <div class="z-100 absolute top-[18px] right-[18px] w-64 hidden my-4 text-base list-none bg-white divide-y divide-gray-100  rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown" style="z-index: 100;"> 
         <div class="px-4 py-3">
           <span class="block text-sm text-gray-900 dark:text-white">{{ app.user.nom}}</span>
           <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{app.user.email}}</span>
@@ -17,39 +17,35 @@
         <ul class="py-2" aria-labelledby="user-menu-button">
           <li>
 
-    {% if 'ROLE_ADMIN' in app.user.getRoles() %}
-    <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
-    {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
-    <a href="{{ path('app_dashboard') }}" data-turbo="false"  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
-    {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
-    <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
-     {% endif %}
-
+            {% if 'ROLE_ADMIN' in app.user.getRoles() %}
+              <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+            {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
+              <a href="{{ path('app_dashboard') }}" data-turbo="false"  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+            {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
+              <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+            {% endif %}
           </li>
           <li>
-            <a href="/annonce/mesAnnonces" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
+            <a href="{{path('mesAnnonces')}}"  data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
           </li>
           <li class="relative group">
-  <a href="{{ path('wishlist_show') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-teal-50 rounded-lg transition-all duration-300">
-    <span class="mr-2">
-      <i class="fas fa-heart text-teal-500"></i>
-    </span>
-    <span>Favoris Annonce</span>
-    <span class="ml-2 bg-teal-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-      {{ app.user ? app.user.getFavoris().count : 0 }}
-    </span>
-  </a>
-</li>
+            <a href="{{ path('wishlist_show') }}" data-turbo="false" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white justify-between items-center">
+              favoris annonce
+              <span class="ml-2 bg-teal-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                {{ app.user ? app.user.getFavoris().count : 0 }}
+              </span>
+            </a>
+          </li>
 
        <li>
-            <a href="{{path('app_blog_all')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Blogs</a>
+            <a href="{{path('app_blog_all')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Blogs</a>
           </li>
 
           <li>
             <a href="{{path('my_events')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Evenements</a>
           </li>
            <li>
-            <a href="{{path('app_reclamation_new')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Envoyer réclamation</a>
+            <a href="{{path('app_reclamation_new')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Envoyer réclamation</a>
           </li>
           <li>
             <a href="/logout" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
@@ -66,13 +62,13 @@
   <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
     <ul class="flex flex-col font-medium  md:p-0 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
       <li>
-        <a href="/" data-turbo="false" class="block py-2 px-3 text-gray-900  rounded-sm md:bg-transparent md:p-0" aria-current="page">Acceuil</a>
+        <a href="{{path('app_home')}}" data-turbo="false" class="block py-2 px-3 text-gray-900  rounded-sm md:bg-transparent md:p-0" aria-current="page">Acceuil</a>
       </li>
       <li>
-        <a href="#" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">A propos</a>
+        <a href="{{path('app_home')}}#aboutus" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">A propos</a>
       </li>
       <li>
-        <a href="/annonce" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Annonces</a>
+        <a href="{{path('app_annonce_index')}}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Annonces</a>
       </li>
       <li>
         <a href="{{path('app_event_index')}}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Evenements</a>
@@ -82,7 +78,7 @@
         <a href="{{ path('app_blog_index') }}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Blog</a>
       </li>
       <li>
-        <a href="#" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Contact</a>
+        <a href="{{path('app_home')}}#contact" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Contact</a>
       </li>
       <li>
           <a href="{{path('all_souk')}}" data-turbo="false" class="block py-2 px-3 text-red-500 rounded-sm md:bg-transparent md:p-0 animate-bounce">

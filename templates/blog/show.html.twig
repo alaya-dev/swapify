@@ -3,354 +3,233 @@
 {% block title %}Blog Details{% endblock %}
 
 {% block body %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <div class="container mx-auto mt-5">
+        <div class="flex gap-6">
+            <!-- Left Side: Blog Details (3/4 width) -->
+            <div class="w-3/4">
+                <h1 class="text-center mb-4 text-2xl font-bold text-gray-800">Détail d'article</h1>
 
-<style>
-    /* Custom Styles */
-    body {
-        background: #f0f2f5;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .blog-post {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        padding: 20px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .blog-post:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    .blog-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-
-    .blog-header img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 15px;
-        object-fit: cover;
-    }
-
-    .blog-header .user-info {
-        flex: 1;
-    }
-
-    .blog-header .user-info h5 {
-        margin: 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #2c3e50;
-    }
-
-    .blog-header .user-info small {
-        color: #6c757d;
-        font-size: 0.9rem;
-    }
-
-    .blog-content {
-        margin-bottom: 15px;
-    }
-
-    .blog-content img {
-        width: 100%;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
-
-    .blog-content p {
-        font-size: 1rem;
-        color: #555;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    .blog-status {
-        margin-bottom: 15px;
-    }
-
-    .blog-status .badge {
-        font-size: 0.9rem;
-        padding: 6px 12px;
-        border-radius: 20px;
-        background: linear-gradient(135deg, #6c757d, #495057);
-        color: white;
-    }
-
-    .blog-actions {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-
-    .blog-actions .btn {
-        border-radius: 20px;
-        padding: 8px 16px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .blog-actions .btn-primary {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-    }
-
-    .blog-actions .btn-success {
-        background: linear-gradient(135deg, #28a745, #218838);
-    }
-
-    .blog-actions .btn-warning {
-        background: linear-gradient(135deg, #ffc107, #e0a800);
-    }
-
-    .blog-actions .btn-danger {
-        background: linear-gradient(135deg, #dc3545, #c82333);
-    }
-
-    .rating-section {
-        margin-bottom: 15px;
-    }
-
-    .rating-section h6 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #6c757d;
-        margin-bottom: 10px;
-    }
-
-    .rating-section .rating {
-        display: flex;
-        align-items: center;
-    }
-
-    .rating-section .rating i {
-        margin-right: 5px;
-        color: #ffc107;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 1.2rem;
-    }
-
-    .rating-section .rating i:hover,
-    .rating-section .rating i.active {
-        color: #ffc107;
-        transform: scale(1.2);
-    }
-
-    .comment-section {
-        margin-top: 15px;
-    }
-
-    .comment-section h6 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #6c757d;
-        margin-bottom: 10px;
-    }
-
-    .comment-section .list-group-item {
-        border: none;
-        padding: 10px;
-        background: rgba(248, 249, 250, 0.9);
-        margin-bottom: 10px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-    }
-
-    .comment-section .list-group-item:hover {
-        transform: translateX(5px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .comment-section .list-group-item p {
-        margin: 0;
-        font-size: 0.9rem;
-        color: #555;
-    }
-
-    .comment-section .list-group-item small {
-        color: #6c757d;
-        font-size: 0.8rem;
-    }
-
-    .no-comments {
-        text-align: center;
-        color: #6c757d;
-        font-size: 1rem;
-        margin-top: 20px;
-    }
-</style>
-
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Détails du Blog</h1>
-
-    <div class="blog-post">
-        <div class="blog-header">
-            <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}">
-            <div class="user-info">
-                <h5>{{ blog.user.prenom }} {{ blog.user.nom }}</h5>
-                <small>{{ blog.createdAt|date('Y-m-d H:i:s') }}</small>
-            </div>
-        </div>
-        <div class="blog-content">
-            {% if blog.image %}
-                <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}" class="img-fluid">
-            {% endif %}
-            <p>{{ blog.Contenu }}</p>
-        </div>
-        <div class="blog-status">
-            <span class="badge btn-{{ blog.statut.value == 'enAttente' ? 'warning' : 'success' }}">
-                {{ blog.statut.value }}
-            </span>
-        </div>
-
-        {# Edit and Delete Buttons (only visible to the blog owner) #}
-        {% if blog.user == app.user %}
-            <div class="blog-actions">
-                <a href="{{ path('app_blog_edit', {'id': blog.id}) }}" class="btn btn-warning">
-                    <i class="fas fa-edit"></i> Modifier
-                </a>
-                <form method="POST" action="{{ path('app_blog_delete', {'id': blog.id}) }}" class="d-inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ blog.id) }}">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this blog?');">
-                        <i class="fas fa-trash"></i> Supprimer
-                    </button>
-                </form>
-            </div>
-        {% endif %}
-
-        <a href="{{ path('app_blog_index') }}" class="btn btn-primary">
-            <i class="fas fa-arrow-left"></i> Retourner aux Blogs
-        </a>
-
-        {# Ratings Section #}
-        <div class="rating-section">
-            <h6>Ratings ({{ blog.rateCount }})</h6>
-            {% if blog.getRate() > 0.0 %}
-                <div class="rating">
-                    {% set fullStars = blog.getRate()|round(0, 'floor') %}
-                    {% set fractionalPart = blog.getRate() % 1 %}
-                    {% set halfStar = fractionalPart >= 0.25 and fractionalPart < 0.75 ? 1 : 0 %}
-                    {% set emptyStars = 5 - fullStars - halfStar %}
-
-                    {% for i in 0..fullStars - 1 %}
-                        <i class="fas fa-star text-warning"></i>
-                    {% endfor %}
-
-                    {% if halfStar == 1 and fullStars < 5 %}
-                        <i class="fas fa-star-half-alt text-warning"></i>
-                    {% endif %}
-
-                    {% if fullStars < 5 %}
-                        {% for i in 0..emptyStars - 1 %}
-                            <i class="far fa-star text-warning"></i>
-                        {% endfor %}
-                    {% endif %}
-                    <span>{{ blog.getRate()|number_format(1) }} ★</span>
-                </div>
-            {% else %}
-                <p class="text-muted">No ratings yet.</p>
-            {% endif %}
-        </div>
-
-        {# Rating Form (only if the user hasn't rated the blog yet) #}
-        {% if blog.statut == constant('App\\Enum\\EtatEnum::Acceptée') %}
-            <div class="rating-section">
-                <h6>Donner un Rate à ce Blog</h6>
-                {%if app.user %}
-                {% if not blog.hasUserRated(app.user) %}
-                    <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
-                        <div class="rating">
-                            {% for i in 1..5 %}
-                                <i class="far fa-star" data-value="{{ i }}"></i>
-                            {% endfor %}
-                        </div>
-                        <input type="hidden" name="rating" class="rating-value" required>
-                        <button type="submit" class="btn btn-success mt-2">Poster Rating</button> <!-- Submit button added here -->
-
-                    </form>
-                {% else %}
-                    <p class="text-muted">You have already rated this blog.</p>
-                {% endif %}
-                {% else %}
-                <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form">
-                    <div class="rating">
-                        {% for i in 1..5 %}
-                            <i class="far fa-star" data-value="{{ i }}"></i>
-                        {% endfor %}
+                <div class="bg-white rounded-xl shadow-md p-6 mb-4 transition-transform duration-300 hover:shadow-lg">
+                    <div class="relative mb-6">
+                        {% if blog.image %}
+                            <!-- Image with overlay -->
+                            <div class="relative overflow-hidden rounded-xl">
+                                <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}" class="w-full rounded-xl object-cover">
+                                <!-- Subtle dark overlay -->
+                                <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent"></div>
+                                <!-- Status badge positioned on top left -->
+                                <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white {% if blog.statut.value == 'Acceptée' %}bg-green-900 text-green-600{% elseif blog.statut.value == 'Rejetée' %}bg-red-900 text-red-600{% else %}bg-yellow-900 text-yellow-600{% endif %}">
+                                    {{ blog.statut.value }}
+                                </span>
+                            </div>
+                        {% else %}
+                            <div class="relative overflow-hidden rounded-xl">
+                                <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}" class="w-full rounded-xl object-cover">
+                                <!-- Subtle dark overlay -->
+                                <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent"></div>
+                                <!-- Status badge positioned on top left -->
+                                <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white {% if blog.statut.value == 'Acceptée' %}bg-green-900 text-green-600{% elseif blog.statut.value == 'Rejetée' %}bg-red-900 text-red-600{% else %}bg-yellow-100 text-yellow-900{% endif %}">
+                                    {{ blog.statut.value }}
+                                </span>
+                            </div>
+                        {% endif %}
                     </div>
-                    <input type="hidden" name="rating" class="rating-value" required>
-                    <button type="submit" class="btn btn-success mt-2">Poster Rating</button> <!-- Submit button added here -->
-
-                </form>
-                {% endif %}
-            </div>
-        {% endif %}
-
-        {# Comments Section #}
-{# Comments Section #}
-<div class="comment-section">
-    <h6>Commentaires ({{ blog.listeCommentaires|length }})</h6>
-    {% if blog.listeCommentaires is empty %}
-        <p class="no-comments">No comments yet.</p>
-    {% else %}
-        <ul class="list-group">
-            {% for comment in blog.listeCommentaires %}
-                <li class="list-group-item" id="comment-{{ comment.id }}">
-                    <p><strong>{{ comment.user.prenom }} {{ comment.user.nom }}</strong> <small class="text-muted">({{ comment.createdAt|date('Y-m-d H:i:s') }})</small></p>
-                    <p id="comment-content-{{ comment.id }}">{{ comment.contenuCmt }}</p>
-                    {% if comment.user == app.user or is_granted('ROLE_ADMIN') %}
-                        <div class="mt-2">
-                            {% if comment.user == app.user %}
-                                <button class="btn btn-sm btn-warning edit-comment-btn" data-comment-id="{{ comment.id }}">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                            {% endif %}
-                            <form method="POST" action="{{ path('app_commentaire_delete', {'id': comment.id}) }}" class="d-inline">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this comment?');">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            </form>
+                    
+                    <p class="text-gray-700 text-base leading-relaxed mb-6">{{ blog.Contenu }}</p>
+                    
+                    <div class="flex items-center mb-6 border-t border-b border-gray-100 py-4">
+                        <img src="https://via.placeholder.com/50" alt="User Avatar" class="w-12 h-12 rounded-full mr-4 object-cover border-2 border-gray-200">
+                        <div>
+                            <h5 class="text-lg font-semibold text-gray-800">{{ blog.user.prenom }} {{ blog.user.nom }}</h5>
+                            <small class="text-gray-500 text-sm">{{ blog.createdAt|date('Y-m-d H:i:s') }}</small>
                         </div>
-                    {% endif %}
-                    {# Edit Form (hidden by default) #}
-                    <form id="edit-comment-form-{{ comment.id }}" class="edit-comment-form" style="display: none;" data-comment-id="{{ comment.id }}">
-                        <textarea class="form-control mb-2" name="contenu">{{ comment.contenuCmt }}</textarea>
-                        <button type="submit" class="btn btn-sm btn-success">Enregistrer</button>
-                        <button type="button" class="btn btn-sm btn-secondary cancel-edit-btn">Annuler</button>
-                    </form>
-                </li>
+                    </div>
+
+                    {# Buttons section - redesigned and repositioned #}
+                    <div class="flex flex-wrap items-center justify-between mb-6">
+                        <a href="{{ path('app_blog_all') }}" class="inline-flex items-center text-gray-600 hover:text-indigo-600 transition-colors duration-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Back to Blogs
+                        </a>
+                        
+                        {% if blog.user == app.user %}
+                            <div class="flex space-x-3 mt-2 sm:mt-0">
+                                <a href="{{ path('app_blog_edit', {'id': blog.id}) }}" class="inline-flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-md text-sm transition-colors duration-300">
+                                    <i class="fas fa-edit mr-2"></i> Edit
+                                </a>
+                                <form method="POST" action="{{ path('app_blog_delete', {'id': blog.id}) }}" class="inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ blog.id) }}">
+                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-rose-50 text-rose-700 hover:bg-rose-100 rounded-md text-sm transition-colors duration-300" onclick="return confirm('Are you sure you want to delete this blog?');">
+                                        <i class="fas fa-trash mr-2"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {# Ratings Section - improved styling #}
+                   <!-- Ratings Display Section -->
+<div class="rating-section mb-6">
+    <h6 class="text-gray-500 text-base font-semibold mb-2">Ratings ({{ blog.rateCount }})</h6>
+    {% if blog.getRate() > 0.0 %}
+        <div class="rating flex items-center space-x-2">
+            {% set fullStars = blog.getRate()|round(0, 'floor') %}
+            {% set fractionalPart = blog.getRate() % 1 %}
+            {% set halfStar = fractionalPart >= 0.25 and fractionalPart < 0.75 ? 1 : 0 %}
+            {% set emptyStars = 5 - fullStars - halfStar %}
+
+            {% for i in 0..fullStars - 1 %}
+                <i class="fas fa-star text-yellow-500"></i>
             {% endfor %}
-        </ul>
+
+            {% if halfStar == 1 and fullStars < 5 %}
+                <i class="fas fa-star-half-alt text-yellow-500"></i>
+            {% endif %}
+
+            {% if fullStars < 5 %}
+                {% for i in 0..emptyStars - 1 %}
+                    <i class="far fa-star text-yellow-500"></i>
+                {% endfor %}
+            {% endif %}
+            <span class="text-gray-600 ml-2">{{ blog.getRate()|number_format(1) }} ★</span>
+        </div>
+    {% else %}
+        <p class="text-gray-500">No ratings yet.</p>
     {% endif %}
 </div>
 
-            {# Comment Form #}
-            <form method="POST" action="{{ path('app_commentaire_new', {'blogId': blog.id}) }}" class="mt-3">
-                <div class="mb-2">
-                    <textarea name="contenu" class="form-control" placeholder="Write a comment..." required></textarea>
+<!-- Give a Rate Section -->
+<div class="rating-section mb-6">
+    <h6 class="text-gray-500 text-base font-semibold mb-4">Rate this Blog</h6>
+    {% if app.user %}
+        {% if not blog.hasUserRated(app.user) %}
+            <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form flex flex-col space-y-4">
+                <div class="rating flex items-center space-x-2">
+                    {% for i in 1..5 %}
+                        <i class="far fa-star text-2xl text-gray-400 cursor-pointer hover:text-yellow-500 transition-colors duration-200" data-value="{{ i }}"></i>
+                    {% endfor %}
                 </div>
-                <button type="submit" class="btn btn-secondary">Post Commentaire</button>
+                <input type="hidden" name="rating" class="rating-value" required>
+                <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:from-green-600 hover:to-blue-600 transition-colors duration-300 text-sm mt-2 self-start">
+                    Submit Rating
+                </button>
             </form>
+        {% else %}
+            <p class="text-gray-500">You have already rated this blog.</p>
+        {% endif %}
+    {% else %}
+        <form method="POST" action="{{ path('app_blog_rate', {'id': blog.id}) }}" class="rating-form flex flex-col space-y-4">
+            <div class="rating flex items-center space-x-2">
+                {% for i in 1..5 %}
+                    <i class="far fa-star text-2xl text-gray-400 cursor-pointer hover:text-yellow-500 transition-colors duration-200" data-value="{{ i }}"></i>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="rating" class="rating-value" required>
+            <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:from-green-600 hover:to-blue-700 transition-colors duration-300 text-sm mt-2 self-start">
+                Submit Rating
+            </button>
+        </form>
+    {% endif %}
+</div>
 
+                    {# Comments Section - improved styling #}
+                    <div>
+                        <h6 class="text-gray-700 text-base font-semibold mb-3">Commentaires ({{ blog.listeCommentaires|length }})</h6>
+                        <form method="POST" action="{{ path('app_commentaire_new', {'blogId': blog.id}) }}" class="mt-3">
+                            <div class="mb-2">
+                                <textarea name="contenu" class="form-control" placeholder="Write a comment..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">Post Commentaire</button>
+                        </form>
+                        {% if blog.listeCommentaires is empty %}
+                            <p class="text-center text-gray-500 text-base py-4">No comments yet.</p>
+                        {% else %}
+                            <ul class="space-y-4">
+                                {% for comment in blog.listeCommentaires %}
+                                    <li class="bg-gray-50 rounded-lg p-4 shadow-sm transition-all duration-300 hover:shadow-md" id="comment-{{ comment.id }}">
+                                        <div class="flex items-center mb-2">
+                                            <strong class="text-gray-800">{{ comment.user.prenom }} {{ comment.user.nom }}</strong>
+                                            <small class="text-gray-500 ml-2">({{ comment.createdAt|date('Y-m-d H:i:s') }})</small>
+                                        </div>
+                                        <p id="comment-content-{{ comment.id }}" class="text-gray-700 mb-3">{{ comment.contenuCmt }}</p>
+                                        {% if comment.user == app.user or is_granted('ROLE_ADMIN') %}
+                                            <div class="flex gap-2">
+                                                {% if comment.user == app.user %}
+                                                    <button class="inline-flex items-center px-3 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-md text-sm transition-colors duration-300 edit-comment-btn" data-comment-id="{{ comment.id }}">
+                                                        <i class="fas fa-edit mr-1"></i> Edit
+                                                    </button>
+                                                {% endif %}
+                                                <form method="POST" action="{{ path('app_commentaire_delete', {'id': comment.id}) }}" class="inline">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                                                    <button type="submit" class="inline-flex items-center px-3 py-1 bg-rose-50 text-rose-700 hover:bg-rose-100 rounded-md text-sm transition-colors duration-300" onclick="return confirm('Are you sure you want to delete this comment?');">
+                                                        <i class="fas fa-trash mr-1"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+                                        {# Edit Form (hidden by default) - improved styling #}
+                                        <form id="edit-comment-form-{{ comment.id }}" class="edit-comment-form hidden mt-3" data-comment-id="{{ comment.id }}">
+                                            <textarea class="w-full p-2 border border-gray-300 rounded-lg mb-2 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 outline-none transition" name="contenu">{{ comment.contenuCmt }}</textarea>
+                                            <div class="flex gap-2">
+                                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-md text-sm transition-colors duration-300">Save</button>
+                                                <button type="button" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-md text-sm transition-colors duration-300 cancel-edit-btn">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: User Blogs (1/4 width) -->
+            <div class="w-1/4">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">autre article par {{ blog.user.prenom }} {{blog.user.nom}}</h2>
+                {% if all_blogs | length>0 %}
+                {% for userBlog in all_blogs %}
+                    {% if userBlog.id != blog.id %}
+                        <div class="bg-white rounded-xl shadow-sm p-4 mb-4 transition-all duration-300 hover:shadow-md hover:border-l-4 hover:border-indigo-500">
+                            <div class="flex items-center mb-2">
+                                <h5 class="text-base font-semibold text-gray-800 truncate">{{ userBlog.Titre }}</h5>
+                            </div>
+                            <small class="text-gray-500 text-xs block mb-2">{{ userBlog.createdAt|date('d M Y') }}</small>
+                        
+                            <div class="relative mb-2">
+                                {% if userBlog.image %}
+                                    <div class="relative overflow-hidden rounded-lg">
+                                        <img src="{{ asset('uploads/images/' ~ userBlog.image) }}" alt="{{ userBlog.Titre }}" class="w-full h-24 object-cover rounded-lg">
+                                        <!-- Status indicator -->
+                                        <span class="absolute top-1 left-1 px-2 py-0.5 rounded-full text-xs font-bold text-white {% if userBlog.statut.value == 'Acceptée' %}bg-green-900 text-green-600{% elseif userBlog.statut.value == 'Rejetée' %}bg-red-900 text-red-600{% else %}bg-yellow-900 text-yellow-600{% endif %}">
+                                            {{ userBlog.statut.value }}
+                                        </span>
+                                    </div>
+                                {% else %}
+                                    <div class="relative overflow-hidden rounded-lg">
+                                        <img src="{{ asset('uploads/images/' ~ userBlog.image) }}" alt="{{ userBlog.Titre }}" class="w-full h-24 object-cover rounded-lg">
+                                        <!-- Status indicator -->
+                                        <span class="absolute top-1 left-1 px-2 py-0.5 rounded-full text-xs font-bold text-white {{ userBlog.statut.value == 'enAttente' ? 'bg-amber-500' : 'bg-emerald-500' }}">
+                                            {{ userBlog.statut.value }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        
+                            <p class="text-gray-600 text-sm line-clamp-2 mb-3">{{ userBlog.Contenu }}</p>
+                        
+                            <a href="{{ path('app_blog_show', {'id': userBlog.id}) }}" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-300">
+                                <i class="fas fa-eye mr-1"></i> View details
+                            </a>
+                        </div>
+                    {% endif %}
+                    
+                {% endfor %}
+                {% else %}
+                    <p class="text-gray-500 text-center p-4 bg-white rounded-xl shadow-sm">aucune autre article disponible pour le moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 <script>
     // JavaScript to handle the edit comment functionality
     document.querySelectorAll('.edit-comment-btn').forEach(button => {
@@ -408,7 +287,6 @@
         });
     });
 
-    // Interactive Star Rating
     document.querySelectorAll('.rating i').forEach(star => {
         star.addEventListener('click', () => {
             const ratingValue = star.getAttribute('data-value');
@@ -438,4 +316,5 @@
         }
     }
 </script>
+
 {% endblock %}

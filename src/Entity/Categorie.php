@@ -32,6 +32,9 @@ class Categorie
     #[ORM\OneToMany(targetEntity: Annonce::class, mappedBy: 'categorie',cascade:['remove'])]
     private Collection $annonces;
 
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $image = null;
+
     public function __construct()
     {
         $this->annonces = new ArrayCollection();
@@ -80,6 +83,18 @@ class Categorie
                 $annonce->setCategorie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

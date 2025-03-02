@@ -124,49 +124,74 @@ final class CertificateController extends AbstractController{
                 'valid' => true
             ]);
             
+            $stats = $participationCalculator->calculateParticipationPercentage($user, $event);
+            // Ensure stats is an array with defaults if null
+            $stats = $stats ?? ['isCertificateEligible' => false, 'percentage' => 0, 'sessionsAttended' => 0, 'totalSessions' => 0];
+            
             $participationStats[] = [
                 'event' => $event,
-                'stats' => $participationCalculator->calculateParticipationPercentage($user, $event),
+                'stats' => $stats,
                 'isCertificateGenerated' => $existingCertificate !== null,
             ];
         }
         
         $filter = $request->query->get('filter', 'all');
-        // Apply the filter
         $filteredStats = $this->filterParticipationStats($participationStats, $filter);
         
         return $this->render('dashboard/events/stats.html.twig', [
             'participationStats' => $filteredStats,
-            'filter' => $filter // Pass the filter to the template
+            'filter' => $filter
         ]);
     }
-
+    
     private function filterParticipationStats(array $participationStats, string $filter): array
-{
-    if ($filter === 'all') {
-        return $participationStats;
+    {
+        if ($filter === 'all') {
+            return $participationStats;
+        }
+        
+        return array_filter($participationStats, function($stat) use ($filter) {
+            // Safely access isCertificateEligible with a default
+            $isEligible = $stat['stats']['isCertificateEligible'] ?? false;
+            
+            if ($filter === 'eligible') {
+                return $isEligible === true;
+            } elseif ($filter === 'not-eligible') {
+                return $isEligible === false;
+            }
+            
+            return true;
+        });
+    }
+
+
+    #[Route('/event/{id}/view-certificate', name: 'app_certificate_view_existing', methods: ['GET'])]
+public function showExistingCertificate(
+    Event $event,
+    CertificateRepository $certificateRepository,
+    CertificateGeneratorService $certificateGenerator
+): Response {
+    $user = $this->getUser();
+    
+    if (!$user) {
+        return $this->redirectToRoute('app_login');
     }
     
-    return array_filter($participationStats, function($stat) use ($filter) {
-        if (!isset($stat['stats'])) {
-            return false;
-        }
-        
-        // Check if stats is an array or object and access accordingly
-        $isEligible = is_array($stat['stats']) 
-            ? $stat['stats']['isCertificateEligible'] 
-            : $stat['stats']->isCertificateEligible;
-        
-        if ($filter === 'eligible') {
-            return $isEligible === true;
-        } elseif ($filter === 'not-eligible') {
-            return $isEligible === false;
-        }
-        
-        return true;
-    });
-}
+    // Find an existing valid certificate for this user and event
+    $certificate = $certificateRepository->findOneBy([
+        'user' => $user,
+        'event' => $event,
+        'valid' => true
+    ]);
     
+    if (!$certificate) {
+        $this->addFlash('error', 'Aucun certificat valide trouvé pour cet événement.');
+        return $this->redirectToRoute('check_certificate_eligibility');
+    }
+    
+    // Generate and return PDF response for the existing certificate
+    return $certificateGenerator->generateCertificateResponse($certificate);
+}
 
 
 

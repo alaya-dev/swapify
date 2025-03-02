@@ -2,141 +2,152 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Attestation d'Attendance</title>
+    <title>Certificat de Participation</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap');
-
+        /* General Styles */
         body {
-            font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: white;
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         .certificate {
-            width: 297mm;
-            min-height: 210mm;
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
+            width: 900px;
+            height: 550px;
+            border: 20px solid #28a745;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             position: relative;
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            text-align: center;
+            padding: 40px;
         }
 
-        .border-frame {
+        .certificate::before {
+            content: '';
             position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 50px;
-            bottom: 10px;
-            border: 2px solid rgb(6, 79, 1);
-            border-radius: 10px;
-            padding:12px;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border: 10px solid rgba(153, 27, 27, 0.1);
+            z-index: -1;
         }
 
         .header {
-            text-align: center;
-            padding-top: 20px;
+            margin-bottom: 30px;
         }
 
-        .title {
-            font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            font-weight: bold;
+        .header h1 {
+            font-size: 48px;
+            color: #28a745;
+            margin: 0;
             text-transform: uppercase;
-            color: #2c3e50;
-            margin-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            color: #333;
+            margin: 10px 0 0;
         }
 
         .content {
-            text-align: center;
-            padding: 0 40px;
-            flex-grow: 1;
+            margin: 40px 0;
         }
 
-        .recipient {
+        .content h3 {
             font-size: 28px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin: 20px 0;
-            font-family: 'Playfair Display', serif;
+            color: #28a745;
+            margin: 0 0 20px;
         }
 
-        .signatures {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-direction: column;
-            width: 100%;
-            padding: 20px 40px;
-        }
-
-        .signature {
-            text-align: center;
-            width: 40%;
-        }
-
-        .signature-line {
-            width: 100%;
-            border-bottom: 2px solid rgb(6, 79, 1);
-            margin-bottom: 10px;
+        .content p {
+            font-size: 20px;
+            color: #555;
+            margin: 10px 0;
         }
 
         .footer {
-            text-align: center;
-            margin-top: 10px;
+            margin-top: 40px;
+        }
+
+        .footer p {
             font-size: 16px;
-            color: #7f8c8d;
+            color: #777;
+            margin: 5px 0;
         }
 
-        @page {
-            size: A4 landscape;
-            margin: 0;
-        }
+        .badge {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    background-color: #e9ffee;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    
 
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            .certificate {
-                padding: 0;
-            }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* overflow: hidden; Ensure the image doesn't overflow */
+}
+.badge img {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 200px;
+    height: 200px;
+    
+}
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 120px;
+            color: rgba(27, 153, 136, 0.1);
+            font-weight: bold;
+            text-transform: uppercase;
+            pointer-events: none;
+            user-select: none;
         }
     </style>
 </head>
 <body>
-    <div class="certificate ">
-        <div class="border-frame"></div>
+    <div class="certificate">
+        <!-- Watermark -->
+        <div class="watermark">SWAPIFY</div>
+
+        <!-- Header -->
         <div class="header">
-            <div class="title">Attestation d'Attendance</div>
+            <h1>Certificat</h1>
+            <h2>de Participation</h2>
         </div>
 
+        <!-- Content -->
         <div class="content">
-            <p style="font-size: 20px; color: #666;">Ce certificat est décerné à</p>
-            <div class="recipient">{{ app.user.nom }} {{ app.user.prenom }}</div>
-            <p style="font-size: 20px; color: #666;">Pour avoir participé à l'événement</p>
-            <div class="event-title">{{ event.title }}</div>
-            <div class="date">Du {{ event.dateDebut|date('d/m/Y') }} au {{ event.dateFin|date('d/m/Y') }}</div>
+            <h3>Ce certificat est décerné à</h3>
+            <p>{{ app.user.nom }} {{ app.user.prenom }}</p>
+            <h3>Pour avoir participé à l'événement</h3>
+            <p>{{ event.title }}</p>
+            <p>Du {{ event.dateDebut|date('d/m/Y') }} au {{ event.dateFin|date('d/m/Y') }}</p>
         </div>
 
-        <div class="signatures">
-            <div class="signature">
-                <div class="signature-line"></div>
-                <p style="font-weight: bold;">{{ event.orgniser.nom }} {{ event.orgniser.prenom }}</p>
-                <p style="color: #666;">Organisateur</p>
-            </div>
-            <div class="signature">
-                <div class="signature-line"></div>
-                <p style="font-weight: bold;">Baaroun Mohamed ali</p>
-                <p style="color: #666;">Directeur SWAPIFY</p>
-            </div>
+        <!-- Footer -->
+        <div class="footer">
+            <p>Organisé par : {{ event.orgniser.nom }} {{ event.orgniser.prenom }}</p>
+            <p>Date d'émission : {{ "now"|date('d/m/Y') }}</p>
         </div>
 
-        <div class="footer">Fait à Tunis, le {{ 'now'|date('d/m/Y') }}</div>
+        <div class="badge">
+            <img src="{{ app.request.schemeAndHttpHost ~ asset('assets/images/signature_pandadoc.png') }}" alt="Badge Icon">
+        </div>
     </div>
 </body>
 </html>

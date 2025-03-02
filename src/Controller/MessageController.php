@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\DTO\CreateMessage;
+use App\DTO\CreatedMessage;
 use App\Factory\MessageFactory;
 use App\Repository\ConversationRepository;
 use App\Service\CacheService;
@@ -23,7 +23,7 @@ final class MessageController extends AbstractController
 
     #[Route('/messages', name: 'message.create', methods: ['POST'])]
     public function create(
-        #[MapRequestPayload] CreateMessage $payload,
+        #[MapRequestPayload] CreatedMessage $payload,
         PusherService $pusherService,
     ): Response {
 

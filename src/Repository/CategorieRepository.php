@@ -40,4 +40,20 @@ class CategorieRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
+    public function findTopTrendingCategories(int $limit = 3): array
+    {
+        // Example query: Get categories with the most announcements in the last 30 days
+        $query = $this->createQueryBuilder('c')
+            ->leftJoin('c.annonces', 'a')
+            ->where('a.dateCreation >= :startDate')
+            ->setParameter('startDate', new \DateTime('-30 days'))
+            ->groupBy('c.id')
+            ->orderBy('COUNT(a.id)', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        return $query->getResult();
+    }
 }
