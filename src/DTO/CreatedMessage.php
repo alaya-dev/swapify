@@ -3,7 +3,7 @@
 namespace App\DTO;
 
 
-readonly final class CreateMessage
+readonly final class CreatedMessage
 {
     public function __construct(public string $content, public int $conversationId) {}
 }

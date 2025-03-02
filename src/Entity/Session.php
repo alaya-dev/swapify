@@ -17,18 +17,16 @@ class Session
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank(message:"la heure de debut est obligatoire")]
-    #[Assert\GreaterThanOrEqual(
-        "today",
-        message: "La date de début doit être aujourd'hui ou dans le futur."
-    )]
+    #[Assert\NotBlank(message: "L'heure de début est obligatoire.")]
+    #[Assert\Type(type: "\DateTimeInterface", message: "Veuillez entrer une date et une heure valides.")]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $startHour = null;
 
-    #[Assert\NotBlank(message:"la heure de fin  est obligatoire")]
+    #[Assert\NotBlank(message: "L'heure de fin est obligatoire.")]
+    #[Assert\Type(type: "\DateTimeInterface", message: "Veuillez entrer une date et une heure valides.")]
     #[Assert\GreaterThan(
-        propertyPath: "startHour", 
-        message: "L'heure de fin doit être supérieure à l'heure de début."
+        propertyPath: "startHour",
+        message: "L'heure de fin doit être postérieure à l'heure de début."
     )]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $endHour = null;

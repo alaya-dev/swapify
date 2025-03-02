@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -54,6 +55,11 @@ class Event
     #[Assert\NotBlank(message:"Le nombre de participant est obligatiore.")]
     #[Assert\Positive(message: "Le nombre maximum de participants doit être un nombre positif.")]
     private ?int $maxParticipant = null;
+
+
+
+
+    
 
     /**
      * @var Collection<int, Session>
@@ -315,6 +321,36 @@ class Event
         $this->image = $image;
 
         return $this;
+    }
+
+
+        /**
+     * @Assert\Callback
+     */
+    public function validateSessions(ExecutionContextInterface $context): void
+    {
+        foreach ($this->sessions as $index => $session) {
+            // Check if session start time is within the event's date range
+            if ($session->getStartHour() < $this->dateDebut) {
+                $context->buildViolation('La session ne peut pas commencer avant la date de début de l\'événement.')
+                    ->atPath("sessions[$index].startHour")
+                    ->addViolation();
+            }
+    
+            // Check if session end time is within the event's date range
+            if ($session->getEndHour() >= $this->dateFin) {
+                $context->buildViolation('La session ne peut pas se terminer après la date de fin de l\'événement.')
+                    ->atPath("sessions[$index].endHour")
+                    ->addViolation();
+            }
+    
+            // Ensure session end time is after session start time
+            if ($session->getEndHour() <= $session->getStartHour()) {
+                $context->buildViolation('L\'heure de fin de la session doit être postérieure à l\'heure de début.')
+                    ->atPath("sessions[$index].endHour")
+                    ->addViolation();
+            }
+        }
     }
 
 

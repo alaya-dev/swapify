@@ -10,10 +10,7 @@
             <!-- Form -->
             <div class="w-full">
                 <div class="leading-loose">
-                    {{ form_start(form, {'attr': {'class': 'p-10 bg-white rounded shadow-xl space-y-4', 'novalidate': 'novalidate'}}) }}
-
-                    <p class="text-lg text-gray-800 font-medium pb-4">Informations de l'événement</p>
-                    
+                    {{ form_start(form, {'attr': {'class': 'p-10 bg-white rounded shadow-xl space-y-4', 'novalidate': 'novalidate','data-turbo': 'false' }}) }}                    
                     <div>
                         {{ form_label(form.title, 'Titre', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
                         {{ form_widget(form.title, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
@@ -62,32 +59,43 @@
                             <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
                         {% endfor %}
                     </div>
-                    <div class="bg-gray-100 p-4 rounded shadow-sm">
-                        <h3 class="text-lg font-semibold text-gray-700">Planifier les Sessions</h3>
-                        <div class="sessions-collection space-y-4">
-                            {% for session in form.sessions %}
-                                <div class="session-item bg-white p-4 rounded shadow">
-                                    {{ form_label(session.objective, 'Heure de Début', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
-                                    {{ form_widget(session.objective, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded '}}) }}
-                                    {{ form_label(session.startHour, 'Heure de Début', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
-                                    {{ form_widget(session.startHour, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded '}}) }}
-                                    {% for error in form.image.vars.errors %}
-                                        <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
-                                    {% endfor %}
-                                    {{ form_label(session.endHour, 'Heure de Fin', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
-                                    {{ form_widget(session.endHour, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded '}}) }}
-                                    {% for error in form.image.vars.errors %}
-                                        <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
-                                    {% endfor %}
-                                    {{ form_label(session.typeSession, 'type session', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
-                                    {{ form_widget(session.typeSession, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded '}}) }}
-                                    
-                                    <button type="button" class="mt-2 w-full bg-red-500 text-white py-2 rounded remove-session">Supprimer la session</button>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <button type="button" class="mt-4 w-full bg-blue-50 text-gray-700 py-2 rounded add-session-btn border border-2 border-dashed border-blue-500 flex items-center justify-center"><i class="fas fa-plus mr-3"></i> Ajouter une session</button>
-                    </div>
+<div class="bg-gray-100 p-4 rounded shadow-sm">
+    <h3 class="text-lg font-semibold text-gray-700">Planifier les Sessions</h3>
+    <div class="sessions-collection space-y-4">
+        {% for session in form.sessions %}
+            <div class="session-item bg-white p-4 rounded shadow">
+                {{ form_label(session.objective, 'Objectif', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                {{ form_widget(session.objective, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                {% for error in session.objective.vars.errors %}
+                    <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                {% endfor %}
+
+                {{ form_label(session.startHour, 'Heure de Début', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                {{ form_widget(session.startHour, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                {% for error in session.startHour.vars.errors %}
+                    <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                {% endfor %}
+
+                {{ form_label(session.endHour, 'Heure de Fin', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                {{ form_widget(session.endHour, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                {% for error in session.endHour.vars.errors %}
+                    <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                {% endfor %}
+
+                {{ form_label(session.typeSession, 'Type de Session', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                {{ form_widget(session.typeSession, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                {% for error in session.typeSession.vars.errors %}
+                    <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                {% endfor %}
+
+                <button type="button" class="mt-2 w-full bg-red-500 text-white py-2 rounded remove-session">Supprimer la session</button>
+            </div>
+        {% endfor %}
+    </div>
+    <button type="button" class="mt-4 w-full bg-blue-50 text-gray-700 py-2 rounded add-session-btn border border-2 border-dashed border-blue-500 flex items-center justify-center">
+        <i class="fas fa-plus mr-3"></i> Ajouter une session
+    </button>
+</div>
                     
                     <button type="submit" class="px-4 py-1 text-white font-light tracking-wider bg-gray-700 rounded">Enregistrer l'événement</button>
                     {{ form_end(form) }}
@@ -106,20 +114,20 @@
         const item = `
             <div class="session-item bg-white p-4 rounded shadow">
                 <div>
-                    <label class="block text-sm text-gray-600">Objective</label>
+                    <label class="block text-sm text-gray-600">Objectif</label>
                     <input type="text" name="event[sessions][${index}][objective]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1">
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600">Heure de Début</label>
-                    <input type="datetime-local" name="event[sessions][${index}][startHour]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1">
+                    <input type="datetime-local" name="event[sessions][${index}][startHour]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1" required>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600">Heure de Fin</label>
-                    <input type="datetime-local" name="event[sessions][${index}][endHour]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1">
+                    <input type="datetime-local" name="event[sessions][${index}][endHour]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1" required>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600">Type de Session</label>
-                    <select name="event[sessions][${index}][typeSession]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1">
+                    <select name="event[sessions][${index}][typeSession]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1" required>
                         <option value="En ligne">En ligne</option>
                         <option value="Présentiel">Présentiel</option>
                     </select>

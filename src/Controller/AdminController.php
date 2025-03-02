@@ -2,11 +2,14 @@
 namespace App\Controller;
 
 use App\Entity\Annonce;
+use App\Entity\Blog;
 use App\Entity\Event;
 use App\Entity\User;
+use App\Enum\EtatEnum;
 use App\Repository\UserRepository;
 use App\Form\RegistrationFormType;
 use App\Repository\AnnonceRepository;
+use App\Repository\BlogRepository;
 use App\Repository\CategorieRepository;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -159,6 +162,17 @@ public function listAdmins(UserRepository $userRepository): Response
             'events' => $events
         ]);
     }
+    #[Route('/admin/blogs', name: 'app_admin_blogs')]
+    public function blogs(BlogRepository $blogRepository): Response
+    {
+
+        $blogs = $blogRepository->findBy(['statut' => EtatEnum::enAttente]);
+      
+
+        return $this->render('blog/all_blogs.html.twig', [
+            'blogs' => $blogs
+        ]);
+    }
 
 
 
@@ -200,6 +214,16 @@ public function listAdmins(UserRepository $userRepository): Response
        $this->addFlash('success', 'évenement a été validé avec succès!');
        return $this->redirectToRoute('app_admin_events');
    }
+   #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+   #[Route('/admin/blog/{id}/validate', name: 'admin_blog_validate')]
+   public function validateBlog(Blog $blog, EntityManagerInterface $entityManager): RedirectResponse
+   {
+       $blog->setStatut(EtatEnum::Acceptée);
+       $entityManager->flush();
+
+       $this->addFlash('success', 'évenement a été validé avec succès!');
+       return $this->redirectToRoute('app_admin_blogs');
+   }
 
 
     #[Route('/admin/annonce/{id}/reject', name: 'admin_annonce_reject')]
@@ -224,6 +248,19 @@ public function listAdmins(UserRepository $userRepository): Response
 
         $this->addFlash('success', "l'évenement a été rejetée avec succès !");
         return $this->redirectToRoute('app_admin_events');
+    }
+
+
+    #[Route('/admin/blog/{id}/reject', name: 'admin_blog_reject')]
+    //#[IsGranted('ROLE_ADMIN')]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+    public function rejectBlog(Blog $blog, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $blog->setStatut(EtatEnum::Rejetée);
+        $entityManager->flush();
+
+        $this->addFlash('success', "l'article a été rejetée avec succès !");
+        return $this->redirectToRoute('app_admin_blogs');
     }
 
 
@@ -264,6 +301,43 @@ public function listAdmins(UserRepository $userRepository): Response
         'events' => $events,
     ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #[Route('/admin/historique/blogs', name: 'app_admin_blog_history')]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+    public function histBlogs(BlogRepository $blogRepository, Request $request): Response
+    {
+
+    $filter = $request->query->get('filter', 'all');
+
+    $blogs = match ($filter) {
+        'pending' => $blogRepository->findBy(['statut' => EtatEnum::enAttente]),
+        'active' => $blogRepository->findBy(['statut' => EtatEnum::Acceptée]),
+        'inactive' => $blogRepository->findBy(['statut' => EtatEnum::Rejetée]),
+        default => $blogRepository->findAll(),
+    };
+
+    return $this->render('blog/historiqueBlog.html.twig', [
+        'blogs' => $blogs,
+    ]);
+    }
+
 
 
 
