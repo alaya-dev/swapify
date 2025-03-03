@@ -15,5 +15,27 @@
     <div class="text-center mt-14 p-4">
         <h2 class="text-lg font-semibold">{{app.user.nom}} {{app.user.prenom}}</h2>
         <div class="flex justify-around mt-4 text-gray-600 text-sm">Rating</div>
+                <div class="star-rating mb-3" style="--rating: {{ rating }};"></div>
+
+
     </div>
 </div>
+
+
+<style>
+
+   .star-rating {
+      --percent: calc(var(--rating) / 5 * 100%);
+      font-size: 24px;
+    }
+
+    .star-rating::before {
+      content: '★★★★★';
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, gold var(--percent), lightgray var(--percent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+</style>

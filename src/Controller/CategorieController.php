@@ -96,14 +96,19 @@ final class CategorieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+           
             if ($photo = $form['image']->getData()) {
                 $fileName = uniqid() . '.' . $photo->guessExtension();
                 $destination = $photoDir . DIRECTORY_SEPARATOR . $fileName;
                 copy($photo->getPathname(), $destination);
+                $categorie->setImage($fileName);
             }
-            $categorie->setImage($fileName);
+        
+
             return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
         }
+
+
 
         return $this->render('categorie/edit.html.twig', [
             'categorie' => $categorie,
