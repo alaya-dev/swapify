@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 
 
 class SecurityController extends AbstractController
@@ -21,6 +23,10 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
         
+
+        if ($this->getUser()) {
+            throw new AccessDeniedException('Vous êtes déjà connecté.'); 
+        }
 
         $form = $this->createForm(TaskType::class);
         $form->handleRequest($request);

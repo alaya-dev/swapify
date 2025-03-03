@@ -19,7 +19,6 @@ security:
             security: false
         main:
             access_denied_url: /error403
-            access_denied_url: /error500
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 20  
