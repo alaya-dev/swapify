@@ -405,6 +405,26 @@ public function rateBlog(Request $request, Blog $blog, EntityManagerInterface $e
     return $this->redirectToRoute('app_blog_index');
 }
 
+#[Route('/top-rated', name: 'app_blog_top_rated', methods: ['GET'])]
+public function topRated(BlogRepository $blogRepository): Response
+{
+    // Fetch all accepted blogs
+    $acceptedBlogs = $blogRepository->findBy(['statut' => EtatEnum::Acceptée]);
+
+    // Sort blogs by their average rating in descending order
+    usort($acceptedBlogs, function ($a, $b) {
+        $ratingA = $a->getRate();
+        $ratingB = $b->getRate();
+        return $ratingB <=> $ratingA; // Sort in descending order
+    });
+
+    // Limit to the top 3 rated articles
+    $topRatedBlogs = array_slice($acceptedBlogs, 0, 3);
+
+    return $this->render('blog/index.html.twig', [
+        'topRatedBlogs' => $topRatedBlogs,
+    ]);
+}
 
 #[Route('/my-blogs', name: 'app_user_blogs', methods: ['GET'])]
 public function displayUserBlogs(BlogRepository $blogRepository,Request $request): Response
