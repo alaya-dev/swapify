@@ -39,6 +39,9 @@ services:
     App\Service\RecommandationService:
         arguments:
             $client: '@http_client'
+    App\Service\ETAService:
+        autowire: true
+        autoconfigure: true
 
     #mailer mailJet service 
     App\Service\mailerMailJetService:

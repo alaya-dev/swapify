@@ -1,12 +1,13 @@
-{% extends 'dashBord_user.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block content %}
+{% block body %}
 <div class="w-full overflow-hidden border-t flex flex-col">
 	<main class="w-full flex-grow p-6">
 		<p class="text-xl pb-6 flex items-center">
 			<i class="fas fa-shipping-fast mr-3"></i>
 			livraison
 		</p>
+
 		<div class="flex flex-col space-y-6">
 			<!-- Form -->
 
@@ -45,8 +46,12 @@
 								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 									Actions
 								</th>
+
 								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 									Code pour le Livreur
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Temps  estimé d'arrivé
 								</th>
 							</tr>
 						</thead>
@@ -98,7 +103,7 @@
 											</a>
 										{% else %}
 											<span class="px-3 py-1 rounded-lg text-white
-																																																																																			                                            {% if livraison.statut == 'Livraison en cours' %} bg-yellow-500 {% elseif livraison.statut == 'Livré' %} bg-green-500 {% else %} bg-gray-500 {% endif %}">
+																																																																																																                                            {% if livraison.statut == 'Livraison en cours' %} bg-yellow-500 {% elseif livraison.statut == 'Livré' %} bg-green-500 {% else %} bg-gray-500 {% endif %}">
 												{{ livraison.statut }}
 											</span>
 										{% endif %}
@@ -135,15 +140,25 @@
 											</a>
 										{% endif %}
 									</td>
-									{% if (livraison.statut == 'En cours de livraison' or livraison.statut == 'Livrée pour l\'expéditeur') and app.user == livraison.idDistinataire %}
-									<td><img src="{{ path('livraison_qr_destinataire', { id: livraison.id }) }}" alt="QR Code Livraison" class="w-20 h-20 object-contain"></td>
-								{% endif %}
+									<td>
+										{% if (livraison.statut == 'En cours de livraison' or livraison.statut == 'Livrée pour l\'expéditeur') and app.user == livraison.idDistinataire %}
+
+									<img src="{{ path('livraison_qr_destinataire', { id: livraison.id }) }}" alt="QR Code Livraison" class="w-20 h-20 object-contain">								{% endif %}
+</td>
 								
 								{% if (livraison.statut == 'En cours de livraison' or livraison.statut == 'Livrée pour le destinataire') and app.user == livraison.idExpediteur %}
 									<td><img src="{{ path('livraison_qr_expediteur', { id: livraison.id }) }}" alt="QR Code Livraison" class="w-20 h-20 object-contain"></td>
 								{% endif %}
 
+								{% if livraison.eta is defined %}
+								<td> 
+									<p>  <strong>{{ livraison.eta }}</strong></p>
+										</td>
+
+								{% endif %}
+						
 									</tr>
+					
 								{% endfor %}
 							</tbody>
 						</table>

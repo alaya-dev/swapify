@@ -1,4 +1,4 @@
-{% extends 'dashBord_user.html.twig' %}
+{% extends 'base.html.twig' %}
 
 
 {% block stylesheets %}
@@ -16,7 +16,7 @@
     </style>
 {% endblock %}
 
-{% block content %}
+{% block body %}
     {% for type, messages in app.flashes %}
         {% if type == 'success' %}
             {% for message in messages %}

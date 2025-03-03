@@ -274,7 +274,7 @@
                     </a>
                     <ul class="sub-menu" x-show="activeMenu === 'annonce'" x-transition>
                         <li><a href="/admin/annonces">Les demandes des annonces</a></li>
-                        <li><a href="/admin/annonces/history">Historique des demandes des annonces</a></li>
+                        <li><a href="{{path('app_admin_annonces_history')}}">Historique des demandes des annonces</a></li>
                     </ul>
                 </li>
 
@@ -312,7 +312,7 @@
                     </a>
                     <ul class="sub-menu" x-show="activeMenu === 'evenement'" x-transition>
                         <li><a href="/admin/events">La liste des événements</a></li>
-                        <li><a href="/admin/event/history">Historique des demande de validation des événements</a></li>
+                        <li><a href="{{path('app_admin_event_history')}}">Historique des demande de validation des événements</a></li>
                     </ul>
                 </li>
 
@@ -366,7 +366,7 @@
                 <div class="page-content">
                     <div class="container-fluid">
 
-                       {% block content %}{% endblock %}
+                       {% block body %}{% endblock %}
         
 
                     </div> <!-- container-fluid -->

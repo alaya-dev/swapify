@@ -18,6 +18,8 @@
         {% endfor %}
     {% endfor %}
 
+      
+
     {# External Libraries #}
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
@@ -35,6 +37,14 @@
             </nav>
         </div>
     </section>
+
+         {% if app.user %}
+            <div class="text-center my-4">
+                <a href="{{ path('app_annonce_new') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow inline-flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Créer une nouvelle annonce
+                </a>
+            </div>
+        {% endif %}
 
         <div class="grid mt-6 md:grid-cols-2 gap-8">
             <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto max-h-[800px]">

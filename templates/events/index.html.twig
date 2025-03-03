@@ -78,6 +78,8 @@
 </style>
 
 {# Hero Section #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+
 <section class="relative h-64 flex items-center justify-center bg-cover bg-center" style="background-image:url('{{ asset('assets/images/eventHero.jpg') }}')">
     <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
     <div class="relative text-center text-white">
@@ -89,6 +91,14 @@
         </nav>
     </div>
 </section>
+
+     {% if app.user %}
+            <div class="text-center my-4">
+                <a href="{{path('app_event_new')}}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow inline-flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Ajouter un évenement
+                </a>
+            </div>
+        {% endif %}
 
 {# Event Slider #}
 {% set upcoming_events = events 

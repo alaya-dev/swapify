@@ -18,18 +18,18 @@
           <li>
 
             {% if 'ROLE_ADMIN' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+              <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
             {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard') }}" data-turbo="false"  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+              <a href="{{ path('app_dashboard') }}" data-turbo="false"  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
             {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+              <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
             {% endif %}
           </li>
           <li>
-            <a href="{{path('mesAnnonces')}}"  data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
+            <a href="{{path('mesAnnonces')}}"  data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-black-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
           </li>
           <li class="relative group">
-            <a href="{{ path('wishlist_show') }}" data-turbo="false" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white justify-between items-center">
+            <a href="{{ path('wishlist_show') }}" data-turbo="false" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-black-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white justify-between items-center">
               favoris annonce
               <span class="ml-2 bg-teal-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
                 {{ app.user ? app.user.getFavoris().count : 0 }}
@@ -44,6 +44,67 @@
           <li>
             <a href="{{path('my_events')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Evenements</a>
           </li>
+  <li class="relative">
+    <a href="#" id="dropdownToggle" 
+       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-black">
+        Mes Contrats ▼
+    </a>
+    <ul id="dropdownMenu" class="absolute left-0 hidden w-48 bg-white shadow-md">
+        <li>
+            <a href="{{ path('app_mesContratsPret') }}" 
+               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-gray-700 hover:text-black">
+                Mes contrats prêt 
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app_mesContratsAsignee') }}" 
+               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-gray-700 hover:text-black">
+                Contrat à signer
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app_mesContratsSigned') }}" 
+               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-gray-700 hover:text-black">
+                Contrat déjà signé
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app_contrat_new') }}" data-turbo="false"
+               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-gray-700 hover:text-black">
+                Créer contrat
+            </a>
+        </li>
+    </ul>
+</li>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownToggle = document.getElementById("dropdownToggle");
+        const dropdownMenu = document.getElementById("dropdownMenu");
+
+        dropdownToggle.addEventListener("click", function (event) {
+            event.preventDefault();
+            dropdownMenu.classList.toggle("hidden");
+        });
+
+        // Cacher le menu si on clique en dehors
+        document.addEventListener("click", function (event) {
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.add("hidden");
+            }
+        });
+    });
+</script>
+
+
+           <li>
+            <a href="{{ path('livraison_list') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Livraisons</a>
+          </li>
+
+             <li>
+         <a href="{{ path('conversation') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Conversations</a>
+       </li>
+         
            <li>
             <a href="{{path('app_reclamation_new')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Envoyer réclamation</a>
           </li>
@@ -64,9 +125,7 @@
       <li>
         <a href="{{path('app_home')}}" data-turbo="false" class="block py-2 px-3 text-gray-900  rounded-sm md:bg-transparent md:p-0" aria-current="page">Acceuil</a>
       </li>
-      <li>
-        <a href="{{path('app_home')}}#aboutus" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">A propos</a>
-      </li>
+ 
       <li>
         <a href="{{path('app_annonce_index')}}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Annonces</a>
       </li>
@@ -77,9 +136,15 @@
         
         <a href="{{ path('app_blog_index') }}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Blog</a>
       </li>
+
       <li>
-        <a href="{{path('app_home')}}#contact" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Contact</a>
+        <a href="{{path('souk')}}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Souk</a>
       </li>
+
+
+     
+
+
       <li>
           <a href="{{path('all_souk')}}" data-turbo="false" class="block py-2 px-3 text-red-500 rounded-sm md:bg-transparent md:p-0 animate-bounce">
             Live
@@ -110,6 +175,24 @@
         userDropdown.classList.add("hidden");
     });
   });
+
+
+ document.addEventListener("DOMContentLoaded", function () {
+    const soukButton = document.querySelector("li.group button");
+    const soukDropdown = soukButton.nextElementSibling;
+
+    soukButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      soukDropdown.classList.toggle("hidden");
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!soukButton.contains(event.target) && !soukDropdown.contains(event.target)) {
+        soukDropdown.classList.add("hidden");
+      }
+    });
+  });
+
 </script>
 
 
