@@ -208,6 +208,8 @@
                 {% if all_blogs | length>0 %}
                 {% for userBlog in all_blogs %}
                     {% if userBlog.id != blog.id %}
+                    {% if userBlog.statut.value == 'Acceptée'  %}
+
                         <div class="bg-white rounded-xl shadow-sm p-4 mb-4 transition-all duration-300 hover:shadow-md hover:border-l-4 hover:border-indigo-500">
                             <div class="flex items-center mb-2">
                                 <h5 class="text-base font-semibold text-gray-800 truncate">{{ userBlog.Titre }}</h5>
@@ -241,7 +243,7 @@
                             </a>
                         </div>
                     {% endif %}
-                    
+                {% endif %}
                 {% endfor %}
                 {% else %}
                     <p class="text-gray-500 text-center p-4 bg-white rounded-xl shadow-sm">aucune autre article disponible pour le moment.</p>
