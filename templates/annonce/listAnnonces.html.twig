@@ -24,10 +24,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
 
-    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-teal-50 p-6">
-        <h3 class="text-center text-3xl font-bold py-6 bg-gradient-to-r from-teal-600 to-teal-800 text-white rounded-lg shadow-lg">
-            Liste des Annonces
-        </h3>
+    <section class="relative h-64 flex items-center justify-center bg-cover bg-center" style="background-image: url('{{ asset('assets/images/blogPage.jpg') }}')">
+        <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+        <div class="relative text-center text-white">
+            <h1 class="text-3xl font-bold">Tous les Annnonces</h1>
+            <nav class="text-sm mt-2">
+                <a href="{{ path('app_home') }}" class="hover:underline text-gray-200">Accueil</a>
+                <span class="mx-2 text-gray-300">»</span>
+                <span class="text-gray-300">annonces</span>
+            </nav>
+        </div>
+    </section>
 
         <div class="grid mt-6 md:grid-cols-2 gap-8">
             <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto max-h-[800px]">
