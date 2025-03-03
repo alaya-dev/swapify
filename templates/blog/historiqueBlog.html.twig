@@ -102,7 +102,7 @@
                     <thead>
                         <tr>
                                         <th>#</th>
-                                        <th>Image</th>
+                                     
                                         <th>Titre</th>
                                         <th>Contenu</th>
                                         <th>Posté par</th>
@@ -113,13 +113,7 @@
                                     {% for blog in blogs %}
                                         <tr>
                                             <td class="fw-medium">{{ blog.id }}</td>
-                                            <td>
-                                                {% if blog.image %}
-                                                    <img src="{{ asset('uploads/images/' ~ blog.image) }}" alt="{{ blog.Titre }}" class="img-thumbnail">
-                                                {% else %}
-                                                    <img src="{{ asset('uploads/images/blog.jpg') }}" alt="{{ blog.Titre }}" class="img-thumbnail">
-                                                {% endif %}
-                                            </td>
+                                        
                                             <td>{{ blog.titre }}</td>
                                             <td>{{ blog.contenu|slice(0, 100) ~ '...' }}</td>
                                             <td>{{ blog.user.prenom }} {{ blog.user.nom }}</td>
