@@ -28,6 +28,10 @@ services:
             $attendanceRepository: '@App\Repository\AttendanceRepository'
             $sessionRepository: '@App\Repository\SessionRepository'
             $participantEventRepository: '@App\Repository\ParticipantEventRepository'
+
+    App\Service\ETAService:
+        autowire: true
+        autoconfigure: true
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

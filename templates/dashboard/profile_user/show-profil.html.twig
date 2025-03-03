@@ -22,6 +22,7 @@
 				<h2 class="text-lg font-semibold">{{ user.nom }}
 					{{user.prenom}}</h2>
 				<div class="flex justify-around mt-4 text-gray-600 text-sm">Rating</div>
+				
 				<div class="average-rating flex justify-center gap-1 text-3xl">
 					{% for i in 1..5 %}
 						{% if i <= avgRating %}
@@ -41,6 +42,13 @@
 						Donner un avis
 					</button>
 				{% endif %}
+				{% for type, messages in app.flashes %}
+					{% for message in messages %}
+						<div class="alert alert-{{ type }}">
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endfor %}
 				<!-- Modal -->
 				<div id="rating-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
 					<div class="bg-white p-6 rounded-lg shadow-lg w-96">

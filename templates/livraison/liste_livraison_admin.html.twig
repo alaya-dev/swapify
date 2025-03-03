@@ -64,7 +64,7 @@
 							<tbody>
 								{% for l in livraisons %}
 									<tr>
-										<td class="fw-medium">{{ l.id }}</td>
+										<td class="fw-medium">{{ l.id }} </td>
 										<td>{{ l.livreur ? l.livreur.nom : 'Non attribué' }}</td>
 										<td>{{ l.idExpediteur.nom }}</td>
 										<td>{{ l.idDistinataire.nom }}</td>
@@ -96,6 +96,7 @@
 										<td colspan="9">Aucunce livraison.</td>
 									</tr>
 								{% endfor %}
+
 							</tbody>
 						</table>
 					</div>

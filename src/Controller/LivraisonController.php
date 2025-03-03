@@ -8,6 +8,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use App\Repository\LivraisonRepository;
 use App\Repository\LivreurRepository;
 use App\Repository\UserRepository;
+use App\Service\ETAService;
 use Doctrine\ORM\EntityManagerInterface;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -32,16 +33,34 @@ class LivraisonController extends AbstractController
 
 
     #[Route('/dashboard/client/livraison', name: 'livraison_list')]
-    public function listLivraisons(LivraisonRepository $livraisonRepository): Response
+    public function listLivraisons(LivraisonRepository $livraisonRepository,ETAService $etaService): Response
     {
         $user = $this->getUser();
 
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
+        
+
 
         $livraisons = $livraisonRepository->findByUser($user);
-
+        foreach ($livraisons as $livraison) {
+            $latExpediteur = $livraison->getLocalisationExpediteurLat();
+            $lonExpediteur = $livraison->getLocalisationExpediteurLng();
+            $latDestinataire = $livraison->getLocalisationDestinataireLat();
+            $lonDestinataire = $livraison->getLocalisationDestinataireLng();
+        
+            // Vérifier si une valeur est nulle
+            if ($latExpediteur === null || $lonExpediteur === null || $latDestinataire === null || $lonDestinataire === null) {
+                continue; // Ignore cette livraison
+            }
+        
+            // Calcul de l'ETA
+            $eta = $etaService->calculerETA($latExpediteur, $lonExpediteur, $latDestinataire, $lonDestinataire);
+        
+            // Ajouter l'ETA à l'objet livraison
+            $livraison->eta = $eta;
+        }
         return $this->render('livraison/livraison_liste_user.html.twig', [
             'livraisons' => $livraisons,
         ]);
@@ -59,6 +78,7 @@ class LivraisonController extends AbstractController
         }
 
 
+
         $livraisons = $livraisonRepository->findAll();
 
         $livreurs = $livreurRepo->findAll();
@@ -70,32 +90,24 @@ class LivraisonController extends AbstractController
     #[Route('/livraison/{id}/qr/destinataire', name: 'livraison_qr_destinataire')]
     public function generateQrCode(Livraison $livraison): Response
     {
-        $url = 'http://192.168.201.161:8000/livraison/' . $livraison->getId() . '/confirmer/destinataire';
+        $url = 'http://192.168.1.17:8000/livraison/' . $livraison->getId() . '/confirmer/destinataire';
 
-        $qrCode = Builder::create()
-        ->writer(new PngWriter())
-        ->data($url)
-        ->encoding(new Encoding('UTF-8'))
-        ->size(200)
-        ->margin(10)
-        ->build();
+        $qrCode = new QrCode($url);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
 
-        return new Response($qrCode->getString(), 200, ['Content-Type' => 'image/png']);
+        return new Response($result->getString(), 200, ['Content-Type' => 'image/png']);
     }
     #[Route('/livraison/{id}/qr/expediteur', name: 'livraison_qr_expediteur')]
     public function generateQrCode2(Livraison $livraison): Response
     {
-        $url = 'http://192.168.201.161:8000/livraison/' . $livraison->getId() . '/confirmer/expediteur';
+        $url = 'http://192.168.1.17:8000/livraison/' . $livraison->getId() . '/confirmer/expediteur';
 
-        $qrCode = Builder::create()
-            ->writer(new PngWriter())
-            ->data($url)
-            ->encoding(new Encoding('UTF-8'))
-            ->size(200)
-            ->margin(10)
-            ->build();
+        $qrCode = new QrCode($url);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
 
-        return new Response($qrCode->getString(), 200, ['Content-Type' => 'image/png']);
+        return new Response($result->getString(), 200, ['Content-Type' => 'image/png']);
     }
     
     #[Route('/livraison/{id}/confirmer/expediteur', name: 'livraison_confirmer_expediteur', methods: ['GET'])]
