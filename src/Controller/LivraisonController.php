@@ -8,6 +8,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use App\Repository\LivraisonRepository;
 use App\Repository\LivreurRepository;
 use App\Repository\UserRepository;
+use App\Service\ETAService;
 use Doctrine\ORM\EntityManagerInterface;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -32,16 +33,34 @@ class LivraisonController extends AbstractController
 
 
     #[Route('/dashboard/client/livraison', name: 'livraison_list')]
-    public function listLivraisons(LivraisonRepository $livraisonRepository): Response
+    public function listLivraisons(LivraisonRepository $livraisonRepository,ETAService $etaService): Response
     {
         $user = $this->getUser();
 
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
+        
+
 
         $livraisons = $livraisonRepository->findByUser($user);
-
+        foreach ($livraisons as $livraison) {
+            $latExpediteur = $livraison->getLocalisationExpediteurLat();
+            $lonExpediteur = $livraison->getLocalisationExpediteurLng();
+            $latDestinataire = $livraison->getLocalisationDestinataireLat();
+            $lonDestinataire = $livraison->getLocalisationDestinataireLng();
+        
+            // Vérifier si une valeur est nulle
+            if ($latExpediteur === null || $lonExpediteur === null || $latDestinataire === null || $lonDestinataire === null) {
+                continue; // Ignore cette livraison
+            }
+        
+            // Calcul de l'ETA
+            $eta = $etaService->calculerETA($latExpediteur, $lonExpediteur, $latDestinataire, $lonDestinataire);
+        
+            // Ajouter l'ETA à l'objet livraison
+            $livraison->eta = $eta;
+        }
         return $this->render('livraison/livraison_liste_user.html.twig', [
             'livraisons' => $livraisons,
         ]);

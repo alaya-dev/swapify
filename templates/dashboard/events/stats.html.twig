@@ -1,8 +1,8 @@
-{% extends 'dashBord_user.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Éligibilité aux Certificats{% endblock %}
 
-{% block content %}
+{% block body %}
 <div class="container mx-auto px-4 py-6">
     {% if participationStats is empty %}
         <!-- Info Alert for No Events -->

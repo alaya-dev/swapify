@@ -1,11 +1,27 @@
-{% extends 'dashBord_user.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block content %}
+{% block body %}
+
+
+    <section class="relative h-64 flex items-center justify-center bg-cover bg-center" style="background-image: url('{{ asset('assets/images/blogPage.jpg') }}')">
+        <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+        <div class="relative text-center text-white">
+            <h1 class="text-3xl font-bold">Tous les Souks</h1>
+            <nav class="text-sm mt-2">
+                <a href="{{ path('app_home') }}" class="hover:underline text-gray-200">Accueil</a>
+                <span class="mx-2 text-gray-300">»</span>
+                <span class="text-gray-300">souks</span>
+            </nav>
+        </div>
+    </section>
+
+
     <div class="w-full overflow-hidden border-t flex flex-col">
         <main class="w-full flex-grow p-6">
             <p class="text-xl pb-6 flex items-center">
                 <i class="fas fa-store mr-3"></i> Souk
             </p>
+
             
             {% if souks  is not empty %}
                 {% for souk in souks %}
