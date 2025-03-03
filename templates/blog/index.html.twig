@@ -173,7 +173,7 @@
                     <p class="text-gray-300 mb-6">Partagez vos idées, participez aux discussions, et restez informé des dernières tendances.</p>
                     <div class="flex space-x-4">
                       {% if app.user is defined %}
-                        <a href="{{path('app_register')}}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">Postuler votre article dés maintnant</a>
+                        <a href="{{path('app_blog_new')}}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">Postuler votre article dés maintnant</a>
                         <a href="{{path('app_home')}}#contact" class="bg-transparent border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">En savoir plus</a>
                       {% else %}
                         <a href="{{path('app_blog_new')}}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">Créer un compte</a>

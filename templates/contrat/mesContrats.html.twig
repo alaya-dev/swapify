@@ -1,11 +1,11 @@
 {% set template_to_extend = 'include.html.twig' %}
 {% if 'ROLE_CLIENT' in app.user.getRoles() %}
-    {% set template_to_extend = 'dashBord_user.html.twig' %}
+    {% set template_to_extend = 'base.html.twig' %}
 {% endif %}
 
 {% extends template_to_extend %}
 
-{% block content %}
+{% block body %}
 
 
     <style>

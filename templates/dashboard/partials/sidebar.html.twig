@@ -1,208 +1,236 @@
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<aside class="relative bg-gray-800 h-screen w-[350px] hidden sm:block shadow-xl">
-    <div class="p-6">
-        <a href="{{ path('app_dashboard_client') }}" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">WELCOME</a>
+
+<!-- Sidebar Toggle Button -->
+<button id="sidebar-toggle" class="fixed top-4 left-4 z-50 p-2 bg-gray-800 text-white rounded-lg shadow-lg sm:hidden">
+  <i id="sidebar-open-icon" class="fas fa-bars"></i>
+  <i id="sidebar-close-icon" class="fas fa-times hidden"></i>
+  BUTTON
+</button>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="relative bg-gray-800 h-screen w-[350px] shadow-xl transform transition-transform duration-200 ease-in-out sm:translate-x-0 -translate-x-full">
+  <div class="p-6">
+    <a href="{{ path('app_dashboard_client') }}" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">WELCOME</a>
+  </div>
+  <nav class="text-white text-base font-semibold pt-3">
+    <!-- Dashboard Link -->
+    <a href="{{ path('app_dashboard_client') }}" data-turbo="false" 
+       class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
+      <i class="fas fa-user mr-3"></i>
+      Profile
+    </a>
+    <a href="{{ path('check_certificate_eligibility') }}" data-turbo="false" 
+       class="flex items-center py-4 pl-6 nav-item no-underline text-white transition-colors duration-200">
+      <i class="fas fa-chart-line mr-3"></i>
+      Statistique
+    </a>
+
+    <!-- Souk Link -->
+    <a href="{{path('souk')}}" data-turbo="false" 
+       class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'souk' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
+      <i class="fas fa-store mr-3"></i>
+      Souk
+    </a>
+
+    <!-- Produits Dropdown -->
+    <div x-data="{ isOpen: false }" class="w-full">
+      <button @click="isOpen = !isOpen" 
+              class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169] transition-colors duration-200">
+        <div class="flex items-center">
+          <i class="fas fa-product-hunt mr-3"></i>
+          Produits
+        </div>
+        <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+           :class="{'rotate-180': isOpen}"></i>
+      </button>
+      <div x-show="isOpen" 
+           x-transition:enter="transition ease-out duration-200" 
+           x-transition:enter-start="opacity-0 transform -translate-y-2" 
+           x-transition:enter-end="opacity-100 transform translate-y-0" 
+           x-transition:leave="transition ease-in duration-200" 
+           x-transition:leave-start="opacity-100 transform translate-y-0" 
+           x-transition:leave-end="opacity-0 transform -translate-y-2" 
+           class="bg-gray-700">
+        <a href="{{path('app_product_new')}}" data-turbo="false"
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          ajouter produits
+        </a>
+      </div>
     </div>
-    <nav class="text-white text-base font-semibold pt-3">
-        <!-- Dashboard Link -->
-        <a href="{{ path('app_dashboard_client') }}" data-turbo="false" 
-           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'app_dashboard_client' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
-            <i class="fas fa-user mr-3"></i>
-            Profile
-        </a>
-        <a href="{{ path('check_certificate_eligibility') }}" data-turbo="false" 
-           class="flex items-center py-4 pl-6 nav-item no-underline text-white transition-colors duration-200">
-            <i class="fas fa-chart-line mr-3"></i>
-            Statistique
-        </a>
 
-        <!-- Souk Link -->
-        <a href="{{path('souk')}}" data-turbo="false" 
-           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'souk' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
-            <i class="fas fa-store mr-3"></i>
-            Souk
-        </a>
-
-         <div x-data="{ isOpen: false }" class="w-full">
-            <button @click="isOpen = !isOpen" 
-                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
-                <div class="flex items-center">
-                    <i class="fas fa-product-hunt mr-3"></i>
-                    Produits
-                </div>
-                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
-                   :class="{'rotate-180': isOpen}"></i>
-            </button>
-            <div x-show="isOpen" 
-                 x-transition:enter="transition ease-out duration-200" 
-                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
-                 x-transition:enter-end="opacity-100 transform translate-y-0" 
-                 x-transition:leave="transition ease-in duration-200" 
-                 x-transition:leave-start="opacity-100 transform translate-y-0" 
-                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
-                 class="bg-gray-700">
-                <a href="{{path('app_product_new')}}"  data-turbo="false"
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                    ajouter produits
-                </a>
-            </div>
+    <!-- Annonce Dropdown -->
+    <div x-data="{ isOpen: false }" class="w-full">
+      <button @click="isOpen = !isOpen" 
+              class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169] transition-colors duration-200">
+        <div class="flex items-center">
+          <i class="fa-solid fa-scroll mr-3"></i>
+          Annonce
         </div>
-
-        <!-- Annonce Dropdown -->
-        <div x-data="{ isOpen: false }" class="w-full" >
-            <button @click="isOpen = !isOpen" 
-                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
-                <div class="flex items-center" >
-                    <i class="fa-solid fa-scroll mr-3"></i>
-                                        Annonce
-                </div>
-                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
-                   :class="{'rotate-180': isOpen}"></i>
-            </button>
-            <div x-show="isOpen" 
-                 x-transition:enter="transition ease-out duration-200" 
-                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
-                 x-transition:enter-end="opacity-100 transform translate-y-0" 
-                 x-transition:leave="transition ease-in duration-200" 
-                 x-transition:leave-start="opacity-100 transform translate-y-0" 
-                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
-                 class="bg-gray-700" >
-                <a href="{{path('mesAnnonces')}}"  data-turbo="false"
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                    mes annonces
-                </a>
-                <a href="{{path('wishlist_show')}}" 
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                    mes favoris
-                </a>
-                <a href="{{path('app_annonce_new')}}" data-turbo="false"
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                    ajouter annonce
-                </a>
-            </div>
-        </div>
-
-        <!-- Blog Link -->
-        <div x-data="{ isOpen: false }" class="w-full">
-            <button @click="isOpen = !isOpen" 
-                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
-                <div class="flex items-center">
-                    <i class="fa-solid fa-blog mr-3"></i>
-                    Blogs
-                </div>
-                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
-                   :class="{'rotate-180': isOpen}"></i>
-            </button>
-            <div x-show="isOpen" 
-                 x-transition:enter="transition ease-out duration-200" 
-                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
-                 x-transition:enter-end="opacity-100 transform translate-y-0" 
-                 x-transition:leave="transition ease-in duration-200" 
-                 x-transition:leave-start="opacity-100 transform translate-y-0" 
-                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
-                 class="bg-gray-700">
-                <a href="{{path('app_blog_all')}}"  data-turbo="false"
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                    Mes Blogs
-                </a>
-                <a href="{{path('app_blog_new')}}" data-turbo="false" 
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                    Créer Blog 
-                </a>
-            </div>
-        </div>
-
-        <!-- Event Dropdown -->
-        <div x-data="{ isOpen: false }" class="w-full">
-            <button @click="isOpen = !isOpen" 
-                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169] transition-colors duration-200">
-                <div class="flex items-center">
-                    <i class="fas fa-calendar-alt mr-3"></i>
-                    Événement
-                </div>
-                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
-                   :class="{'rotate-180': isOpen}"></i>
-            </button>
-            <div x-show="isOpen" 
-                 x-transition:enter="transition ease-out duration-200" 
-                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
-                 x-transition:enter-end="opacity-100 transform translate-y-0" 
-                 x-transition:leave="transition ease-in duration-200" 
-                 x-transition:leave-start="opacity-100 transform translate-y-0" 
-                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
-                 class="bg-gray-700">
-                <a href="{{path('my_events')}}" data-turbo="false"
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                    mes evenements
-                </a>
-                <a href="{{path('app_event_new')}}" data-turbo="false"
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 ">
-                    ajouter evenements
-                </a>
-            </div>
-        </div>
-
-        <!-- Livraison Link -->
-        <a href="{{ path('livraison_list') }}" data-turbo="false" 
-           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'livraison' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
-            <i class="fas fa-shipping-fast mr-3"></i>
-            Livraison
+        <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+           :class="{'rotate-180': isOpen}"></i>
+      </button>
+      <div x-show="isOpen" 
+           x-transition:enter="transition ease-out duration-200" 
+           x-transition:enter-start="opacity-0 transform -translate-y-2" 
+           x-transition:enter-end="opacity-100 transform translate-y-0" 
+           x-transition:leave="transition ease-in duration-200" 
+           x-transition:leave-start="opacity-100 transform translate-y-0" 
+           x-transition:leave-end="opacity-0 transform -translate-y-2" 
+           class="bg-gray-700">
+        <a href="{{path('mesAnnonces')}}" data-turbo="false"
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          mes annonces
         </a>
-
-        <!-- Conversation Link -->
-        {% set conversations = conversations|default([]) %}
-        {% if conversations|filter(x => x is not empty)|length > 0 %}
-        <a href="{{ path('conversation') }}" data-turbo="false" 
-           class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'conversation' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
-            <i class="fa fa-comments mr-3" aria-hidden="true"></i>
-            Conversation
+        <a href="{{path('wishlist_show')}}" 
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          mes favoris
         </a>
-        {% endif %}
+        <a href="{{path('app_annonce_new')}}" data-turbo="false"
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          ajouter annonce
+        </a>
+      </div>
+    </div>
 
-
-         <!-- Annonce Dropdown -->
-        <div x-data="{ isOpen: false }" class="w-full" >
-            <button @click="isOpen = !isOpen" 
-                    class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169]  transition-colors duration-200">
-                <div class="flex items-center" >
-                    <i class="fa-solid fa-file-contract mr-3"></i>
-                    Contrats
-                </div>
-                <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
-                   :class="{'rotate-180': isOpen}"></i>
-            </button>
-            <div x-show="isOpen" 
-                 x-transition:enter="transition ease-out duration-200" 
-                 x-transition:enter-start="opacity-0 transform -translate-y-2" 
-                 x-transition:enter-end="opacity-100 transform translate-y-0" 
-                 x-transition:leave="transition ease-in duration-200" 
-                 x-transition:leave-start="opacity-100 transform translate-y-0" 
-                 x-transition:leave-end="opacity-0 transform -translate-y-2" 
-                 class="bg-gray-700" >
-                    <a href="{{path('app_mesContratsPret')}}" 
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                       mes contrats prêt 
-                </a>
-                <a href="{{path('app_mesContratsAsignee')}}" 
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                       contrat à signée
-                </a>
-                       <a href="{{path('app_mesContratsSigned')}}" 
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                       contrat déja signée
-                </a>
-        
-        
-                <a href="{{path('app_contrat_new')}}" data-turbo="false"
-                   class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
-                    crée contrat
-                </a>
-            </div>
+    <!-- Blog Dropdown -->
+    <div x-data="{ isOpen: false }" class="w-full">
+      <button @click="isOpen = !isOpen" 
+              class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169] transition-colors duration-200">
+        <div class="flex items-center">
+          <i class="fa-solid fa-blog mr-3"></i>
+          Blogs
         </div>
+        <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+           :class="{'rotate-180': isOpen}"></i>
+      </button>
+      <div x-show="isOpen" 
+           x-transition:enter="transition ease-out duration-200" 
+           x-transition:enter-start="opacity-0 transform -translate-y-2" 
+           x-transition:enter-end="opacity-100 transform translate-y-0" 
+           x-transition:leave="transition ease-in duration-200" 
+           x-transition:leave-start="opacity-100 transform translate-y-0" 
+           x-transition:leave-end="opacity-0 transform -translate-y-2" 
+           class="bg-gray-700">
+        <a href="{{path('app_blog_all')}}" data-turbo="false"
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          Mes Blogs
+        </a>
+        <a href="{{path('app_blog_new')}}" data-turbo="false" 
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          Créer Blog 
+        </a>
+      </div>
+    </div>
 
-    </nav>
+    <!-- Event Dropdown -->
+    <div x-data="{ isOpen: false }" class="w-full">
+      <button @click="isOpen = !isOpen" 
+              class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169] transition-colors duration-200">
+        <div class="flex items-center">
+          <i class="fas fa-calendar-alt mr-3"></i>
+          Événement
+        </div>
+        <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+           :class="{'rotate-180': isOpen}"></i>
+      </button>
+      <div x-show="isOpen" 
+           x-transition:enter="transition ease-out duration-200" 
+           x-transition:enter-start="opacity-0 transform -translate-y-2" 
+           x-transition:enter-end="opacity-100 transform translate-y-0" 
+           x-transition:leave="transition ease-in duration-200" 
+           x-transition:leave-start="opacity-100 transform translate-y-0" 
+           x-transition:leave-end="opacity-0 transform -translate-y-2" 
+           class="bg-gray-700">
+        <a href="{{path('my_events')}}" data-turbo="false"
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          mes evenements
+        </a>
+        <a href="{{path('app_event_new')}}" data-turbo="false"
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200">
+          ajouter evenements
+        </a>
+      </div>
+    </div>
+
+    <!-- Livraison Link -->
+    <a href="{{ path('livraison_list') }}" data-turbo="false" 
+       class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'livraison' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
+      <i class="fas fa-shipping-fast mr-3"></i>
+      Livraison
+    </a>
+
+    <!-- Conversation Link -->
+    {% set conversations = conversations|default([]) %}
+    {% if conversations|filter(x => x is not empty)|length > 0 %}
+    <a href="{{ path('conversation') }}" data-turbo="false" 
+       class="flex items-center py-4 pl-6 nav-item no-underline text-white {{ app.request.attributes.get('_route') == 'conversation' ? 'bg-green-700' : 'hover:bg-green-700' }} transition-colors duration-200">
+      <i class="fa fa-comments mr-3" aria-hidden="true"></i>
+      Conversation
+    </a>
+    {% endif %}
+
+    <!-- Contrats Dropdown -->
+    <div x-data="{ isOpen: false }" class="w-full">
+      <button @click="isOpen = !isOpen" 
+              class="w-full flex items-center justify-between py-4 pl-6 hover:bg-[#38a169] transition-colors duration-200">
+        <div class="flex items-center">
+          <i class="fa-solid fa-file-contract mr-3"></i>
+          Contrats
+        </div>
+        <i class="fas fa-chevron-down mr-4 transform transition-transform duration-200" 
+           :class="{'rotate-180': isOpen}"></i>
+      </button>
+      <div x-show="isOpen" 
+           x-transition:enter="transition ease-out duration-200" 
+           x-transition:enter-start="opacity-0 transform -translate-y-2" 
+           x-transition:enter-end="opacity-100 transform translate-y-0" 
+           x-transition:leave="transition ease-in duration-200" 
+           x-transition:leave-start="opacity-100 transform translate-y-0" 
+           x-transition:leave-end="opacity-0 transform -translate-y-2" 
+           class="bg-gray-700">
+        <a href="{{path('app_mesContratsPret')}}" 
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          mes contrats prêt 
+        </a>
+        <a href="{{path('app_mesContratsAsignee')}}" 
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          contrat à signée
+        </a>
+        <a href="{{path('app_mesContratsSigned')}}" 
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          contrat déja signée
+        </a>
+        <a href="{{path('app_contrat_new')}}" data-turbo="false"
+           class="block py-3 pl-16 hover:bg-green-800 transition-colors duration-200 no-underline text-white">
+          crée contrat
+        </a>
+      </div>
+    </div>
+  </nav>
 </aside>
 
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("Script Loaded"); // Debugging
+
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebar-toggle");
+    const sidebarOpenIcon = document.getElementById("sidebar-open-icon");
+    const sidebarCloseIcon = document.getElementById("sidebar-close-icon");
+
+    if (sidebar && sidebarToggle) {
+      sidebarToggle.addEventListener("click", function () {
+        console.log("Button Clicked"); // Debugging
+        sidebar.classList.toggle("-translate-x-full");
+        sidebarOpenIcon.classList.toggle("hidden");
+        sidebarCloseIcon.classList.toggle("hidden");
+      });
+    } else {
+      console.error("Sidebar or Toggle Button not found!");
+    }
+  });
+</script>
