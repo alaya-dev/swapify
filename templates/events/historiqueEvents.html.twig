@@ -101,7 +101,6 @@
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col" class="text-center">Image</th>
                             <th scope="col" class="text-center">Titre</th>
                             <th scope="col" class="text-center">Description</th>
                             <th scope="col" class="text-center">État</th>
@@ -110,9 +109,7 @@
                     <tbody>
                         {% for event in events %}
                             <tr>
-                                <td class="text-center">
-                                    <img src="{{ asset('uploads/images/' ~ event.image) }}" alt="event Image" class="img-thumbnail" width="100">
-                                </td>
+                             
                                 <td class="text-center">{{ event.title }}</td>
                                 <td class="text-center">{{ event.description }}</td>
                                 <td class="text-center">
