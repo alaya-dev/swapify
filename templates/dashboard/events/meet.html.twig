@@ -208,9 +208,12 @@
         const submitButton = document.getElementById("submitAttendanceCode");
         
         // Show modal 15 minutes before the session ends
-        setTimeout(() => {
-            modal.style.display = "flex";
-        }, {{ (remainingMinutes-15) * 60 * 1000 }}); // Convert minutes to milliseconds
+        if (!isOrganizer) {
+            setTimeout(() => {
+                modal.style.display = "flex";
+            }, {{ (remainingMinutes - 15) * 60 * 1000 }}); // Convert minutes to milliseconds
+        }
+
 
         closeModal.addEventListener("click", () => {
             modal.style.display = "none";

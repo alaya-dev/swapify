@@ -46,9 +46,39 @@ final class EventRegistationController extends AbstractController
     {
         $user = $this->getUser();
         $sessions = $event->getSessions();
+        $sessionStatuses = [];
+        
+        foreach ($sessions as $session) {
+
+            $now = new \DateTime('now', new \DateTimeZone('UTC'));
+            $now->modify('+1 hour');
+            $startHour =$session->getStartHour();
+            
+            $endHour =$session->getEndHour();
+            $status="";
+
+        
+            if ($session->getTypeSession() === "En ligne") {
+                if ($startHour <= $now && $endHour >= $now) {
+                    
+                    $status = 'session en cours';
+                } elseif ($startHour > $now) {
+                    $status = 'Session pas encore commencée ';
+                   
+                } else {
+                    $status = 'Session déjà écoulée';
+                    
+                }
+            } else {
+                $status = 'Session présentiel';
+            }
+
+            $sessionStatuses[$session->getId()] = $status;
+        }
         return $this->render('Dashboard/events/planning.html.twig', [
             'sessions' => $sessions,
             'user' => $user,
+            'sessionStatuses'=>$sessionStatuses,
         ]);
     }
 }

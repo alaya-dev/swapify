@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="w-full overflow-hidden border-t flex flex-col">
+<div class="w-full overflow-hidden border-t flex flex-col p-5">
     <main class="w-full flex-grow p-6">
         <p class="text-xl pb-6 flex items-center">
             <i class="fas fa-calendar-alt mr-3"></i><a href="{{path('my_events')}}">Mes Évenements</a>/ Ajouter Événement
@@ -92,7 +92,7 @@
             </div>
         {% endfor %}
     </div>
-    <button type="button" class="mt-4 w-full bg-blue-50 text-gray-700 py-2 rounded add-session-btn border border-2 border-dashed border-blue-500 flex items-center justify-center">
+    <button type="button" class="mt-4 w-full bg-blue-50 text-gray-700 py-2 rounded add-session-btn border border-2 border-dashed border-blue-500 flex items-center justify-center" >
         <i class="fas fa-plus mr-3"></i> Ajouter une session
     </button>
 </div>
