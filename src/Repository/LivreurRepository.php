@@ -40,4 +40,14 @@ class LivreurRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function searchLivreurs(?string $query): array
+{
+    return $this->createQueryBuilder('l')
+        ->where('l.nom LIKE :query')
+        ->orWhere('l.societe LIKE :query')
+        ->orWhere('l.contact LIKE :query')
+        ->setParameter('query', '%' . $query . '%')
+        ->getQuery()
+        ->getResult();
+}
 }
