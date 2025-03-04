@@ -70,7 +70,7 @@
                             {% if sessionStatuses[session.id] == 'session en cours' %}
                                 <div class="session-action">
                                     <span class="live-icon"></span>
-                                    <a href="{{ path('join_online_sessionn', { id: session.id }) }}" class="session-action hover-only text-red-600 hover:text-red-800">Session en cours :Join meeting</a>
+                                    <a href="{{ path('join_online_sessionn', { id: session.id }) }}" class="session-action  text-red-600 hover:text-red-800">Session en cours :Join meeting</a>
                                 </div>
                             {% elseif sessionStatuses[session.id] == 'Session pas encore commencée ' %}
                                 <span class="text-muted">Session pas encore commencée</span>
