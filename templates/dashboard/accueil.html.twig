@@ -52,6 +52,8 @@
         </div>
     </div>
 
+    
+
     <div class="col-md-4">
         <div class="card text-dark bg-secondary-subtle mb-3">
             <div class="card-header">Clients Non Bannis</div>
@@ -62,22 +64,18 @@
     </div>
 </div>
 
-    <!-- Bar Chart and Other Stats -->
+    <!-- Bar Chart légèrement décalé à droite et Pie Chart à droite -->
     <div class="row mt-4">
-        <!-- Bar Chart Column -->
-        <div class="col-md-6">
-            <canvas id="barChart" class="small-chart"></canvas>
-        </div>
-
-        <!-- Colonne droite : Autres Statistiques (Pie Chart + Infos) -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <!-- Graphique en camembert -->
-                    <div class="d-flex justify-content-center mb-3">
-                        <canvas id="pieChart" style="max-width: 300px;"></canvas>
-                    </div>
-
+        <div class="col-12">
+            <div class="d-flex justify-content-start align-items-center">
+                <!-- Bar Chart (Annonces) avec un léger décalage à droite -->
+                <div style="margin-left: 20px;">
+                    <canvas id="barChart" class="small-chart"></canvas>
+                </div>
+                <!-- Pie Chart (Blogs) avec une marge à gauche -->
+                <div style="margin-left: 170px;">
+                    <canvas id="blogPieChart" style="max-width: 300px;"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -87,48 +85,58 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Bar Chart
-        const ctxBar = document.getElementById('barChart').getContext('2d');
-        const chartData = {{ chartData|json_encode|raw }};
-        const chartOptions = {{ chartOptions|json_encode|raw }};
-
-        new Chart(ctxBar, {
-            type: 'bar',
-            data: chartData,
-            options: chartOptions
-        });
-
-        // Pie Chart
-        const ctxPie = document.getElementById('pieChart').getContext('2d');
-        const pieData = {
-            labels: chartData.labels, // Utilisez les mêmes étiquettes que le bar chart
-            datasets: [{
-                data: chartData.datasets[0].data, // Utilisez les mêmes données que le bar chart
-                backgroundColor: [
-                    '#85d6ff', // info (bleu clair)
-                    '#a3d8ff', // primary (bleu clair)
-                    '#b8f2b8', // success (vert clair)
-                    '#ff9a9a', // danger (rouge clair)
-                    '#d3d3d3', // dark (gris clair)
-                    '#ffffff'  // secondary (gris plus clair)
-                ]
-            }]
-        };
-
-        new Chart(ctxPie, {
-            type: 'pie',
-            data: pieData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom', // Position de la légende
-                    }
-                }
+    // Bar Chart - Annonces
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    const chartData = {
+        labels: ['Acceptées', 'Rejetées', 'En Attente'],  // Labels pour les annonces
+        datasets: [
+            {
+                label: 'Annonces',
+                data: [{{ acceptedAnnonces }}, {{ rejectedAnnonces }}, {{ pendingAnnonces }}], // Statistiques des annonces
+                backgroundColor: ['#ffcc80', '#ffb3b3', '#99ccff'],
+                borderColor: ['#ffcc80', '#ffb3b3', '#99ccff'],
+                borderWidth: 1,
             }
-        });
+        ]
+    };
+
+    const chartOptions = {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    };
+
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: chartData,
+        options: chartOptions
     });
+
+        // Pie Chart - Blogs
+            const ctxBlogPie = document.getElementById('blogPieChart').getContext('2d');
+            const blogPieData = {
+                labels: ['Acceptées', 'Rejetées', 'En Attente'],
+                datasets: [{
+                    label: 'Blogs',
+                    data: [{{ acceptedBlogs|default(0) }}, {{ rejectedBlogs|default(0) }}, {{ pendingBlogs|default(0) }}],
+                    backgroundColor: ['#80d8ff', '#ff80bf', '#ccff99'],
+                    borderColor: ['#80d8ff', '#ff80bf', '#ccff99'],
+                    borderWidth: 1
+                }]
+            };
+            new Chart(ctxBlogPie, {
+                type: 'pie',
+                data: blogPieData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        });
 </script>
 
 <!-- Custom CSS -->

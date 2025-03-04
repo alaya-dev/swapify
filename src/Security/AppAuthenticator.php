@@ -90,7 +90,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             $this->security->logout(false);
 
             // Ajoute un message flash pour l'alerte
-            $request->getSession()->getFlashBag()->add('error', 'Votre compte est banni.');
+            $request->getSession()->getFlashBag()->add('error', 'Votre compte est banni,vous recevez un mail lorsque votre compte sera actif.');
 
             // Redirige vers la page de connexion
             return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));

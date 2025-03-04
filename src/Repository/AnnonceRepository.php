@@ -136,6 +136,37 @@ public function findAnnoncesByUsrId($idU): array
         ->getResult();
 }
 
+// Méthode pour compter les annonces acceptées
+public function countAcceptedAnnonces(): int
+{
+    return (int) $this->createQueryBuilder('a')
+        ->select('count(a.id)')
+        ->where('a.statut = :statut')
+        ->setParameter('statut', 'Acceptée') // Modifier selon ton statut
+        ->getQuery()
+        ->getSingleScalarResult();
+}
 
+// Méthode pour compter les annonces rejetées
+public function countRejectedAnnonces(): int
+{
+    return (int) $this->createQueryBuilder('a')
+        ->select('count(a.id)')
+        ->where('a.statut = :statut')
+        ->setParameter('statut', 'Rejetée') // Modifier selon ton statut
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+// Méthode pour compter les annonces en attente
+public function countPendingAnnonces(): int
+{
+    return (int) $this->createQueryBuilder('a')
+        ->select('count(a.id)')
+        ->where('a.statut = :statut')
+        ->setParameter('statut', 'En Attente') // Modifier selon ton statut
+        ->getQuery()
+        ->getSingleScalarResult();
+}
 
 }
