@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
-use App\Service\mailerMailJetService;
+use App\Service\MailerMailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,10 +28,10 @@ class ResetPasswordController extends AbstractController
 
     private ResetPasswordHelperInterface $resetPasswordHelper;
     private EntityManagerInterface $entityManager;
-    private mailerMailJetService $mailerMailJetService;
+    private MailerMailJetService $mailerMailJetService;
 
 
-    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, EntityManagerInterface $entityManager,        mailerMailJetService $mailerMailJetService
+    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, EntityManagerInterface $entityManager,        MailerMailJetService $mailerMailJetService
     )
     {
         $this->resetPasswordHelper = $resetPasswordHelper;
@@ -44,7 +44,7 @@ class ResetPasswordController extends AbstractController
      * Display & process form to request a password reset.
      */
     #[Route('', name: 'app_forgot_password_request')]
-    public function request(Request $request, mailerMailJetService $mj): Response
+    public function request(Request $request, MailerMailJetService $mj): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
@@ -194,7 +194,7 @@ class ResetPasswordController extends AbstractController
     
       
     //new logic with mailJet par Karim.M
-    private function processSendingPasswordResetEmail(string $emailFormData, mailerMailJetService $mailer): RedirectResponse
+    private function processSendingPasswordResetEmail(string $emailFormData, MailerMailJetService $mailer): RedirectResponse
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
@@ -224,7 +224,7 @@ class ResetPasswordController extends AbstractController
         );
     
         // Ensure we use MailJet instead of Symfony Mailer
-        if ($mailer instanceof \App\Service\mailerMailJetService) {
+        if ($mailer instanceof \App\Service\MailerMailJetService) {
             $mailer->sendEmail($user->getEmail(), $subject, $content);
         } else {
             throw new \LogicException('Expected mailerMailJetService as MailerInterface implementation.');
