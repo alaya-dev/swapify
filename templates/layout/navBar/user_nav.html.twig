@@ -9,27 +9,27 @@
         <img class="w-8 h-8 rounded-full" src="{{ asset('assets/images/contact.png') }}" alt="user photo">
       </button>
       <!-- Dropdown menu -->
-      <div class="z-100 absolute top-[18px] right-[18px] w-64 hidden my-4 text-base list-none bg-white divide-y divide-gray-100  rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown" style="z-index: 100;"> 
+      <div class="z-999 absolute top-[18px] right-[18px] w-64 hidden my-4 text-white list-none bg-gray-800 divide-y divide-gray-100  rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown" style="z-index: 100;"> 
         <div class="px-4 py-3">
-          <span class="block text-sm text-gray-900 dark:text-white">{{ app.user.nom}}</span>
-          <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{app.user.email}}</span>
+          <span class="block text-sm text-white">{{ app.user.nom}} {{app.user.prenom}}</span>
+          <span class="block text-sm  text-white truncate dark:text-gray-400">{{app.user.email}}</span>
         </div>
         <ul class="py-2" aria-labelledby="user-menu-button">
-          <li>
+          <li class="text-white">
 
             {% if 'ROLE_ADMIN' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+              <a href="{{ path('app_dashboard') }}" data-turbo="false" class=" block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Profile</a>
             {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard') }}" data-turbo="false"  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+              <a href="{{ path('app_dashboard') }}" data-turbo="false"  class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Profile</a>
             {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+              <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Profile</a>
             {% endif %}
           </li>
           <li>
-            <a href="{{path('mesAnnonces')}}"  data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-black-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"> Mes Annonces</a>
+            <a href="{{path('mesAnnonces')}}"  data-turbo="false" class=" block px-4 py-2 text-sm text-white  hover:bg-gray-500   "> Mes Annonces</a>
           </li>
           <li class="relative group">
-            <a href="{{ path('wishlist_show') }}" data-turbo="false" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-black-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white justify-between items-center">
+            <a href="{{ path('wishlist_show') }}" data-turbo="false" class="flex px-4 py-2 text-sm text-white  hover:bg-gray-500    justify-between items-center">
               favoris annonce
               <span class="ml-2 bg-teal-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
                 {{ app.user ? app.user.getFavoris().count : 0 }}
@@ -38,39 +38,39 @@
           </li>
 
        <li>
-            <a href="{{path('app_blog_all')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Blogs</a>
+            <a href="{{path('app_blog_all')}}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Mes Blogs</a>
           </li>
 
           <li>
-            <a href="{{path('my_events')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Mes Evenements</a>
+            <a href="{{path('my_events')}}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Mes Evenements</a>
           </li>
   <li class="relative">
     <a href="#" id="dropdownToggle" 
-       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-black">
+       class="block px-4 py-2 text-sm text-white hover:bg-gray-500  dark:hover:text-black">
         Mes Contrats ▼
     </a>
     <ul id="dropdownMenu" class="absolute left-0 hidden w-48 bg-white shadow-md">
         <li>
             <a href="{{ path('app_mesContratsPret') }}" 
-               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-gray-700 hover:text-black">
+               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-white hover:text-black">
                 Mes contrats prêt 
             </a>
         </li>
         <li>
             <a href="{{ path('app_mesContratsAsignee') }}" 
-               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-gray-700 hover:text-black">
+               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-white hover:text-black">
                 Contrat à signer
             </a>
         </li>
         <li>
             <a href="{{ path('app_mesContratsSigned') }}" 
-               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-gray-700 hover:text-black">
+               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-white hover:text-black">
                 Contrat déjà signé
             </a>
         </li>
         <li>
             <a href="{{ path('app_contrat_new') }}" data-turbo="false"
-               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-gray-700 hover:text-black">
+               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-white hover:text-black">
                 Créer contrat
             </a>
         </li>
@@ -98,18 +98,18 @@
 
 
            <li>
-            <a href="{{ path('livraison_list') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Livraisons</a>
+            <a href="{{ path('livraison_list') }}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Livraisons</a>
           </li>
 
              <li>
-         <a href="{{ path('conversation') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Conversations</a>
+         <a href="{{ path('conversation') }}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Conversations</a>
        </li>
          
            <li>
-            <a href="{{path('app_reclamation_new')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Envoyer réclamation</a>
+            <a href="{{path('app_reclamation_new')}}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Envoyer réclamation</a>
           </li>
           <li>
-            <a href="/logout" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
+            <a href="/logout" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Logout</a>
           </li>
         </ul>
       </div>

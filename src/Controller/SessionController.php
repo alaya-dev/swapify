@@ -160,7 +160,7 @@ private function scheduleAttendanceEmail(Session $session,Attendance $attendance
         </div>
     </body>
     </html>';
-            $this->mailerService->sendEmail("alouioussema697@gmail.com","Code d'attendance pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
+            $this->mailerService->sendEmail($user->getEmail(),"Code d'attendance pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
            
         }
     }
@@ -173,7 +173,12 @@ private function scheduleAttendanceEmail(Session $session,Attendance $attendance
             'event' => $session->getEvent()
         ]);
 
-        foreach ($participantEvents as $participantEvent) {
+        if (empty($participantEvents)) {
+            $this->addFlash('error', 'No participants found for this session.');
+            
+        }
+        else {
+             foreach ($participantEvents as $participantEvent) {
 
             $htmlContent='
                 <!DOCTYPE html>
@@ -203,7 +208,7 @@ private function scheduleAttendanceEmail(Session $session,Attendance $attendance
                 <img src="/public/logo.png" alt="Logo" class="logo">
                 <p>Bonjour'  . $participantEvent->getUser()->getNom().' '.$participantEvent->getUser()->getPreNom()  .' ,</p>
                 <p>Voici la localisation pour la session presentiel intitulé <strong> '. $session->getEvent()->getTitle() .' </strong> est :</p>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1635601.6805351204!2d7.74782005625!3d36.80570910000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd346f56c6005d%3A0xc726448e3297a122!2sConference%20Palace!5e0!3m2!1sen!2stn!4v1741032134479!5m2!1sen!2stn" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <p><a href="https://maps.app.goo.gl/6h5EYdcTNJsVCnZg9" target="_blank" style="color:rgb(0, 103, 2); font-weight:bold;">Voir sur Google Maps</a></p>
                 <p>Merci et à bientôt !</p>
             </div>
             <div class="email-footer">
@@ -213,8 +218,12 @@ private function scheduleAttendanceEmail(Session $session,Attendance $attendance
         </div>
     </body>
     </html>';
-            $this->mailerService->sendEmail("alouioussema697@gmail.com","Localisation pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
+            $this->mailerService->sendEmail($participantEvent->getUser()->getEmail(),"Localisation pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
         }
+
+        }
+
+       
         
     }
 #[Route('/session/{id}/join-session', name: 'join_online_sessionn')]
@@ -232,9 +241,9 @@ public function joinSessions(
 
     // Find the participant event record for this user and event
     $participantEvent = $participantEventRepo->findOneBy([
-        'user' => $user,
         'event' => $session->getEvent()
     ]);
+    
 
     if (!$participantEvent && $session->getEvent()->getOrgniser() != $user) {
         throw $this->createNotFoundException('Vous n\'êtes pas inscrit à cet événement.');
@@ -259,7 +268,7 @@ public function joinSessions(
         $entityManager->flush();
     }
 
-    $this->scheduleAttendanceEmail($session,$attendance);
+    
 
     $now = new \DateTime();
     $endHour = $session->getEndHour();
@@ -271,7 +280,7 @@ public function joinSessions(
         $entityManager->persist($session);
         $entityManager->flush();
     }
-
+    $this->scheduleAttendanceEmail($session,$attendance);
     // Pass the VideoSDK API key
     $apiKey = $this->getParameter('videosdk_api_key');
 
@@ -326,10 +335,9 @@ public function sendLocation(
 
     }
     $this->sendLocationEmail($session,$participantEventRepo);
+    $this->addFlash('Success',"localisaion send successfully!");
 
-    
-    // Allow both organizer and participants to join
-    return new Response('localisaion send successfully!');
+    return $this->redirectToRoute('app_event_show',['id' => $session->getEvent()->getId()]);
 }
 
 
