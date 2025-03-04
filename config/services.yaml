@@ -33,6 +33,8 @@ services:
             $attendanceRepository: '@App\Repository\AttendanceRepository'
             $sessionRepository: '@App\Repository\SessionRepository'
             $participantEventRepository: '@App\Repository\ParticipantEventRepository'
+
+    
    
    
     # RecommandationAnnonce service

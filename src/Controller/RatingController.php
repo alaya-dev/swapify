@@ -47,7 +47,7 @@ final class RatingController extends AbstractController
         $em->persist($rating);
         $em->flush();
 
-        $this->addFlash('success', 'Note enregistrée avec succès.');
+        $this->addFlash('success', 'Merci pour votre note.');
         return $this->redirectToRoute('profil_user', ['id' => $idRecepteur]);
     }
 }

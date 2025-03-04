@@ -16,14 +16,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class LivreurController extends AbstractController
 {
     #[Route(name: 'app_livreur_index', methods: ['GET'])]
-    public function index(LivreurRepository $livreurRepository): Response
-    
+    public function index(LivreurRepository $livreurRepository, Request $request): Response
     {
         if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->redirectToRoute('error403'); // Remplace 'app_home' par ta route
+            return $this->redirectToRoute('error403'); 
         }
+    
+        $searchTerm = $request->query->get('search'); 
+        $livreurs = $searchTerm ? $livreurRepository->searchLivreurs($searchTerm) : $livreurRepository->findAll();
+    
         return $this->render('livreur/index.html.twig', [
-            'livreurs' => $livreurRepository->findAll(),
+            'livreurs' => $livreurs,
+            'searchTerm' => $searchTerm, 
         ]);
     }
 
