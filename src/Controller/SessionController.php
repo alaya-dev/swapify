@@ -160,7 +160,7 @@ private function scheduleAttendanceEmail(Session $session,Attendance $attendance
         </div>
     </body>
     </html>';
-            $this->mailerService->sendEmail("alouioussema697@gmail.com","Code d'attendance pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
+            $this->mailerService->sendEmail($user->getEmail() ,"Code d'attendance pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
            
         }
     }
@@ -213,7 +213,7 @@ private function scheduleAttendanceEmail(Session $session,Attendance $attendance
         </div>
     </body>
     </html>';
-            $this->mailerService->sendEmail("alouioussema697@gmail.com","Localisation pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
+            $this->mailerService->sendEmail( $participantEvent->getUser()->getEmail(),"Localisation pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
         }
         
     }

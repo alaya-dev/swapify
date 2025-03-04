@@ -75,6 +75,7 @@
                 const endHour = new Date(td.getAttribute("data-end-hour"));
                 const typeSession = td.getAttribute("data-type-session");
                 const joinUrl = td.getAttribute("data-join-url");
+                console.log(joinUrl);
                 const statusSpan = td.querySelector(".session-status");
                 if (typeSession === "En ligne") {
                     if (startHour <= now && endHour >= now) {

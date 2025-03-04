@@ -40,4 +40,44 @@ class BlogRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
+
+
+
+    
+    // Méthode pour compter les Blogs acceptées
+public function countAcceptedBlogs(): int
+{
+    return (int) $this->createQueryBuilder('a')
+        ->select('count(a.id)')
+        ->where('a.statut = :statut')
+        ->setParameter('statut', 'Acceptée') // Modifier selon ton statut
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+// Méthode pour compter les Blogs rejetées
+public function countRejectedBlogs(): int
+{
+    return (int) $this->createQueryBuilder('a')
+        ->select('count(a.id)')
+        ->where('a.statut = :statut')
+        ->setParameter('statut', 'Rejetée') // Modifier selon ton statut
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+// Méthode pour compter les Blogs en attente
+public function countPendingBlogs(): int
+{
+    return (int) $this->createQueryBuilder('a')
+        ->select('count(a.id)')
+        ->where('a.statut = :statut')
+        ->setParameter('statut', 'enAttente') // Modifier selon ton statut
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+
 }

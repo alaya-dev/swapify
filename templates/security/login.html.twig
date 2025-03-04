@@ -6,10 +6,19 @@
         <h3 class="text-3xl font-semibold text-gray-800 mb-8">
             Connectez-vous sur <span class="font-handwriting text-green-600">SWAPIFY</span>
         </h3>
-        {% for label, messages in app.flashes %}
+      {% for label, messages in app.flashes %}
             {% for message in messages %}
                 <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
-                    {{ message }}
+                    {# Vérifie si le message est un tableau #}
+                    {% if message is iterable %}
+                        {{ message.message }} {# Affiche le message #}
+                        <a href="{{ message.url }}" class="text-blue-600 hover:text-blue-800 underline">
+                            Renvoyez un nouvel email
+                        </a>
+                    {% else %}
+                        {# Si ce n'est pas un tableau, affiche le message normalement #}
+                        {{ message }}
+                    {% endif %}
                 </div>
             {% endfor %}
         {% endfor %}
