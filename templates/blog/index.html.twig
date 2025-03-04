@@ -55,7 +55,7 @@
 
                     <!-- Recent Posts Section -->
                     <div class="">
-                        <h2 class="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-blue-500 pl-4">Articles Récents</h2>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-blue-500 pl-4">Articles</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {% for blog in blogs|slice(1) %}
                                 <div class="rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-shadow duration-300">
@@ -127,7 +127,7 @@
                     <!-- Top Rated Articles -->
                     {% if blogs is defined and blogs|length > 0 %}
                         <div>
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Top Rated Articles</h3>
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Articles Récents</h3>
                             <div class="space-y-4">
                                 {% for blog in blogs|slice(0, 3) %}
                                     <div class="flex items-center gap-3 pb-4 {% if not loop.last %}border-b border-gray-100{% endif %}">
@@ -173,7 +173,7 @@
                     <p class="text-gray-300 mb-6">Partagez vos idées, participez aux discussions, et restez informé des dernières tendances.</p>
                     <div class="flex space-x-4">
                       {% if app.user is defined %}
-                        <a href="{{path('app_register')}}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">Postuler votre article dés maintnant</a>
+                        <a href="{{path('app_blog_new')}}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">Postuler votre article dès maintenant</a>
                         <a href="{{path('app_home')}}#contact" class="bg-transparent border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">En savoir plus</a>
                       {% else %}
                         <a href="{{path('app_blog_new')}}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">Créer un compte</a>

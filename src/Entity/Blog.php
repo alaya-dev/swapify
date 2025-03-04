@@ -61,6 +61,9 @@ class Blog
 #[ORM\JoinTable(name: 'blog_user_ratings')]
 private Collection $ratedByUsers;
 
+#[ORM\Column(nullable: true)]
+private ?int $views = null;
+
 public function __construct()
 {
     $this->listeCommentaires = new ArrayCollection();
@@ -205,6 +208,24 @@ public function addRatedByUser(User $user): self
     public function setImage(?string $image): static
     {
         $this->image = $image;
+        return $this;
+    }
+    public function getViews(): ?int
+    {
+        return $this->views;
+    }
+
+    public function setViews(?int $views): static
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+    
+    // Method to increment views
+    public function incrementViews(): self
+    {
+        $this->views++;
         return $this;
     }
 }

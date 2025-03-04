@@ -17,6 +17,10 @@ parameters:
     VIDEOSDK_SECRET_KEY: '%env(VIDEOSDK_SECRET_KEY)%'
     images_directory: '%kernel.project_dir%/public/uploads/images'
     swapifyAdminEmail: 'swapifyMailer199@gmail.com'
+    bad_words:
+        - badword1
+        - badword2
+        - badword3
 
 services:
     App\Service\CertificateGeneratorService:
@@ -35,6 +39,9 @@ services:
     App\Service\RecommandationService:
         arguments:
             $client: '@http_client'
+    App\Service\ETAService:
+        autowire: true
+        autoconfigure: true
 
     #mailer mailJet service 
     App\Service\MailerMailJetService:
@@ -66,3 +73,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
     
+    App\Service\BadWordFilter:
+        arguments:
+            $badWords: '%bad_words%'  # Pass the bad words list from parameters

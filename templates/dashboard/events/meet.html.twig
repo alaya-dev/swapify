@@ -1,4 +1,4 @@
-{% extends 'dashBord_user.html.twig' %} 
+{% extends 'base.html.twig' %} 
 
 {% block title %}Rejoindre la session{% endblock %}
 
@@ -74,7 +74,7 @@
     </style>
 {% endblock %}
 
-{% block content %} 
+{% block body %} 
 
 {% if session.meetingStarted %}
     <div class="container">        

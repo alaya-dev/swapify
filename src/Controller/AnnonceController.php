@@ -15,7 +15,7 @@ use App\Repository\FavorisRepository;
 use App\Repository\ImageRepository;
 use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
-use App\Service\mailerMailJetService;
+use App\Service\MailerMailJetService;
 use App\Service\RecommandationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

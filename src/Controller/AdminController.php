@@ -12,7 +12,7 @@ use App\Repository\AnnonceRepository;
 use App\Repository\BlogRepository;
 use App\Repository\CategorieRepository;
 use App\Repository\EventRepository;
-use App\Service\mailerMailJetService;
+use App\Service\MailerMailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -196,7 +196,7 @@ public function listAdmins(UserRepository $userRepository): Response
     #[Route('/admin/annonce/{id}/validate', name: 'admin_annonce_validate')]
      //#[IsGranted('ROLE_ADMIN')]
      #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
-    public function validate(Annonce $annonce, EntityManagerInterface $entityManager, mailerMailJetService $mj): RedirectResponse
+    public function validate(Annonce $annonce, EntityManagerInterface $entityManager, MailerMailJetService $mj): RedirectResponse
     {
         $annonce->setStatut('Acceptee');
         $entityManager->flush();
@@ -254,7 +254,7 @@ public function listAdmins(UserRepository $userRepository): Response
     #[Route('/admin/annonce/{id}/reject', name: 'admin_annonce_reject')]
     //#[IsGranted('ROLE_ADMIN')]
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
-    public function reject(Annonce $annonce, EntityManagerInterface $entityManager, mailerMailJetService $mj): RedirectResponse
+    public function reject(Annonce $annonce, EntityManagerInterface $entityManager, MailerMailJetService $mj): RedirectResponse
     {
         $annonce->setStatut('Rejetee');
         $entityManager->flush();

@@ -1,8 +1,8 @@
-{% extends 'dashBord_user.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Blog Details{% endblock %}
 
-{% block content %}
+{% block body %}
     <div class="container mx-auto mt-5">
         <div class="flex gap-6">
             <!-- Left Side: Blog Details (3/4 width) -->
@@ -65,9 +65,28 @@
                             </div>
                         {% endif %}
                     </div>
-
+                    {# Social Media Sharing Buttons #}
+                    <div class="social-sharing mt-4">
+                        <p class="mb-2">Partager ce blog :</p>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url(path('app_blog_show', {'id': blog.id})) }}" target="_blank" class="btn btn-primary btn-sm me-2">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ absolute_url(path('app_blog_show', {'id': blog.id})) }}&text={{ blog.Titre|url_encode }}" target="_blank" class="btn btn-info btn-sm me-2">
+                            <i class="fab fa-twitter"></i> Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/shareArticle?url={{ absolute_url(path('app_blog_show', {'id': blog.id})) }}&title={{ blog.Titre|url_encode }}" target="_blank" class="btn btn-secondary btn-sm me-2">
+                            <i class="fab fa-linkedin-in"></i> LinkedIn
+                        </a>
+                        <a href="https://wa.me/?text={{ ('Check out this blog: ' ~ blog.Titre ~ ' - ' ~ absolute_url(path('app_blog_show', {'id': blog.id})))|url_encode }}" target="_blank" class="btn btn-success btn-sm">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <button class="btn btn-light btn-sm me-2" onclick="copyToClipboard('{{ absolute_url(path('app_blog_show', {'id': blog.id})) }}')">
+                            <i class="fas fa-copy"></i> Copy Link
+                        </button>
+                    </div>
                     {# Ratings Section - improved styling #}
                     <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+                        <h6 class="text-gray-700 text-base font-semibold mb-2">Vues ({{ blog.Views }})</h6>
                         <h6 class="text-gray-700 text-base font-semibold mb-2">Ratings ({{ blog.rateCount }})</h6>
                         {% if blog.getRate() > 0.0 %}
                             <div class="rating flex items-center">
@@ -245,5 +264,13 @@
                 });
             });
         });
+                // Copy to Clipboard Functionality
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
     </script>
 {% endblock %}
