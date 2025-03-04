@@ -133,7 +133,13 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
       } catch (VerifyEmailExceptionInterface $exception) {
              // Lien expiré → afficher un message et proposer le renvoi
-            $this->addFlash('warning', 'Le lien de vérification a expiré. Renvoyez un nouvel email.');
+             $this->addFlash(
+                'warning', 
+                [
+                    'message' => 'Le lien de vérification a expiré.',
+                    'url' => $this->generateUrl('app_resend_verification_email', ['id' => $userId]),
+                ]
+            );
             return $this->redirectToRoute('app_login', ['id' => $userId]);
 
         }}
