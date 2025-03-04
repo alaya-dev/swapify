@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Service\mailerMailJetService;
+use App\Service\MailerMailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,15 +16,15 @@ class EmailVerifier
     private VerifyEmailHelperInterface $verifyEmailHelper;
     private MailerInterface $mailer;
     private EntityManagerInterface $entityManager;
-    private mailerMailJetService $mailerMailJetService;
+    private MailerMailJetService $MailerMailJetService;
 
 
-    public function __construct(VerifyEmailHelperInterface $helper, MailerInterface $mailer, EntityManagerInterface $manager,mailerMailJetService $mailerMailJetService)
+    public function __construct(VerifyEmailHelperInterface $helper, MailerInterface $mailer, EntityManagerInterface $manager,MailerMailJetService $MailerMailJetService)
     {
         $this->verifyEmailHelper = $helper;
         $this->mailer = $mailer;
         $this->entityManager = $manager;
-        $this->mailerMailJetService = $mailerMailJetService;
+        $this->MailerMailJetService = $MailerMailJetService;
 
     }
 
@@ -94,7 +94,7 @@ class EmailVerifier
             $expiresAtMessageKey
         );
     
-        $this->mailerMailJetService->sendEmail($user->getEmail(), $subject, $content);
+        $this->MailerMailJetService->sendEmail($user->getEmail(), $subject, $content);
     }
 
     /**

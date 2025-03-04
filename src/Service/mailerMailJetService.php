@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class mailerMailJetService
+class MailerMailJetService
 {
     private MailerInterface $mailer;
     private string $adminEmail;
