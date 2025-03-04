@@ -57,14 +57,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
 
-    public function findAdmins(): array
+    public function findAdmins(?string $search = null): array
     {
-        return $this->createQueryBuilder('u')
+        $qb = $this->createQueryBuilder('u')
             ->andWhere('u.roles LIKE :role')
-            ->setParameter('role', '%"ROLE_ADMIN"%')
-            ->getQuery()
-            ->getResult();
+            ->setParameter('role', '%"ROLE_ADMIN"%');
+    
+        if ($search) {
+            $qb->andWhere('u.nom LIKE :search OR u.prenom LIKE :search OR u.email LIKE :search OR u.adresse LIKE :search OR u.tel LIKE :search')
+            
+               ->setParameter('search', '%' . $search . '%');
+        }
+    
+        return $qb->getQuery()->getResult();
     }
+    
 
 
 

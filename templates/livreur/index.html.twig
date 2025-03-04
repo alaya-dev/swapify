@@ -18,7 +18,13 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Liste des Livreurs</h4>
-
+                        <form method="get" action="{{ path('app_livreur_index') }}" class="mb-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="search" value="{{ searchTerm }}" placeholder="Rechercher un livreur...">
+                                <button type="submit" class="btn btn-primary">Rechercher</button>
+                            </div>
+                        </form>
+                    
                         <!-- Messages de succès -->
                         {% for message in app.flashes('success') %}
                             <div class="alert alert-success" role="alert">
@@ -27,7 +33,7 @@
                         {% endfor %}
 
                         <!-- Table des livreurs -->
-                        <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                        <table  class="table table-bordered dt-responsive nowrap w-100">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -68,4 +74,5 @@
             </div>
         </div>
     </div>
+    
 {% endblock %}

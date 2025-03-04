@@ -73,15 +73,18 @@ class AdminController extends AbstractController
 
 
 
+
 #[Route('/admin/liste', name: 'admin_list')]
-public function listAdmins(UserRepository $userRepository): Response
+public function listAdmins(UserRepository $userRepository,Request $request): Response
 {
     // Requête pour récupérer tous les utilisateurs avec le rôle 'ROLE_ADMIN'
-    $admins = $userRepository->findAdmins();
+    $search = $request->query->get('search'); 
+    $admins = $userRepository->findAdmins($search);  // Appelle la méthode du repository
 
     // Rendu du template avec la liste des administrateurs
     return $this->render('admin/liste_admin.html.twig', [
         'admins' => $admins,
+        'searchTerm' => $search,
     ]);
 }
 

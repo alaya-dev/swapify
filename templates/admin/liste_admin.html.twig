@@ -19,7 +19,13 @@
                         <div class="card-body">
 
                             <h4 class="card-title">Liste des Administrateurs</h4>
-
+                            <form method="get" action="{{ path('admin_list') }}" class="mb-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="search" value="{{ searchTerm }}" placeholder="Rechercher un administrateur...">
+                                <button type="submit" class="btn btn-primary">Rechercher</button>
+                            </div>
+                        </form>
+                        
                             <!-- Display success messages -->
                             {% for message in app.flashes('success') %}
                                 <div class="alert alert-success" role="alert">
@@ -29,7 +35,7 @@
 
                             <!-- Table for listing admins -->
                              
-                            <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                            <table id="" class="table table-bordered dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
