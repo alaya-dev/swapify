@@ -1,0 +1,46 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Attendance List{% endblock %}
+
+{% block body %}
+
+{% for type,messages
+in app.flashes %} 
+{% for message in messages %}
+<div
+  class=" msg px-4 py-3 mb-4 text-white rounded-md {% if type == 'success' %}bg-green-500{% elseif type == 'warning' %}bg-yellow-500{% elseif type == 'error' %}bg-red-500{% endif %}"
+>
+  {{ message }}
+</div>
+{% endfor %} 
+
+{% endfor %}
+    <h1>Attendance List for Session: {{ session.objective }}</h1>
+
+    <form action="{{ path('update_attendance', {'id': session.id}) }}" method="post">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Participant Name</th>
+                    <th>Attendance Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participantEvent in participantEvents %}
+                    <tr>
+                        <td>{{ participantEvent.user.prenom }}{{participantEvent.user.nom}}</td>
+                        <td>
+                            <input type="checkbox" 
+                                   name="attendance[{{ participantEvent.id }}]" 
+                                   value="1" 
+                                   {% if attendanceRecords[participantEvent.id] %}checked{% endif %}
+                                  >
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Update Attendance</button>
+    </form>
+{% endblock %}

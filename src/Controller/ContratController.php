@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Contrat;
 use App\Form\ContratType;
 use App\Repository\ContratRepository;
-use App\Service\mailerMailJetService;
+use App\Service\MailerMailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,7 +104,7 @@ final class ContratController extends AbstractController
 
 
     #[Route('/new', name: 'app_contrat_new', methods: ['GET', 'POST'])]
-    public function new( mailerMailJetService $mailer ,Request $request, EntityManagerInterface $entityManager, ContratRepository $contratRepository): Response
+    public function new( MailerMailJetService $mailer ,Request $request, EntityManagerInterface $entityManager, ContratRepository $contratRepository): Response
     {
         $contrat = new Contrat();
         $form = $this->createForm(ContratType::class, $contrat);
@@ -154,10 +154,10 @@ $content = sprintf(
     'https://127.0.0.1:8000/' 
 );
 
-if ($mailer instanceof \App\Service\mailerMailJetService) {
+if ($mailer instanceof \App\Service\MailerMailJetService) {
     $mailer->sendEmail($offre->getOfferMaker()->getEmail(), $subject, $content);
 } else {
-    throw new \LogicException('Expected mailerMailJetService as MailerInterface implementation.');
+    throw new \LogicException('Expected MailerMailJetService as MailerInterface implementation.');
 }
 
 
