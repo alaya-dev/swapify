@@ -31,9 +31,23 @@
     .text-muted {
         color: #6b7280;
     }
+
+    .session-action {
+        display: inline-block;
+        padding: 5px 10px;
+        transition: opacity 0.3s ease;
+    }
+
+    .session-action.hover-only {
+        opacity: 0;
+    }
+
+    .session-action.hover-only:hover {
+        opacity: 1;
+    }
 </style>
 
-<div class="overflow-x-auto">
+<div class="overflow-x-auto p-5">
     <table class="min-w-full border-collapse border border-gray-300">
         <thead class="bg-gray-100">
             <tr class="border border-gray-300">
@@ -51,58 +65,25 @@
                     <td class="px-4 py-2 text-gray-600">{{ session.startHour|date('d M, Y H:i') }}</td>
                     <td class="px-4 py-2 text-gray-600">{{ session.endHour|date('d M, Y H:i') }}</td>
                     <td class="px-4 py-2 text-gray-600">{{ session.typeSession }}</td>
-                    <td class="px-4 py-2 space-x-2" 
-                        data-session-id="{{ session.id }}" 
-                        data-start-hour="{{ session.startHour|date('Y-m-d\\TH:i:s') }}" 
-                        data-end-hour="{{ session.endHour|date('Y-m-d\\TH:i:s') }}"
-                        data-type-session="{{ session.typeSession }}"
-                        data-join-url="{{ path('join_online_sessionn', { id: session.id }) }}">
-                        <span class="session-status"></span>
+                    <td class="px-4 py-2 space-x-2">
+                        {% if session.typeSession == "En ligne" %}
+                            {% if sessionStatuses[session.id] == 'session en cours' %}
+                                <div class="session-action">
+                                    <span class="live-icon"></span>
+                                    <a href="{{ path('join_online_sessionn', { id: session.id }) }}" class="session-action text-red-600 hover:text-red-800">Session en cours :Join meeting</a>
+                                </div>
+                            {% elseif sessionStatuses[session.id] == 'Session pas encore commencée ' %}
+                                <span class="text-muted">Session pas encore commencée</span>
+                            {% else %}
+                                <span class="text-muted text-red-500">Session déjà écoulée</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-teal-600 hover:text-teal-800">Session présentiel</span>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        function updateSessionStatuses() {
-            const now = new Date();
-
-            document.querySelectorAll("td[data-session-id]").forEach((td) => {
-                const startHour = new Date(td.getAttribute("data-start-hour"));
-                const endHour = new Date(td.getAttribute("data-end-hour"));
-                const typeSession = td.getAttribute("data-type-session");
-                const joinUrl = td.getAttribute("data-join-url");
-                console.log(joinUrl);
-                const statusSpan = td.querySelector(".session-status");
-                if (typeSession === "En ligne") {
-                    if (startHour <= now && endHour >= now) {
-                        // Session is ongoing
-                        statusSpan.innerHTML = `
-                            <span class="live-icon"></span>
-                            <a href="${joinUrl}" class="text-red-600 hover:text-red-800">Join meeting</a>
-                        `;
-                    } else if (startHour > now) {
-                        // Session has not started yet
-                        statusSpan.innerHTML = `<span class="text-muted">Session pas encore commencée</span>`;
-                    } else {
-                        // Session has ended
-                        statusSpan.innerHTML = `<span class="text-muted text-red-500">Session déjà écoulée</span>`;
-                    }
-                } else {
-                    // Session is "Présentiel"
-                    statusSpan.innerHTML = `<span class="text-teal-600 hover:text-teal-800">Session présentiel</span>`;
-                }
-            });
-        }
-
-        // Update statuses immediately on page load
-        updateSessionStatuses();
-
-        // Update statuses every 30 seconds
-        setInterval(updateSessionStatuses, 30000);
-    });
-</script>
 {% endblock %}

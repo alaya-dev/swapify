@@ -126,6 +126,11 @@ final class EventController extends AbstractController{
     #[Route('/{id}/delete', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
+
+        if (!$event->getCertificates()->isEmpty()) {
+            $this->addFlash('error', 'Cet événement ne peut pas être supprimé car des certificats y sont attachés.');
+            return $this->redirectToRoute('my_events');
+        }
         if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($event);
             $entityManager->flush();
