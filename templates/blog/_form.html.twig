@@ -1,4 +1,44 @@
-{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+<div class="w-full overflow-hidden border-t flex flex-col">
+    <main class="w-full flex-grow p-6">
+        <p class="text-xl pb-6 flex items-center">
+            <i class="fas fa-calendar-alt mr-3"></i><a href="{{path('app_user_blogs')}}">Mes Articles</a>/ {% if  app.request.get('_route') == 'app_blog_new' %}Ajouter Article {% else %} modifier Article {% endif %}
+        </p>
+        <div class="flex flex-col space-y-6">
+            <!-- Form -->
+            <div class="w-full">
+                <div class="leading-loose">
+                    {{ form_start(form, {'attr': {'class': 'p-10 bg-white rounded shadow-xl space-y-4', 'novalidate': 'novalidate'}}) }}                    
+                    <div>
+                        {{ form_label(form.Titre, 'Titre', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                        {{ form_widget(form.Titre, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                        {% for error in form.Titre.vars.errors %}
+                            <div class=" mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.Contenu, 'contenu', {'label_attr': {'class': 'block text-sm text-gray-600'}}) }}
+                        {{ form_widget(form.Contenu, {'attr': {'class': 'w-full px-5 py-2 text-gray-700 bg-gray-200 rounded'}}) }}
+                        {% for error in form.Contenu.vars.errors %}
+                            <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    <div>
+
+                        {{ form_label(form.imageFile, 'Image', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-600'}}) }}
+                        {{ form_widget(form.imageFile, {'attr': {'class': 'block w-full text-sm text-gray-700 p-3  border border-gray-300 rounded-lg cursor-pointer bg-gray-200 focus:outline-none '}}) }}
+                        {% for error in form.imageFile.vars.errors %}
+                            <div class="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="px-4 py-1 text-white font-light tracking-wider bg-gray-700 rounded">Enregistrer l'article</button>
+                    <button type="submit" name="saveAsDraft" class="px-4 py-1 text-white font-light tracking-wider bg-gray-700 rounded">Enregistrer comme Brouillon</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+

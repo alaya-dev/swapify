@@ -46,14 +46,14 @@
         </p>
         <div class="flex flex-wrap justify-center lg:justify-start gap-4">
           {% if not app.user%}
-          <a href="app_login" class="inline-flex items-center justify-center gap-3 px-6 py-3 text-lg font-medium text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300">
+          <a href="{{path('app_login')}}" data-turbo="false" class="inline-flex items-center justify-center gap-3 px-6 py-3 text-lg font-medium text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300">
             Déposez votre objet
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
           </a>
           {% else  %}
-          <a href="#" class="inline-flex items-center justify-center gap-3 px-6 py-3 text-lg font-medium text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300">
+          <a href="{{path('app_annonce_new')}}" data-turbo="false" class="inline-flex items-center justify-center gap-3 px-6 py-3 text-lg font-medium text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300">
             Déposez votre objet
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -80,14 +80,14 @@
     <div class="flex flex-col items-center justify-center space-y-6 relative z-10">
       <h2 class="text-3xl font-bold text-gray-800 text-center">C'est le moment d'échange</h2>
       {% if not app.user %}
-      <a href="/login"class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
+      <a href="{{path('app_login')}}" data-turbo="false" class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
         <span>Ajouter une annonce</span>
     </a>
     {% else %}
-    <a href="/annonce/new"class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
+    <a href="{{path('app_annonce_new')}}" data-turbo="false" class="bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 text-white font-semibold px-6 py-3 flex items-center space-x-2 transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
@@ -111,86 +111,82 @@
       </a>
     </div>
     {# Category Items #}
-    {% for category in ['cat1.jpg', 'tech.webp', 'cat3.jpg'] %}
-    <div class="relative bg-cover bg-center w-full max-w-7xl h-full overflow-hidden rounded-2xl shadow-2xl hover:shadow-3xl">
-      <img src="{{ asset('assets/images/' ~ category) }}" alt="Category Image" class="w-full h-full object-cover">
-      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
-        <div class="absolute bottom-0 left-0 w-full p-4">
-          <h2 class="text-white font-semibold text-xl">
-            {% if loop.index == 1 %} Équipements sportifs {% elseif loop.index == 2 %} Technologie {% else %} Mode Et Vêtements {% endif %}
-          </h2>
+    {% if trendingCategories | length >0 %}
+      {% for category in trendingCategories %}
+        <div class="relative bg-cover bg-center w-full max-w-7xl h-full overflow-hidden rounded-2xl shadow-2xl hover:shadow-3xl">
+          {% if category.image is not null %}
+            <img src="{{ asset('uploads/images/' ~ category.image) }}" alt="Category Image" class="w-full h-full object-cover">
+          {% else %}
+            <img src="{{ asset('uploads/images/default-category.jpeg') }}" alt="Category Image" class="w-full h-full object-cover">
+          {% endif %}
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+            <div class="absolute bottom-0 left-0 w-full p-4">
+              <h2 class="text-white font-semibold text-xl">
+                {{ category.libelle }} 
+              </h2>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-span-1 sm:col-span-2 md:col-span-3 flex items-center justify-center bg-gray-100 border border-gray-200 shadow-sm rounded-lg min-h-[400px]">
+        <div class="text-center">
+            <p class="mt-4 text-gray-900 text-lg font-medium">Aucune tendance disponible pour le moment.</p>
+            <p class="mt-2 text-gray-600 text-sm">Restez à l’écoute pour découvrir les dernières tendances !</p>
         </div>
       </div>
-    </div>
-    {% endfor %}
+    {% endif %}
   </div>
 </div>
 {# Category Section #}
 
-{# all categories #}
+{# All categories #}
 <section class="py-12 mt-9">
     <div class="max-w-screen-xl mx-auto px-4">
-      <h2 class="text-3xl font-bold mb-8 text-gray-800">Explore Toutes Les Categories</h2>
-      
-      <div class="relative">
-        <!-- Left Arrow -->
-        <button class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200 focus:outline-none" onclick="scrollCarousel(-1)">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
-        </button>
-  
-        <div class="carousel w-full space-x-4 overflow-x-auto scroll-smooth flex gap-6 p-4" id="categoryCarousel">
-            <!-- Category Card 1 -->
-             {#{% for cat in categories %}#}
-            <div class="carousel-item min-w-[150px] h-32 p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat1.jpg') }}'); background-size: cover; background-position: center;">
-              <h3 class="text-sm font-semibold text-white mb-2">category 1</h3>
-            </div>
-            {#{% endfor %}#}
-          
-            <!-- Category Card 2 -->
-            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/tech.webp') }}'); background-size: cover; background-position: center;">
-              <h3 class="text-sm font-semibold text-white mb-2">Category 2</h3>
-            </div>
-          
-            <!-- Category Card 3 -->
-            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat3.jpg') }}'); background-size: cover; background-position: center;">
-              <h3 class="text-sm font-semibold text-white mb-2">Category 3</h3>
-            </div>
-          
-            <!-- Category Card 4 -->
-            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat1.jpg') }}'); background-size: cover; background-position: center;">
-              <h3 class="text-sm font-semibold text-white mb-2">Category 4</h3>
-            </div>
-          
-            <!-- Category Card 5 -->
-            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat3.jpg') }}'); background-size: cover; background-position: center;">
-              <h3 class="text-sm font-semibold text-white mb-2">Category 5</h3>
-            </div>
-          
-            <!-- Category Card 6 -->
-            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/tech.webp') }}'); background-size: cover; background-position: center;">
-              <h3 class="text-sm font-semibold text-white mb-2">Category 6</h3>
-            </div>
-          
-            <!-- Category Card 7 -->
-            <div class="carousel-item min-w-[150px] p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end" style="background-image: url('{{ asset('assets/images/cat1.jpg') }}'); background-size: cover; background-position: center;">
-              <h3 class="text-sm font-semibold text-white mb-2">Category 7</h3>
-            </div>
-          </div>
-          
-          
-  
-        <!-- Right Arrow -->
-        <button class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200 focus:outline-none" onclick="scrollCarousel(1)">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
-        </button>
-      </div>
+        <h2 class="text-3xl font-bold mb-8 text-gray-800">Explore Toutes Les Categories</h2>
+        
+        <div class="relative">
+            {% if categories|length > 0 %}
+                <!-- Left Arrow -->
+                <button class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200 focus:outline-none" onclick="scrollCarousel(-1)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+                
+                <div class="carousel w-full overflow-x-auto scroll-smooth flex p-4 gap-3" id="categoryCarousel">
+                    {% for cat in categories  %}
+                      {% if cat.image is not null %}
+                        <div class="carousel-item flex-none w-[200px] h-32 p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end mr-6 " style="background-image: url('{{ asset('uploads/images/' ~ cat.image) }}'); background-size: cover; background-position: center;">
+                          <h3 class="text-sm font-semibold text-white mb-2">{{ cat.libelle }}</h3>
+                        </div>
+                      {% else %}
+                        <div class=" carousel-item  flex-none w-[200px] h-32 p-3 bg-white shadow-md rounded-lg text-center flex flex-col justify-end mr-6" style="background-image: url('{{ asset('uploads/images/default-category.jpeg') }}'); background-size: cover; background-position: center;">
+                          <h3 class="text-sm font-semibold text-white mb-2">{{ cat.libelle }}</h3>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                </div>
+                
+                <!-- Right Arrow -->
+                <button class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200 focus:outline-none" onclick="scrollCarousel(1)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+            {% else %}
+                <!-- Full-width empty state message -->
+                <div class="w-full h-32 p-3 bg-gray-100 shadow-md rounded-lg text-center flex flex-col justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v3.75m0 0v3.75m0-7.5h3.75m-3.75 0H8.25m10.5 3.75H6.75m9 3.75h-7.5m12-9h-3.75m3.75 0h-7.5m7.5 9h-7.5M8.25 3h9.5a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 17.75 21H6.25A2.25 2.25 0 0 1 4 18.75V5.25A2.25 2.25 0 0 1 6.25 3Z" />
+                    </svg>
+                    <p class="text-xs text-gray-600 mt-1">Aucune catégorie disponible pour le moment.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
-  </section>
-{# all category #}  
+</section>
+{# All categories #}
 
 {# annonces section #}
 <section class="mt-9 px-4 sm:px-8 w-full">
@@ -199,51 +195,32 @@
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
             <!-- Product Card 1 -->
-            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
-                <div class="relative aspect-square">
+             {% if annonces | length>0 %}
+              {% for annonce in annonces %}
+                <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                  <div class="relative aspect-square">
                     <img 
-                        src="{{asset('uploads/images/67a0ae941ea95.jpg')}}"
+                        src="{{asset('uploads/images/'~annonce.images[0].imageName)}}"
                         alt="Product 1"
                         class="w-full h-full object-cover"
                     />
-                </div>
+                  </div>
                 <div class="p-4">
-                    <h3 class="font-medium">produit 1</h3>
-                    <p class="text-gray-600 text-sm">description</p>
+                    <h3 class="font-medium">{{annonce.titre}}</h3>
+                    <p class="text-gray-600 text-sm">{{ annonce.region }}</p>
                 </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
-                <div class="relative aspect-square">
-                    <img 
-                        src="{{asset('uploads/images/casqueB.jpg')}}"
-                        alt="Product 2"
-                        class="w-full h-full object-cover"
-                    />
                 </div>
-                <div class="p-4">
-                    <h3 class="font-medium">produit 2</h3>
-                    <p class="text-gray-600 text-sm">description</p>
+              {% endfor %}
+              {% else %}
+                <div class="col-span-1 sm:col-span-2 md:col-span-3 flex items-center justify-center bg-gray-100 border border-gray-200 shadow-sm rounded-lg min-h-[400px]">
+                  <div class="text-center">
+                    <p class="mt-4 text-gray-900 text-lg font-medium">Aucune annonce disponible pour le moment.</p>
+                    <p class="mt-2 text-gray-600 text-sm">Restez à l’écoute pour découvrir les dernières annonces !</p>
+                  </div>
                 </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
-                <div class="relative aspect-square">
-                    <img 
-                        src="{{asset('uploads/images/R.png')}}"
-                        alt="Product 3"
-                        class="w-full h-full object-cover"
-                    />
-                </div>
-                <div class="p-4">
-                    <h3 class="font-medium">produit 3</h3>
-                    <p class="text-gray-600 text-sm">description</p>
-                </div>
-            </div>
+            {% endif %}
             <div class="bg-white rounded-lg shadow overflow-hidden flex items-center justify-center border border-gray-200" >
-                <a href="#" class="text-center p-4">
+                <a href="{{path('app_annonce_index')}}" data-turbo="false" class="text-center p-4">
                     <div class="mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -259,7 +236,7 @@
 
 {# about us  #}
 
-<section class="flex flex-col md:flex-row items-center justify-center p-6 md:p-10 border rounded-lg w-full mx-auto bg-gray-100">
+<section class="flex flex-col md:flex-row items-center justify-center p-6 md:p-10 border rounded-lg w-full mx-auto bg-gray-100" id="aboutus">
     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-6 w-full">
         <div class="relative w-full flex justify-center">
             <img src="{{asset('assets/images/3dshop2.png')}}" alt="architecture du website" 
@@ -334,11 +311,14 @@
 
 {# contact section #}
 <script>
-    function scrollCarousel(direction) {
-      const carousel = document.getElementById('categoryCarousel');
-      const scrollAmount = 150; // Adjust for smooth scrolling
-      carousel.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+function scrollCarousel(direction) {
+        const carousel = document.getElementById('categoryCarousel');
+        const scrollAmount = 200; // Adjust this value as needed
+        carousel.scrollBy({
+            left: direction * scrollAmount,
+            behavior: 'smooth'
+        });
     }
-  </script>
+</script>
 
 {% endblock %}

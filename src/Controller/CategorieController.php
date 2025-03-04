@@ -8,6 +8,7 @@ use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -26,9 +27,9 @@ final class CategorieController extends AbstractController
         ]);
     }
 
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT')" )]
+ 
     #[Route('/new', name: 'app_categorie_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,#[Autowire('%uploads_directory%')] string $photoDir): Response
     {
         $user = $this->getUser();
         $categorie = new Categorie();
@@ -37,10 +38,17 @@ final class CategorieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $libelle = $categorie->getLibelle();
+            
+            if ($photo = $form['image']->getData()) {
+                $fileName = uniqid() . '.' . $photo->guessExtension();
+                $destination = $photoDir . DIRECTORY_SEPARATOR . $fileName;
+                copy($photo->getPathname(), $destination);
+                $categorie->setImage($fileName);
+            }
 
-  
             $existingCategorie = $entityManager->getRepository(Categorie::class)
                 ->findOneBy(['libelle' => $libelle]);
+
 
             if ($existingCategorie) {
                 $this->addFlash('warning', 'Categorie existante !');
@@ -81,15 +89,26 @@ final class CategorieController extends AbstractController
 
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')" )]
     #[Route('/{id}/edit', name: 'app_categorie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Categorie $categorie, EntityManagerInterface $entityManager,#[Autowire('%uploads_directory%')] string $photoDir): Response
     {
         $form = $this->createForm(CategorieType::class, $categorie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+           
+            if ($photo = $form['image']->getData()) {
+                $fileName = uniqid() . '.' . $photo->guessExtension();
+                $destination = $photoDir . DIRECTORY_SEPARATOR . $fileName;
+                copy($photo->getPathname(), $destination);
+                $categorie->setImage($fileName);
+            }
+        
+
             return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
         }
+
+
 
         return $this->render('categorie/edit.html.twig', [
             'categorie' => $categorie,

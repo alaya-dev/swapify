@@ -3,6 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}User Dashbord!{% endblock %}</title>
+        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>        
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -10,8 +12,6 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
-        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
         <style>
              @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
              .font-family-karla { font-family: karla; }
@@ -26,11 +26,11 @@
 
     <body class='bg-gray-100 font-family-karla flex'>
         {% block sidebar %}
-            {% include 'dashboard/partials/sidebar.html.twig' %}
+       
         {% endblock %}
         <div class="w-full flex flex-col h-screen overflow-y-hidden">
             {% block header %}
-                {% include 'dashboard/partials/header.html.twig' %}
+                {% include 'layout/navBar/user_nav.html.twig' %}
             {% endblock %}
             <div class="w-full overflow-x-hidden border-t flex flex-col">
                 <main class="w-full flex-grow p-6">

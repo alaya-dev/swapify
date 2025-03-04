@@ -178,18 +178,15 @@ class LivraisonController extends AbstractController
     }
 
 
-    #[Route('/livraison/new/{id}', name: 'livraison_create', methods: ['POST','GET'])]
-    public function create(Request $request, EntityManagerInterface $em,$id,UserRepository $ur ): Response
+    #[Route('/livraison/new/{id}', name: 'livraison_create', methods: ['POST', 'GET'])]
+    public function create(Request $request, EntityManagerInterface $em, $id, UserRepository $ur): Response
     {
 
-        $userDestinataire=$ur->find($id) ;
-
+        $userDestinataire = $ur->find($id);
         $livraison = new Livraison();
         $livraison->setIdExpediteur($this->getUser()); // Associer l'expéditeur connecté
         $livraison->setStatut('En attente de localisation du destinataire');
         $livraison->setDate(new \DateTime());
-
-
         $livraison->setIdDistinataire($userDestinataire);
         $livraison->setPaymentExp('non payé');
         $form = $this->createForm(LivraisonType::class, $livraison);

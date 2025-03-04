@@ -6,6 +6,7 @@ use App\Entity\Souk;
 use App\Form\SoukFormType;
 use App\Repository\SoukRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class SoukController extends AbstractController
 {
     #[Route('/new', name: 'app_souk_new')]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $souk = new Souk();

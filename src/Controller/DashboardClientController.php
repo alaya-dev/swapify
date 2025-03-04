@@ -9,6 +9,7 @@ use App\Form\ProfileType;
 use App\Repository\ConversationRepository;
 use App\Repository\OffreRepository;
 use App\Repository\ProductRepository;
+use App\Repository\RatingRepository;
 use App\Repository\SoukRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +22,7 @@ class DashboardClientController extends AbstractController
     public function __construct(private readonly ConversationRepository $conversationRepository) {}
 
     #[Route('/dashboard/client', name: 'app_dashboard_client')]
-    public function rendre(OffreRepository $offerRepository, Request $request, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
+    public function rendre(OffreRepository $offerRepository, RatingRepository $ratingRepo, Request $request, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
     {
         $current_user = $this->getUser();
         $form = $this->createForm(ProfileType::class, $current_user);
@@ -33,11 +34,18 @@ class DashboardClientController extends AbstractController
             'status' => ['accepted', 'pending']
         ]);
         $my_products = $productRepository->findBy(['owner' => $current_user]);
+
+
+
+    
+        $avgRating = $ratingRepo->getAverageRating($current_user) ?? 0;
+
         return $this->render('dashboard/accueil_client.html.twig', [
             'my_offers' => $my_offers,
             'other_offers' => $other_offers,
             'my_products' => $my_products,
             'conversations' => $conversations,
+            'rating' => $avgRating,
             'form' => $form->createView()
         ]);
     }

@@ -1,0 +1,38 @@
+
+    <div class="inline-flex rounded-md shadow-sm">
+        {% if first is defined and current != first %}
+            <a href="{{ path(route, query|merge({(pageParameterName): first})) }}" class="py-2 px-4 border border-gray-300 rounded-l-lg bg-white text-gray-700 hover:bg-gray-50 flex items-center">
+                <i class="fas fa-chevron-left mr-1"></i> Previous
+            </a>
+        {% elseif previous is defined %}
+            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}" class="py-2 px-4 border border-gray-300 rounded-l-lg bg-white text-gray-700 hover:bg-gray-50 flex items-center">
+                <i class="fas fa-chevron-left mr-1"></i> Previous
+            </a>
+        {% else %}
+            <span class="py-2 px-4 border border-gray-300 rounded-l-lg bg-gray-100 text-gray-400 cursor-not-allowed flex items-center">
+                <i class="fas fa-chevron-left mr-1"></i> Previous
+            </span>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page == current %}
+                <span class="py-2 px-4 border-t border-b border-gray-300 bg-blue-50 text-blue-600 font-medium">{{ page }}</span>
+            {% else %}
+                <a href="{{ path(route, query|merge({(pageParameterName): page})) }}" class="py-2 px-4 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">{{ page }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}" class="py-2 px-4 border border-gray-300 rounded-r-lg bg-white text-gray-700 hover:bg-gray-50 flex items-center">
+                Next <i class="fas fa-chevron-right ml-1"></i>
+            </a>
+        {% elseif last is defined and current != last %}
+            <a href="{{ path(route, query|merge({(pageParameterName): last})) }}" class="py-2 px-4 border border-gray-300 rounded-r-lg bg-white text-gray-700 hover:bg-gray-50 flex items-center">
+                Next <i class="fas fa-chevron-right ml-1"></i>
+            </a>
+        {% else %}
+            <span class="py-2 px-4 border border-gray-300 rounded-r-lg bg-gray-100 text-gray-400 cursor-not-allowed flex items-center">
+                Next <i class="fas fa-chevron-right ml-1"></i>
+            </span>
+        {% endif %}
+    </div>

@@ -1,61 +1,79 @@
-{{ form_start(form, {'attr': {'class': 'my-form-class'}}) }}
+{{ form_start(form, {'attr': {'class': 'my-form-class', 'novalidate': 'novalidate'}}) }}
 
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10"> <!-- Increased container width -->
             <!-- Title Input -->
             <div class="form-group mb-4">
-                {{ form_row(form.titre, {
+                {{ form_label(form.titre, 'Title', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.titre, {
                     'attr': {
                         'class': 'form-control form-control-lg',
-                        'placeholder': 'Rechercher...',
-                        'aria-label': 'Search title'
+                        'style': 'width: 100%; max-width: 700px;',  
+                        'placeholder': 'Search for a title...',
+                        'aria-label': 'Search title',
+                        'aria-describedby': 'titleHelp'
                     }
                 }) }}
             </div>
 
             <div class="row g-3 align-items-end">
                 <!-- Category Input -->
-                <div class="col-md-4">
+                <div class="col-md-6">  <!-- Increased width -->
                     <div class="form-group">
-                        {{ form_row(form.categorie, {
+                        {{ form_label(form.categorie, 'Categorie', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.categorie, {
                             'attr': {
                                 'class': 'form-control',
-                                'aria-label': 'Category'
+                                'aria-label': 'Category',
+                                'aria-describedby': 'categoryHelp'
                             }
                         }) }}
                     </div>
                 </div>
                 <!-- Region Input -->
-                <div class="col-md-4">
+                <div class="col-md-6">  <!-- Increased width -->
                     <div class="form-group">
-                        {{ form_row(form.Region, {
+                        {{ form_label(form.Region, 'Region', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.Region, {
                             'attr': {
                                 'class': 'form-control',
-                                'aria-label': 'Region'
+                                'aria-label': 'Region',
+                                'aria-describedby': 'regionHelp'
                             }
                         }) }}
                     </div>
                 </div>
+            </div>
+
+            <div class="row g-3 align-items-end mt-3">
                 <!-- Date Input -->
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <div class="form-group">
-                        {{ form_row(form.dateCreation, {
+                        {{ form_label(form.dateCreation, 'Creation Date', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.dateCreation, {
                             'attr': {
                                 'class': 'form-control',
-                                'aria-label': 'Creation Date'
+                                'aria-label': 'Creation Date',
+                                'aria-describedby': 'dateHelp'
                             }
                         }) }}
                     </div>
                 </div>
 
-                <!-- Submit Button -->
-                <div class="col-md-1 d-flex align-items-end">
-                    <button type="submit" class="btn btn-lg text-white fw-bold"
-                        style="background: linear-gradient(90deg, rgb(9, 99, 45), rgb(0, 212, 127)); border: none; border-radius: 10px; padding: 10px 20px; transition: all 0.3s ease;">
+               <div class="col-md-6 d-flex align-items-end">
+                    <!-- Search Button -->
+                    <button type="submit" class="btn btn-lg text-white fw-bold w-100"
+                        style="background: linear-gradient(90deg, rgb(9, 99, 45), rgb(0, 212, 127)); border: none; border-radius: 10px; padding: 14px 20px; transition: all 0.3s ease; "
+                        aria-label="Search">
                         <i class="fas fa-search me-2"></i>Search
                     </button>
+                        <button type="button" class="btn btn-light btn-lg w-80" style="border-radius: 10px; border: 1px solid #ced4da; padding: 14px 20px;" onclick="window.location.href='https://127.0.0.1:8000/annonce';">
+                        <i class="fas fa-times-circle me-2"></i>Reset filter
+                    </button>
                 </div>
+                
+    
             </div>
         </div>
     </div>
@@ -71,24 +89,6 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .form-control-lg {
-        font-size: 1.25rem;
-        padding: 15px;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border: none;
-        padding: 12px 24px;
-        font-size: 1rem;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        transform: translateY(-2px);
-    }
-
     .form-group {
         margin-bottom: 1.5rem;
     }
@@ -100,10 +100,12 @@
     }
 
     .form-control {
+        width: 100%;
+        max-width: 700px; /* Increased max-width */
         border-radius: 8px;
         border: 1px solid #ced4da;
-        padding: 12px;
-        font-size: 1rem;
+        padding: 14px;
+        font-size: 1.1rem;
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -118,5 +120,15 @@
 
     .form-control:focus::placeholder {
         color: transparent;
+    }
+
+    .btn {
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
     }
 </style>

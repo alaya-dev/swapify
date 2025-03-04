@@ -6,17 +6,29 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" defer>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 
+    <section class="relative h-64 flex items-center justify-center bg-cover bg-center" style="background-image: url('{{ asset('assets/images/blogPage.jpg') }}')">
+        <div class="absolute inset-0 bg-green-900 bg-opacity-50"></div>
+        <div class="relative text-center text-white">
+            <h1 class="text-3xl font-bold">Détails de l'annonce</h1>
+            <nav class="text-sm mt-2">
+                <a href="{{ path('app_home') }}" class="hover:underline text-gray-200">Accueil</a>
+                <span class="mx-2 text-gray-300">»</span>
+                <span class="text-gray-300">annonces</span>
+            </nav>
+        </div>
+    </section>
+
   <div class="container my-5">
     {# Check if the annonce is favorited by the user #}
     {% set isFavorited = app.user and favoris is not empty and annonce in favoris %}
 
     {# Annonce title section with gradient background and animation #}
     <h3 class="mb-4 text-white fw-bold text-uppercase py-3 px-4 rounded-lg shadow-lg" style="
-      background: linear-gradient(135deg, rgb(72, 212, 142), rgb(25, 109, 60));
+      background: linear-gradient(135deg, rgb(176, 233, 204), rgb(69, 84, 75));
       position: relative;
       overflow: hidden;
     ">
-      <i class="fas fa-bullhorn me-2"></i> Détails annonce : {{ annonce.titre }}
+      <i class="fas fa-bullhorn me-2"></i> Titre d'annonce : {{ annonce.titre }}
       {% if isFavorited %}
         <div class="position-absolute top-1 end-0 p-3">
           <i class="fas fa-heart text-pink-500 text-4xl"></i>
@@ -141,7 +153,7 @@
     {% set anID = annonce.id %}
     <div class="row mt-4">
       <div class="col-md-12">
-        <h2>Dernières annonces publiées :</h2>
+        <h2>Dernières annonces publiées par {{ annonce.user.nom }} {{ annonce.user.prenom }} :</h2>
         <div class="d-flex overflow-auto custom-scrollbar">
           {% for annonce in annonces|slice(0,5) %} 
             {% if annonce.id != anID %} 
@@ -166,6 +178,39 @@
         </div>
       </div>
     </div>
+
+   {# Section des annonces similaires #}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Annonces similaires :</h2>
+        <div class="d-flex overflow-auto custom-scrollbar">
+            {% for annonceSim in annoncesSim %}
+                {# Vérifier que l'annonce similaire n'est pas l'annonce actuelle #}
+                {% if annonceSim.id != annonce.id %}
+                    <div class="card mx-2 shadow-sm" style="width: 18rem;">
+                        {# Afficher l'image de l'annonce #}
+                        {% if annonceSim.images is defined and annonceSim.images is not empty %}
+                            <img src="{{ asset('uploads/images/' ~ annonceSim.images[0].imageName) }}" class="card-img-top" alt="Image de l'annonce" loading="lazy">
+                        {% else %}
+                            <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Image par défaut" loading="lazy">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ annonceSim.titre }}</h5>
+                            <p class="card-text">{{ annonceSim.description|slice(0, 100) }}...</p>
+                            <small class="text-muted">Publié le {{ annonceSim.dateCreation|date('d F Y') }}</small>
+                            <br>
+                            <small class="text-muted">Catégorie: {{ annonceSim.categorie.libelle }}</small>
+                            <br>
+                            <a href="{{ path('app_annonce_show', {'id': annonceSim.id}) }}" class="btn btn-primary btn-sm mt-2">Voir Détails</a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
   </div>
 
   {# Leaflet JS for map functionality #}

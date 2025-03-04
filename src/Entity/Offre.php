@@ -35,6 +35,9 @@ class Offre
     #[ORM\JoinColumn(nullable: false)]
     private ?user $offerMaker = null;
 
+    #[ORM\OneToOne(mappedBy: 'offre', cascade: ['persist', 'remove'])]
+    private ?Contrat $contrat = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,6 +99,23 @@ class Offre
     public function setOfferMaker(?user $offerMaker): static
     {
         $this->offerMaker = $offerMaker;
+
+        return $this;
+    }
+
+    public function getContrat(): ?Contrat
+    {
+        return $this->contrat;
+    }
+
+    public function setContrat(Contrat $contrat): static
+    {
+        // set the owning side of the relation if necessary
+        if ($contrat->getOffre() !== $this) {
+            $contrat->setOffre($this);
+        }
+
+        $this->contrat = $contrat;
 
         return $this;
     }

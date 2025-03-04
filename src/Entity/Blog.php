@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Symfony\Component\Validator\Constraints as Assert; 
 
 #[ORM\Entity(repositoryClass: BlogRepository::class)]
 #[ORM\HasLifecycleCallbacks] // Enable lifecycle callbacks
@@ -19,9 +20,15 @@ class Blog
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     private ?string $Contenu = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
+    #[Assert\Regex(
+        pattern: "/[a-zA-Z]/", 
+        message: "Le champ doit contenir au moins une lettre."
+    )]
     private ?string $Titre = null;
 
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
@@ -53,6 +60,9 @@ class Blog
     #[ORM\ManyToMany(targetEntity: User::class)]
 #[ORM\JoinTable(name: 'blog_user_ratings')]
 private Collection $ratedByUsers;
+
+#[ORM\Column(nullable: true)]
+private ?int $views = null;
 
 public function __construct()
 {
@@ -198,6 +208,24 @@ public function addRatedByUser(User $user): self
     public function setImage(?string $image): static
     {
         $this->image = $image;
+        return $this;
+    }
+    public function getViews(): ?int
+    {
+        return $this->views;
+    }
+
+    public function setViews(?int $views): static
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+    
+    // Method to increment views
+    public function incrementViews(): self
+    {
+        $this->views++;
         return $this;
     }
 }

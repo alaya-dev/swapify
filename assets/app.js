@@ -1,9 +1,9 @@
 import "./bootstrap.js";
 import "./styles/app.css";
+
 Pusher.logToConsole = true;
 
 console.log("charhcour 🎉");
-
 const pusher = new Pusher("7f4f9c9d2b396ad6ec87", { cluster: "eu" });
 const Btn = document.querySelector("#send");
 const input = document.querySelector("#content");
@@ -32,8 +32,9 @@ const sendMessage = async () => {
   input.value = "";
 
   try {
-    await fetch("http://127.0.0.1:8000/messages", {
+    await fetch("/messages", {
       method: "POST",
+      
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -76,3 +77,5 @@ channel.bind("message-created", (data) => {
   msgs.appendChild(parent);
   msgs.scrollTo(0, msgs.scrollHeight);
 });
+
+ 

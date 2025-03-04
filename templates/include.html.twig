@@ -198,174 +198,163 @@
                 </div>
             </header>
 
-            <!-- ========== Left Sidebar Start ========== -->
-            <div class="vertical-menu">
+<div class="vertical-menu">
+    <div data-simplebar class="h-100">
+        <!-- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu" x-data="{ 
+                activeMenu: null,
+                toggleMenu(menu) {
+                    this.activeMenu = this.activeMenu === menu ? null : menu;
+                }
+            }">
+                <li class="menu-title">Menu</li>
 
-                <div data-simplebar class="h-100">
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect" 
+                       @click.prevent="toggleMenu('home')"
+                       :class="{'mm-active': activeMenu === 'home'}">
+                        <i class="bx bx-home-circle"></i>
+                        <span>Home</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'home'" x-transition>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                    </ul>
+                </li>
 
-                    <!--- Sidemenu -->
-                    <div id="sidebar-menu">
-                        <!-- Left Menu Start -->
-                        <ul class="metismenu list-unstyled" id="side-menu">
-                            <li class="menu-title" key="t-menu">Menu</li>
-
-                                <li>
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="bx bx-home-circle"></i>
-                                    <span>Home</span>
-                                </a>
-                               
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/dashboard" >Dashboard</a></li>
-                                   
-                                </ul></li>
-                                {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                <li>
-                                
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="fas fa-user"></i>
-                                    <span>Admin</span>
-                                    
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/admin/add_admin" >Ajouter un admin</a></li>
-                                    <li><a href="/admin/liste" >La liste des admins</a></li>
-                                   
-                                </ul></li>
-                                {% endif %}
-
-                                
-                               
-                                <li>
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <li x-data="{ isAdmin: true }"> <!-- Replace with actual admin check -->
+                    <template x-if="isAdmin">
+                        <div>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect"
+                               @click.prevent="toggleMenu('admin')"
+                               :class="{'mm-active': activeMenu === 'admin'}">
                                 <i class="fas fa-user"></i>
-                                    <span >Client</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/client/liste " >La liste des clients</a></li>
-                                   
-                                </ul></li>
+                                <span>Admin</span>
+                            </a>
+                            <ul class="sub-menu" x-show="activeMenu === 'admin'" x-transition>
+                                <li><a href="/admin/add_admin">Ajouter un admin</a></li>
+                                <li><a href="/admin/liste">La liste des admins</a></li>
+                            </ul>
+                        </div>
+                    </template>
+                </li>
 
-   <li>
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="bx bx-store"></i>
-                                    <span >Catégories</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect"
+                       @click.prevent="toggleMenu('client')"
+                       :class="{'mm-active': activeMenu === 'client'}">
+                        <i class="fas fa-user"></i>
+                        <span>Client</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'client'" x-transition>
+                        <li><a href="/client/liste">La liste des clients</a></li>
+                    </ul>
+                </li>
 
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect"
+                       @click.prevent="toggleMenu('categories')"
+                       :class="{'mm-active': activeMenu === 'categories'}">
+                        <i class="bx bx-store"></i>
+                        <span>Catégories</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'categories'" x-transition>
+                        <li><a href="/categorie/new">Ajouter une catégorie</a></li>
+                        <li><a href="/categorie">La liste des catégories</a></li>
+                    </ul>
+                </li>
 
-                                   <li><a href="{{ path('app_categorie_new') }}">Ajouter une catégorie</a></li>
-                                    <li><a href="/categorie" >La liste des catégories</a></li>
-                                   
-                                </ul></li>
-                                <li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect"
+                       @click.prevent="toggleMenu('annonce')"
+                       :class="{'mm-active': activeMenu === 'annonce'}">
+                        <i class="bx bx-store"></i>
+                        <span>Annonce</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'annonce'" x-transition>
+                        <li><a href="/admin/annonces">Les demandes des annonces</a></li>
+                        <li><a href="{{path('app_admin_annonces_history')}}">Historique des demandes des annonces</a></li>
+                    </ul>
+                </li>
 
-                                <li>
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="bx bx-store"></i>
-                                    <span >Annonce</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/admin/annonces" >Les demandes des annonces</a></li>
-                                     <li><a  href="{{ path('app_admin_annonces_history') }}">Historique des demandes des annonces</a></li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect"
+                       @click.prevent="toggleMenu('article')"
+                       :class="{'mm-active': activeMenu === 'article'}">
+                        <i class="bx bx-news"></i>
+                        <span>Article</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'article'" x-transition>
+                        <li><a href="/admin/blogs">Les demandes des articles</a></li>
+                        <li><a href="/admin/historique/blogs">Historique des demandes des articles</a></li>
+                    </ul>
+                </li>
 
-                                </ul></li>
-                                <li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect"
+                       @click.prevent="toggleMenu('souk')"
+                       :class="{'mm-active': activeMenu === 'souk'}">
+                        <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
+                        <span>Souk</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'souk'" x-transition>
+                        <li><a href="/souk/new">Ajouter</a></li>
+                        <li><a href="/souk">Liste</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect"
+                       @click.prevent="toggleMenu('evenement')"
+                       :class="{'mm-active': activeMenu === 'evenement'}">
+                        <i class="bx bx-calendar-event"></i>
+                        <span>Evénement</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'evenement'" x-transition>
+                        <li><a href="/admin/events">La liste des événements</a></li>
+                        <li><a href="{{path('app_admin_event_history')}}">Historique des demande de validation des événements</a></li>
+                    </ul>
+                </li>
 
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="bx bx-news"></i>
-                                    <span >Article</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="#" >La liste des articles</a></li>
-                                   
-                                </ul></li>
-                                <li>
-                                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                        <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
-                                        <span >souk</span>
-                                    </a>
-                                    <ul class="sub-menu" aria-expanded="false">
-                                        <li><a href="{{path('app_souk_new')}}" >ajouter</a></li>
-                                    </ul>
-                                    <ul class="sub-menu" aria-expanded="false">
-                                        <li><a href="{{path('app_souk_index')}}" >liste</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                        <i class="bx bx-news"></i>
-                                        <span >Blogs</span>
-                                    </a>
-                                    <ul class="sub-menu" aria-expanded="false">
-                                        <li><a href="{{ path('app_blog_all') }}" >Voir Tous Les Blogs</a></li>
-                                         <li><a  href="{{ path('admin_pending_blogs') }}">Gérer Les Demandes des Blogs</a></li>
-        
-                                    </ul></li>
-                                    <li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect"
+                       @click.prevent="toggleMenu('reclamation')"
+                       :class="{'mm-active': activeMenu === 'reclamation'}">
+                        <i class="fas fa-envelope"></i>
+                        <span>Réclamation</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'reclamation'" x-transition>
+                        <li><a href="/reclamation">La liste des réclamations</a></li>
+                    </ul>
+                </li>
 
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="bx bx-calendar-event"></i>
-                                    <span >Evénement</span>
-                                   
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{path('app_admin_events')}}" >La liste des événements</a></li>
-                                    <li><a href="{{path('app_admin_event_history')}}"> Historique des demande de validation des événements</a></li>
-                                </ul></li>
-                                <li>
-                                    
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="fas fa-envelope"></i>
-                                    <span >Réclamation</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{path('app_reclamation_index') }}" >La liste des réclamations</a></li>
-                                   
-                
-                                    <li>
-                                </li>
-                                </ul></li>
-								<li>
-									<a href="javascript:void(0);" class="has-arrow waves-effect">
-										<i class="fas fa-truck"></i>
-										<span>Livraisons</span>
-									</a>
-									<ul class="sub-menu" aria-expanded="false">
-										<li>
-											<a href="/liste_livraisons">Liste des livraisons</a>
-										</li>
-										<li>
-											<a href="/livreur/new">Ajouter livreur</a>
-	
-										</li>
-										<li>
-											<a href="/livreur">Liste Des livreurs</a>
-	
-										</li>
-									</ul>
-								</li>
-	
+                <li>
+                    <a href="javascript:void(0);" class="has-arrow waves-effect"
+                       @click.prevent="toggleMenu('livraisons')"
+                       :class="{'mm-active': activeMenu === 'livraisons'}">
+                        <i class="fas fa-truck"></i>
+                        <span>Livraisons</span>
+                    </a>
+                    <ul class="sub-menu" x-show="activeMenu === 'livraisons'" x-transition>
+                        <li><a href="/liste_livraisons">Liste des livraisons</a></li>
+                        <li><a href="/livreur/new">Ajouter livreur</a></li>
+                        <li><a href="/livreur">Liste Des livreurs</a></li>
+                    </ul>
+                </li>
 
-                            
-
-                                <li>
-                                    <a href="/logout" >
-                                        <i class="bx bx-log-out"></i> Se déconnecter
-                                    </a>
-
-                                    <form id="logout-form" action="{{ path('app_logout') }}" method="post" class="d-none">
-                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
-                                    </form>
-                                </li>
-
-                            
-                        </ul>
-                    </div>
-                    <!-- Sidebar -->
-                </div>
-            </div>
-            <!-- Left Sidebar End -->
+                <li>
+                    <a href="/logout">
+                        <i class="bx bx-log-out"></i> Se déconnecter
+                    </a>
+                    <form id="logout-form" action="/logout" method="post" class="d-none">
+                        <input type="hidden" name="_csrf_token" value="">
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>
 
             
 
@@ -377,7 +366,7 @@
                 <div class="page-content">
                     <div class="container-fluid">
 
-                       {% block content %}{% endblock %}
+                       {% block body %}{% endblock %}
         
 
                     </div> <!-- container-fluid -->
@@ -491,7 +480,8 @@
 
         <!-- Datatable init js -->
         <script src="/assets/js/pages/datatables.init.js"></script>    
-
+        <!--alpine js -->
+        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script src="assets/js/app.js"></script>
 
     </body>

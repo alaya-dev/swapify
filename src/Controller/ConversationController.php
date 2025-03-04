@@ -23,12 +23,12 @@ final class ConversationController extends AbstractController
             throw $this->createNotFoundException('Recipient user not found.');
         }
 
-      
+
         /*$offer = $this->offerRepository->findOneBy([
             'offerMaker' => $currentUser,
             'annonceOwner' => $recipientUser,
         ]);
-
+        
         if (!$offer) {
             $this->addFlash('error', 'You must send an offer to this user before contacting them.');
             return $this->redirectToRoute('app_annonce_index');

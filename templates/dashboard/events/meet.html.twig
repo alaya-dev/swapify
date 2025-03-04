@@ -1,4 +1,4 @@
-{% extends 'dashBord_user.html.twig' %} 
+{% extends 'base.html.twig' %} 
 
 {% block title %}Rejoindre la session{% endblock %}
 
@@ -74,11 +74,12 @@
     </style>
 {% endblock %}
 
-{% block content %} 
+{% block body %} 
+
+{% if session.meetingStarted %}
     <div class="container">        
         <div id="videosdkContainer"></div>
     </div>
-    </script>
     <div id="attendanceModal" class="modal">
     <div class="modal-content">
         <h2>Confirmer votre présence</h2>
@@ -88,6 +89,29 @@
         <button id="closeModal">Annuler</button>
     </div>
 </div>
+{% else %}
+
+    <div class="p-4 max-w-full">
+    <div class="rounded-lg overflow-hidden shadow-lg border border-gray-100">
+      <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-5 text-center">
+        <h2 class="text-xl font-semibold">Notification d'Accès</h2>
+      </div>
+      <div class="bg-white p-6 text-center">
+        <div class="text-4xl text-green-500 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <p class="text-gray-800 font-bold mb-3">
+          Vous ne pouvez pas entrer une session qui n'a pas encore commencé.
+        </p>
+        <p class="text-gray-600">
+          Vous allez être notifié par adresse email dès que la session a été lancée par l'organisateur de l'événement.
+        </p>
+      </div>
+    </div>
+  </div>
+{% endif %}
 {% endblock %}
 
 {% block javascripts %}

@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-use App\DTO\CreateMessage;
+use App\DTO\CreatedMessage;
 use App\Factory\MessageFactory;
 use App\Repository\ConversationRepository;
+use App\Service\CacheService;
 use App\Service\PusherService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,15 +17,20 @@ final class MessageController extends AbstractController
 {
     public function __construct(
         private readonly MessageFactory $messageFactory,
-        private ConversationRepository $conversationRepository
+        private ConversationRepository $conversationRepository,
+        private CacheService $cacheService
     ) {}
 
     #[Route('/messages', name: 'message.create', methods: ['POST'])]
     public function create(
-        #[MapRequestPayload] CreateMessage $payload,
+        #[MapRequestPayload] CreatedMessage $payload,
         PusherService $pusherService,
     ): Response {
 
+        $cachedMessage = $this->cacheService->getCachedMessage($payload->conversationId);
+        if ($cachedMessage) {
+            return new Response('Message cached: ' . json_encode($cachedMessage), Response::HTTP_OK);
+        }
 
         $conversation = $this->conversationRepository->find($payload->conversationId);
         $message = $this->messageFactory->create(
@@ -43,6 +49,9 @@ final class MessageController extends AbstractController
             ],
             'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s')
         ];
+
+        //cach the message  
+        $this->cacheService->cacheMessage($message->getConversation()->getId(), $messageData);
 
         $pusherService->trigger(
             'chat',

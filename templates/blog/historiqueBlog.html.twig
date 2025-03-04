@@ -1,0 +1,143 @@
+{% extends 'include.html.twig' %}
+
+{% block title %}Historique des articles{% endblock %}
+
+
+{% block stylesheets %}
+
+    <style>
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+            transition: background-color 0.3s ease;
+        }
+        .table thead th {
+            background-color: rgb(17, 103, 66);
+            color: white;
+            border-bottom: 2px solid rgb(0, 179, 90);
+        }
+        .table tbody td {
+            vertical-align: middle;
+        }
+        .img-thumbnail {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        .alert-info {
+            background-color: #e2f3ff;
+            border-color: #b8e2ff;
+            color: #004085;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+
+        .fade-out {
+            animation: fadeOut 5s forwards; /* 5 seconds duration */
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+
+
+    {% for type, messages in app.flashes %}
+        {% if type == 'success' %}
+            {% for message in messages %}
+                <div class="alert alert-success fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'warning' %}
+            {% for message in messages %}
+                <div class="alert alert-warning fade-out">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% elseif type == 'error' %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="container mt-5">
+        <h3>
+            Historique des demandes d'article  
+        </h3>
+        <div class="filter-section mb-5 mt-5">
+            <div class="btn-group" role="group" aria-label="Filter annonces">
+                <a href="{{ path('app_admin_blog_history', {'filter': 'all'}) }}" class="btn btn-outline-primary">Toutes</a>
+                <a href="{{ path('app_admin_blog_history', {'filter': 'pending'}) }}" class="btn btn-outline-warning">En attente</a>
+                <a href="{{ path('app_admin_blog_history', {'filter': 'active'}) }}" class="btn btn-outline-success">Acceptées</a>
+                <a href="{{ path('app_admin_blog_history', {'filter': 'inactive'}) }}" class="btn btn-outline-danger">Rejetées</a>
+            </div>
+        </div>
+
+
+
+
+
+        {% if blogs is empty %}
+            <div class="alert alert-info text-center" role="alert">
+                <i class="fas fa-info-circle"></i> Vous n'avez aucune article pour le moment.
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                                        <th>#</th>
+                                     
+                                        <th>Titre</th>
+                                        <th>Contenu</th>
+                                        <th>Posté par</th>
+                                        <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                    {% for blog in blogs %}
+                                        <tr>
+                                            <td class="fw-medium">{{ blog.id }}</td>
+                                        
+                                            <td>{{ blog.titre }}</td>
+                                            <td>{{ blog.contenu|slice(0, 100) ~ '...' }}</td>
+                                            <td>{{ blog.user.prenom }} {{ blog.user.nom }}</td>
+                                            <td>
+                                                <span class="badge 
+                                                                {% if blog.statut.value == 'Acceptée' %}
+                                                                    bg-success
+                                                                {% elseif blog.statut.value == 'Rejetée' %}
+                                                                    bg-danger
+                                                                {% else %}
+                                                                    bg-warning
+                                                                {% endif %}">
+                                                    {{ blog.statut.value }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">Aucune article trouvée</td>
+                                        </tr>
+                                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
