@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Attendance;
+use App\Entity\ParticipantEvent;
 use App\Entity\Session;
 use App\Form\SessionType;
 use App\Repository\AttendanceRepository;
 use App\Repository\ParticipantEventRepository;
 use App\Repository\SessionRepository;
 use App\Service\JwtService;
+use App\Service\MailerMailJetService;
 use App\Service\VideoSDKService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +27,17 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/session')]
 final class SessionController extends AbstractController{
+
+
+    private MailerMailJetService $mailerService;
+
+    public function __construct(
+        MailerMailJetService $mailerService,
+      
+    ) {
+        $this->mailerService=$mailerService;
+      
+    }
 
     #[Route(name: 'app_session_index', methods: ['GET'])]
     public function index(SessionRepository $sessionRepository): Response
@@ -101,29 +114,118 @@ public function checkStatus(Session $session): JsonResponse
     ]);
 }
 
-#[Route('/session/{id}/join', name: 'join_online_session')]
-public function joinSession(Session $session, EntityManagerInterface $entityManager): Response
-{
-    $user = $this->getUser();
+private function scheduleAttendanceEmail(Session $session,Attendance $attendance,): void
+    {
+        $delay = $session->getEndHour()->getTimestamp() - (new \DateTime('+15 minutes'))->getTimestamp();
+        $code =$attendance->getCode();
+        $user=$attendance->getParticipantEvent()->getUser();
 
-    $meetingRoom = 'session_' . $session->getId();
-    $isOrganizer = $session->getEvent()->getOrgniser() === $user;
-
-    // If organizer, set meeting as started
-    if ($isOrganizer) {
-        $session->setMeetingStarted(true);
-        $entityManager->persist($session);
-        $entityManager->flush();
+        if ($delay > 0) {
+            $htmlContent='
+                <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Code de Présence</title>
+        <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+            .email-header { background-color:rgb(0, 103, 2); color: #ffffff; text-align: center; padding: 20px; }
+            .email-header h1 { margin: 0; font-size: 24px; }
+            .email-body { padding: 20px; color: #333333; }
+            .email-body h2 { color:rgb(0, 103, 2); font-size: 28px; text-align: center; margin: 20px 0; }
+            .email-body p { font-size: 16px; line-height: 1.6; }
+            .email-footer { text-align: center; padding: 20px; background-color: #f4f4f4; font-size: 14px; color: #666666; }
+            .logo { display: block; margin: 0 auto 20px; width: 100px; }
+        </style>
+    </head>
+    <body>
+        <div class="email-container">
+            <div class="email-header">
+                <h1>Code de Présence pour la Session</h1>
+            </div>
+            <div class="email-body">
+                <img src="/public/logo.png" alt="Logo" class="logo">
+                <p>Bonjour'  . $user->getNom().' '.$user->getPreNom()  .' ,</p>
+                <p>Votre code de présence pour la session <strong> '. $session->getEvent()->getTitle() .' </strong> est :</p>
+                <h2>' . $code .' </h2>
+                <p>Veuillez entrer ce code dans l\'interface de la session pour confirmer votre présence.</p>
+                <p>Merci et à bientôt !</p>
+            </div>
+            <div class="email-footer">
+                <p>Si vous n\'avez pas demandé ce code, veuillez ignorer cet e-mail.</p>
+                <p>&copy; 2024 Swapify. Tous droits réservés.</p>
+            </div>
+        </div>
+    </body>
+    </html>';
+            $this->mailerService->sendEmail($user->getEmail(),"Code d'attendance pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
+           
+        }
     }
 
-    // Allow both organizer and participants to join
-    return $this->render('session/meet.html.twig', [
-        'meetingRoom' => $meetingRoom,
-        'session' => $session,
-        'isOrganizer' => $isOrganizer,
+
+    private function sendLocationEmail(Session $session,ParticipantEventRepository $participantEventRepo): void
+    {
+        
+        $participantEvents = $participantEventRepo->findBy([
+            'event' => $session->getEvent()
+        ]);
+
+        if (empty($participantEvents)) {
+            $this->addFlash('error', 'No participants found for this session.');
+            
+        }
+        else {
+             foreach ($participantEvents as $participantEvent) {
+
+            $htmlContent='
+                <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Code de Présence</title>
+        <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+            .email-header { background-color:rgb(0, 103, 2); color: #ffffff; text-align: center; padding: 20px; }
+            .email-header h1 { margin: 0; font-size: 24px; }
+            .email-body { padding: 20px; color: #333333; }
+            .email-body h2 { color:rgb(0, 103, 2); font-size: 28px; text-align: center; margin: 20px 0; }
+            .email-body p { font-size: 16px; line-height: 1.6; }
+            .email-footer { text-align: center; padding: 20px; background-color: #f4f4f4; font-size: 14px; color: #666666; }
+            .logo { display: block; margin: 0 auto 20px; width: 100px; }
+        </style>
+    </head>
+    <body>
+        <div class="email-container">
+            <div class="email-header">
+                <h1>Code de Présence pour la Session</h1>
+            </div>
+            <div class="email-body">
+                <img src="/public/logo.png" alt="Logo" class="logo">
+                <p>Bonjour'  . $participantEvent->getUser()->getNom().' '.$participantEvent->getUser()->getPreNom()  .' ,</p>
+                <p>Voici la localisation pour la session presentiel intitulé <strong> '. $session->getEvent()->getTitle() .' </strong> est :</p>
+                <p><a href="https://maps.app.goo.gl/6h5EYdcTNJsVCnZg9" target="_blank" style="color:rgb(0, 103, 2); font-weight:bold;">Voir sur Google Maps</a></p>
+                <p>Merci et à bientôt !</p>
+            </div>
+            <div class="email-footer">
+                <p>Si vous n\'avez pas demandé ce code, veuillez ignorer cet e-mail.</p>
+                <p>&copy; 2024 Swapify. Tous droits réservés.</p>
+            </div>
+        </div>
+    </body>
+    </html>';
+            $this->mailerService->sendEmail($participantEvent->getUser()->getEmail(),"Localisation pour la session intitulé {{$session->getEvent()->getTitle()}}",$htmlContent,);
+        }
+
+        }
+
        
-    ]);
-}
+        
+    }
 #[Route('/session/{id}/join-session', name: 'join_online_sessionn')]
 public function joinSessions(
     Session $session,
@@ -139,9 +241,9 @@ public function joinSessions(
 
     // Find the participant event record for this user and event
     $participantEvent = $participantEventRepo->findOneBy([
-        'user' => $user,
         'event' => $session->getEvent()
     ]);
+    
 
     if (!$participantEvent && $session->getEvent()->getOrgniser() != $user) {
         throw $this->createNotFoundException('Vous n\'êtes pas inscrit à cet événement.');
@@ -166,37 +268,19 @@ public function joinSessions(
         $entityManager->flush();
     }
 
-    // Send the attendance code via email
-    // $organizerEmail = $session->getEvent()->getOrgniser()->getEmail();
-    // $participantEmail = $participantEvent->getUser()->getEmail();
+    
+
     $now = new \DateTime();
     $endHour = $session->getEndHour();
     $remainingMinutes = $endHour > $now ? $now->diff($endHour)->i : 0;
-    // $email = (new Email())
-    //     ->from($organizerEmail)
-    //     ->to($participantEmail)
-    //     ->subject('Votre code de présence')
-    //     ->html($this->renderView('mail/index.html.twig', [
-    //         'participant_name' => $participantEvent->getUser()->getEmail(),
-    //         'session_name' => $session->getObjective(),
-    //         'attendance_code' => $attendance->getCode(),
-    //         'organizer_name' => $session->getEvent()->getOrgniser()->getEmail(),
-    //         'event_name' => $session->getEvent()->getTitle(),
-    //     ]));
-
     
-    //         $mailer->send($email);
- 
-   
-
-    // If organizer, set meeting as started
     $isOrganizer = $session->getEvent()->getOrgniser() === $user;
     if ($isOrganizer) {
         $session->setMeetingStarted(true);
         $entityManager->persist($session);
         $entityManager->flush();
     }
-
+    $this->scheduleAttendanceEmail($session,$attendance);
     // Pass the VideoSDK API key
     $apiKey = $this->getParameter('videosdk_api_key');
 
@@ -212,6 +296,114 @@ public function joinSessions(
     ]);
 }
 
+
+
+#[Route('/session/{id}/location', name: 'sendInpPrsonSessionLocation')]
+public function sendLocation(
+    Session $session,
+    ParticipantEventRepository $participantEventRepo,
+    EntityManagerInterface $entityManager,
+    AttendanceRepository $attendanceRepository,
+): Response {
+    $user = $this->getUser();
+    if (!$user) {
+        return $this->redirectToRoute('app_login');
+    }
+
+    $participantEvents = $participantEventRepo->findBy([
+        'event' => $session->getEvent()
+    ]);
+
+    // Loop through each participant and create an attendance record if it doesn't exist
+    foreach ($participantEvents as $participantEvent) {
+        $attendance = $attendanceRepository->findOneBy([
+            'participantEvent' => $participantEvent,
+            'session' => $session
+        ]);
+
+        if (!$attendance) {
+            $attendance = new Attendance();
+            $attendance->setAttended(false); // Set attended status to false
+            $attendance->setParticipantEvent($participantEvent);
+            $attendance->setSession($session);
+            $attendance->setTimestamp(new DateTime());
+            $entityManager->persist($attendance);
+            $entityManager->flush();
+        }
+
+
+
+    }
+    $this->sendLocationEmail($session,$participantEventRepo);
+    $this->addFlash('Success',"localisaion send successfully!");
+
+    return $this->redirectToRoute('app_event_show',['id' => $session->getEvent()->getId()]);
+}
+
+
+#[Route('/session/{id}/attendance', name: 'view_attendance')]
+public function viewAttendance(
+    Session $session,
+    ParticipantEventRepository $participantEventRepo,
+    AttendanceRepository $attendanceRepository
+): Response {
+    // Fetch all participant events for this session
+    $participantEvents = $participantEventRepo->findBy([
+        'event' => $session->getEvent()
+    ]);
+
+    // Fetch attendance records for each participant
+    $attendanceRecords = [];
+    foreach ($participantEvents as $participantEvent) {
+        $attendance = $attendanceRepository->findOneBy([
+            'participantEvent' => $participantEvent,
+            'session' => $session
+        ]);
+        $attendanceRecords[$participantEvent->getId()] = $attendance ? $attendance->isAttended() : false;
+    }
+
+    return $this->render('Dashboard/events/attendance_list.html.twig', [
+        'session' => $session,
+        'participantEvents' => $participantEvents,
+        'attendanceRecords' => $attendanceRecords, // Pass attendance records to the template
+    ]);
+}
+
+
+#[Route('/session/{id}/attendance/update', name: 'update_attendance', methods: ['POST'])]
+public function updateAttendance(
+    Request $request,
+    Session $session,
+    ParticipantEventRepository $participantEventRepo,
+    AttendanceRepository $attendanceRepository,
+    EntityManagerInterface $entityManager
+): Response {
+    // Get the submitted attendance data
+    $attendanceData = $request->request->all('attendance');
+    
+    // Fetch all participant events for this session
+    $participantEvents = $participantEventRepo->findBy([
+        'event' => $session->getEvent()
+    ]);
+
+    // Loop through each participant and update their attendance status
+    foreach ($participantEvents as $participantEvent) {
+        $attendance = $attendanceRepository->findOneBy([
+            'participantEvent' => $participantEvent,
+            'session' => $session
+        ]);
+
+        $attendance->setAttended((bool)($attendanceData[$participantEvent->getId()] ?? false));
+        $entityManager->persist($attendance);
+    }
+
+    // Save all changes to the database
+    $entityManager->flush();
+
+    // Redirect back to the attendance list with a success message
+    $this->addFlash('success', 'Attendance updated successfully.');
+    return $this->redirectToRoute('view_attendance', ['id' => $session->getId()]);
+}
 
 
 

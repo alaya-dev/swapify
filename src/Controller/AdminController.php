@@ -12,7 +12,7 @@ use App\Repository\AnnonceRepository;
 use App\Repository\BlogRepository;
 use App\Repository\CategorieRepository;
 use App\Repository\EventRepository;
-use App\Service\mailerMailJetService;
+use App\Service\MailerMailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,15 +77,18 @@ class AdminController extends AbstractController
 
 
 
+
 #[Route('/admin/liste', name: 'admin_list')]
-public function listAdmins(UserRepository $userRepository): Response
+public function listAdmins(UserRepository $userRepository,Request $request): Response
 {
     // Requête pour récupérer tous les utilisateurs avec le rôle 'ROLE_ADMIN'
-    $admins = $userRepository->findAdmins();
+    $search = $request->query->get('search'); 
+    $admins = $userRepository->findAdmins($search);  // Appelle la méthode du repository
 
     // Rendu du template avec la liste des administrateurs
     return $this->render('admin/liste_admin.html.twig', [
         'admins' => $admins,
+        'searchTerm' => $search,
     ]);
 }
 
@@ -196,7 +199,7 @@ public function listAdmins(UserRepository $userRepository): Response
     #[Route('/admin/annonce/{id}/validate', name: 'admin_annonce_validate')]
      //#[IsGranted('ROLE_ADMIN')]
      #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
-    public function validate(Annonce $annonce, EntityManagerInterface $entityManager, mailerMailJetService $mj): RedirectResponse
+    public function validate(Annonce $annonce, EntityManagerInterface $entityManager, MailerMailJetService $mj): RedirectResponse
     {
         $annonce->setStatut('Acceptee');
         $entityManager->flush();
@@ -254,7 +257,7 @@ public function listAdmins(UserRepository $userRepository): Response
     #[Route('/admin/annonce/{id}/reject', name: 'admin_annonce_reject')]
     //#[IsGranted('ROLE_ADMIN')]
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
-    public function reject(Annonce $annonce, EntityManagerInterface $entityManager, mailerMailJetService $mj): RedirectResponse
+    public function reject(Annonce $annonce, EntityManagerInterface $entityManager, MailerMailJetService $mj): RedirectResponse
     {
         $annonce->setStatut('Rejetee');
         $entityManager->flush();
@@ -285,6 +288,39 @@ public function listAdmins(UserRepository $userRepository): Response
         return $this->redirectToRoute('app_admin_annonces');
     }
     
+
+
+
+    #[Route('/client/toggle-ban/{id}', name: 'client_toggle_ban')]
+    public function toggleBanClient(int $id, EntityManagerInterface $em): Response
+    {
+        $user = $em->getRepository(User::class)->find($id);
+    
+        if (!$user) {
+            $this->addFlash('error', 'Client introuvable.');
+            return $this->redirectToRoute('client_list');
+        }
+    
+        if (!in_array('ROLE_CLIENT', $user->getRoles())) {
+            $this->addFlash('error', 'Action non autorisée.');
+            return $this->redirectToRoute('client_list');
+        }
+    
+        // Bascule entre banni et non banni
+        $user->setIsBanned(!$user->getIsBanned());
+        $em->flush();
+    
+        $this->addFlash('success', sprintf(
+            'Le client %s a été %s.',
+            $user->getEmail(),
+            $user->getIsBanned() ? 'banni' : 'débanni'
+        ));
+    
+        return $this->redirectToRoute('client_list');
+    }
+
+
+
     #[Route('/admin/event/{id}/reject', name: 'admin_event_reject')]
     //#[IsGranted('ROLE_ADMIN')]
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]

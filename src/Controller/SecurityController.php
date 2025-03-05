@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+
 
 class SecurityController extends AbstractController
 {
@@ -19,6 +22,11 @@ class SecurityController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
+        
+
+        if ($this->getUser()) {
+            throw new AccessDeniedException('Vous êtes déjà connecté.'); 
+        }
 
         $form = $this->createForm(TaskType::class);
         $form->handleRequest($request);
@@ -33,15 +41,6 @@ class SecurityController extends AbstractController
         if ($error) {
             $this->addFlash('error', 'données invalides');
         }
-
-        if ($form->isSubmitted() && !$form->isValid()) {
-            $recaptchaResponse = $request->request->get('g-recaptcha-response');
-            
-            if (!$recaptchaResponse) {
-                $this->addFlash('error', 'Veuillez valider le reCAPTCHA.');
-            }
-        }
-        
         
             // 🔹 Retourner toujours une réponse
         return $this->render('security/login.html.twig', [
@@ -50,9 +49,9 @@ class SecurityController extends AbstractController
             'error' => $error,
         ]);
     }
-    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+    #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }
+    

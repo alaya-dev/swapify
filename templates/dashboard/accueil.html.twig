@@ -1,5 +1,149 @@
 {% extends 'include.html.twig' %}
-{% block content %}
-    <h1>Bienvenue dans votre espace d'administration</h1>
-    <p>Cet espace est réservé en fonction de vos rôles.</p>
+
+{% block body %}
+
+<div class="container mt-1">
+    <h1 class="text-center">Dashboard Administrateur</h1><br><br>
+    
+    <!-- Widgets -->
+    <div class="row">
+    <div class="col-md-4">
+        <div class="card text-dark bg-info-subtle mb-3">
+            <div class="card-header">Total Admins</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[0] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-primary-subtle mb-3">
+            <div class="card-header">Total Clients</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[1] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-success-subtle mb-3">
+            <div class="card-header">Clients Vérifiés</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[2] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-warning-subtle mb-3">
+            <div class="card-header">Clients Non Vérifiés</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[3] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-danger-subtle mb-3">
+            <div class="card-header">Clients Bannis</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[4] }}</h5>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div class="col-md-4">
+        <div class="card text-dark bg-secondary-subtle mb-3">
+            <div class="card-header">Clients Non Bannis</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ chartData.datasets[0].data[5] }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bar Chart légèrement décalé à droite et Pie Chart à droite -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-start align-items-center">
+                <!-- Bar Chart (Annonces) avec un léger décalage à droite -->
+                <div style="margin-left: 20px;">
+                    <canvas id="barChart" class="small-chart"></canvas>
+                </div>
+                <!-- Pie Chart (Blogs) avec une marge à gauche -->
+                <div style="margin-left: 170px;">
+                    <canvas id="blogPieChart" style="max-width: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Bar Chart - Annonces
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    const chartData = {
+        labels: ['Acceptées', 'Rejetées', 'En Attente'],  // Labels pour les annonces
+        datasets: [
+            {
+                label: 'Annonces',
+                data: [{{ acceptedAnnonces }}, {{ rejectedAnnonces }}, {{ pendingAnnonces }}], // Statistiques des annonces
+                backgroundColor: ['#ffcc80', '#ffb3b3', '#99ccff'],
+                borderColor: ['#ffcc80', '#ffb3b3', '#99ccff'],
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const chartOptions = {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    };
+
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: chartData,
+        options: chartOptions
+    });
+
+        // Pie Chart - Blogs
+            const ctxBlogPie = document.getElementById('blogPieChart').getContext('2d');
+            const blogPieData = {
+                labels: ['Acceptées', 'Rejetées', 'En Attente'],
+                datasets: [{
+                    label: 'Blogs',
+                    data: [{{ acceptedBlogs|default(0) }}, {{ rejectedBlogs|default(0) }}, {{ pendingBlogs|default(0) }}],
+                    backgroundColor: ['#80d8ff', '#ff80bf', '#ccff99'],
+                    borderColor: ['#80d8ff', '#ff80bf', '#ccff99'],
+                    borderWidth: 1
+                }]
+            };
+            new Chart(ctxBlogPie, {
+                type: 'pie',
+                data: blogPieData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        });
+</script>
+
+<!-- Custom CSS -->
+<style>
+    .small-chart {
+        width: 100% !important;
+        height: 300px !important; /* Ajustez la hauteur selon vos besoins */
+    }
+</style>
 {% endblock %}

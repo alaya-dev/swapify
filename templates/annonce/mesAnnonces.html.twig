@@ -49,6 +49,10 @@
             100% { opacity: 0; display: none; }
         }
 
+        a{
+            text-decoration:"none"
+        }
+
 
     </style>
 {% endblock %}
@@ -99,6 +103,19 @@
                 <a href="{{ path('mesAnnonces', {'filter': 'inactive'}) }}" class="btn btn-outline-danger">Rejetées</a>
             </div>
         </div>
+
+     
+
+  
+  <div class="flex space-x-4" style="margin-left:90%">
+   <a href="{{ path('app_annonce_new') }}" data-turbo="false"
+       class="flex items-center space-x-4 bg-slate-800 hover:bg-slate-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
+      <i class="fas fa-plus"></i>
+      <span>Ajouter annonce</span>
+    </a>
+  </div>
+
+
 
         {% if annonces is empty %}
             <div class="alert alert-info text-center" role="alert">

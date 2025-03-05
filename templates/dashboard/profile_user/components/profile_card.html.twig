@@ -6,8 +6,8 @@
              alt="Cover Image">
         <!-- Profile Image -->
         <div class="absolute inset-x-0 -bottom-12 flex justify-center">
-            <img class="w-24 h-24 rounded-full border-4 border-white" 
-                 src="https://th.bing.com/th/id/OIP.AbGafkazjc_S1pZPh0B9cQHaIm?rs=1&pid=ImgDetMain" 
+         <img class="w-24 h-24 rounded-full border-4 border-white" 
+             src="{{ app.user.imageUrl ?: '/uploads/images/admin.jpg' }}" 
                  alt="Profile">
         </div>
     </div>

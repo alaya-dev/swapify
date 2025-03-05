@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Attendance List{% endblock %}
+
+{% block body %}
+
+    {# Flash Messages with Improved Styling #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="px-4 py-3 mb-4 text-white rounded-md 
+                {% if type == 'success' %}bg-green-500{% elseif type == 'warning' %}bg-yellow-500{% elseif type == 'error' %}bg-red-500{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="w-full mx-auto bg-white  rounded-lg p-5 mt-6">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-4">Attendance List for Session: <span class="text-indigo-600">{{ session.objective }}</span></h1>
+
+        <form action="{{ path('update_attendance', {'id': session.id}) }}" method="post">
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2 border border-gray-300 text-left">Participant Name</th>
+                            <th class="px-4 py-2 border border-gray-300 text-center">Attendance Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participantEvent in participantEvents %}
+                            <tr class="border-t border-gray-200 hover:bg-gray-50">
+                                <td class="px-4 py-3 border border-gray-300">
+                                    {{ participantEvent.user.prenom }} {{ participantEvent.user.nom }}
+                                </td>
+                                <td class="px-4 py-3 border border-gray-300 text-center">
+                                    <input type="checkbox" 
+                                        name="attendance[{{ participantEvent.id }}]" 
+                                        value="1" 
+                                        class="w-5 h-5 accent-indigo-500"
+                                        {% if attendanceRecords[participantEvent.id] %}checked{% endif %}>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4 flex justify-end">
+                <button type="submit" class="px-6 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-md shadow-md">
+                    Update Attendance
+                </button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

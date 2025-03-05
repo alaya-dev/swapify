@@ -1,7 +1,7 @@
        {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="w-full overflow-hidden border-t flex flex-col">
+<div class="w-full overflow-hidden border-t flex flex-col p-5">
     <main class="w-full flex-grow p-6">
         <p class="text-xl pb-6 flex items-center">
             <i class="fas fa-calendar-alt mr-3"></i><a href="{{path('my_events')}}">Mes Évenements</a>/ modifier Événement
@@ -86,16 +86,60 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        <button type="button" class="mt-4 w-full bg-blue-50 text-gray-700 py-2 rounded add-session-btn border border-2 border-dashed border-blue-500 flex items-center justify-center"><i class="fas fa-plus mr-3"></i> Ajouter une session</button>
+                        <button type="button" class="mt-4 w-full bg-blue-100 text-gray-700 py-2 rounded add-session-btn border-2 border-dashed border-blue-500 flex items-center justify-center" >
+                            <i class="fas fa-plus mr-3"></i> Ajouter une session
+                        </button>
                     </div>
                     
-                    <button type="submit" class="px-4 py-1 text-white font-light tracking-wider bg-gray-700 rounded">Enregistrer l'événement</button>
+                    <button type="submit" class="px-4 py-1 text-white font-light tracking-wider bg-gray-700 rounded">Modifier l'événement</button>
                     {{ form_end(form) }}
                 </div>
             </div>
         </div>
     </main>
 </div>
+
+<script>
+(function() {
+    let index = document.querySelectorAll('.session-item').length;
+    const addButton = document.querySelector('.add-session-btn');
+    const collection = document.querySelector('.sessions-collection');
+    
+    function addSessionForm() {
+        const item = `
+            <div class="session-item bg-white p-4 rounded shadow">
+                <div>
+                    <label class="block text-sm text-gray-600">Objectif</label>
+                    <input type="text" name="event[sessions][${index}][objective]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600">Heure de Début</label>
+                    <input type="datetime-local" name="event[sessions][${index}][startHour]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600">Heure de Fin</label>
+                    <input type="datetime-local" name="event[sessions][${index}][endHour]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600">Type de Session</label>
+                    <select name="event[sessions][${index}][typeSession]" class="w-full px-5 py-2 text-gray-700 bg-gray-200 rounded mb-2 mt-1" required>
+                        <option value="En ligne">En ligne</option>
+                        <option value="Présentiel">Présentiel</option>
+                    </select>
+                </div>
+                <button type="button" class="mt-2 w-full bg-red-500 text-white py-2 rounded remove-session">Supprimer la session</button>
+            </div>
+        `;
+        collection.insertAdjacentHTML('beforeend', item);
+        collection.lastElementChild.querySelector('.remove-session').addEventListener('click', function() {
+            this.closest('.session-item').remove();
+        });
+        index++;
+    }
+    
+    addButton.addEventListener('click', addSessionForm);
+})();
+</script>
 
 {% endblock %}
 

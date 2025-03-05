@@ -5,13 +5,13 @@
     {{ parent() }}
     <style>
         .fade-out {
-            animation: fadeOut 5s forwards; /* 5 seconds duration */
+            animation: fadeOut 5s forwards;
         }
 
         @keyframes fadeOut {
             0% { opacity: 1; }
             90% { opacity: 1; }
-            100% { opacity: 0; display: none; }
+            100% { opacity: 0; }
         }
     </style>
 {% endblock %}
@@ -43,21 +43,40 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Remove alert messages after animation ends
+            setTimeout(function() {
+                document.querySelectorAll(".fade-out").forEach(function(el) {
+                    el.remove();
+                });
+            }, 6000); // 6 seconds (5s animation + 1s buffer)
+
+            // Handle geolocation
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    // Vérifie si position.coords existe avant d'y accéder
-                    if (position.coords && position.coords.latitude && position.coords.longitude) {
-                        console.log("position", position.coords.latitude, position.coords.longitude);
-                        document.getElementById("annonce_localisation_x").value = position.coords.latitude;
-                        document.getElementById("annonce_localisation_y").value = position.coords.longitude;
+                    let latitude = position.coords?.latitude;
+                    let longitude = position.coords?.longitude;
+
+                    if (latitude && longitude) {
+                        console.log("Position:", latitude, longitude);
+                        
+                        // Check if input fields exist before setting values
+                        let inputX = document.getElementById("annonce_localisation_x");
+                        let inputY = document.getElementById("annonce_localisation_y");
+
+                        if (inputX && inputY) {
+                            inputX.value = latitude;
+                            inputY.value = longitude;
+                        } else {
+                            console.error("Les champs de localisation ne sont pas trouvés dans le DOM.");
+                        }
                     } else {
-                        console.error("La géolocalisation a échoué, pas de coordonnées disponibles.");
+                        console.error("La géolocalisation a échoué.");
                     }
                 }, function(error) {
                     console.error("Erreur de géolocalisation :", error);
                 });
             } else {
-                console.log("La géolocalisation n'est pas supportée par ce navigateur.");
+                console.warn("La géolocalisation n'est pas supportée par ce navigateur.");
             }
         });
     </script>

@@ -429,21 +429,20 @@ public function topRated(BlogRepository $blogRepository): Response
 #[Route('/my-blogs', name: 'app_user_blogs', methods: ['GET'])]
 public function displayUserBlogs(BlogRepository $blogRepository,Request $request): Response
 {
-   
-
-            $filter = $request->query->get('filter', 'all');
-            $blogs = match ($filter) {
-                'pending' => $blogRepository->findBy(['statut' => 'enAttente', 'user' => $this->getUser()]),
-                'active' => $blogRepository->findBy(['statut' => 'Acceptée', 'user' => $this->getUser()]),
-                'inactive' => $blogRepository->findBy(['statut' => 'Rejetée', 'user' => $this->getUser()]),
-                default => $blogRepository->findBy(['user' => $this->getUser()]),
-            };
-            
     
-            return $this->render('blog/my_blogs.html.twig', [
-                'blogs' => $blogs,
-                
-            ]);
+    $filter = $request->query->get('filter', 'all');
+    $blogs = match ($filter) {
+        'pending' => $blogRepository->findBy(['status' => 'enAttente', 'user' => $this->getUser()]),
+        'active' => $blogRepository->findBy(['status' => 'Acceptée', 'user' => $this->getUser()]),
+        'inactive' => $blogRepository->findBy(['status' => 'Rejetée', 'user' => $this->getUser()]),
+        'draft' => $blogRepository->findBy(['status' => 'Draft', 'user' => $this->getUser()]),
+        default => $blogRepository->findBy(['user' => $this->getUser()]),
+    };    
+return $this->render('blog/my_blogs.html.twig', [
+   'blogs' => $blogs,
+]);
+
+
         }
     
 // In BlogController.php

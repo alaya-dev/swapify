@@ -15,8 +15,13 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use ReCaptcha\ReCaptcha;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+
+
 
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
@@ -27,43 +32,44 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function __construct(private  UrlGeneratorInterface $urlGenerator,
      private UserRepository $userRepository,
+     private Security $security,
      private RequestStack $requestStack,
      #[Autowire('%env(GOOGLE_RECAPTCHA_SECRET_KEY)%')] private string $recaptchaSecretKey) {}
 
-        public function authenticate(Request $request): Passport
-        {
-
-            $recaptchaResponse = $request->request->get('g-recaptcha-response');
-
-            // Valider reCAPTCHA
-            $recaptcha = new ReCaptcha($this->recaptchaSecretKey);
-            $resp = $recaptcha->verify($recaptchaResponse, $request->getClientIp());
-
-            if (!$resp->isSuccess()) {
-                // Si reCAPTCHA n'est pas valide, ajouter un message flash
-                $session = $this->requestStack->getSession();
-                $session->getFlashBag()->add('error', 'Veuillez cocher le reCAPTCHA.');
-        
-                
-                return new Passport(
-                    new UserBadge(''), // L'utilisateur ne sera pas authentifié
-                    new PasswordCredentials(''), // Aucun mot de passe
-                    [] // Aucune autre information
-                );
-            }
-
-            
-            $email = $request->getPayload()->getString('email');
-            $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
-
-            return new Passport(
-                new UserBadge($email),
-                new PasswordCredentials($request->getPayload()->getString('password')),
-                [
-                    new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
-                ]
-            );
-        }
+     public function authenticate(Request $request): Passport
+     {
+         $recaptchaResponse = $request->request->get('g-recaptcha-response');
+     
+         // If reCAPTCHA response is provided, verify it
+         if (!empty($recaptchaResponse)) {
+             $recaptcha = new ReCaptcha($this->recaptchaSecretKey);
+             $resp = $recaptcha->verify($recaptchaResponse, $request->getClientIp());
+     
+             if (!$resp->isSuccess()) {
+                 // If reCAPTCHA is provided but invalid, show an error and deny authentication
+                 $session = $this->requestStack->getSession();
+                 $session->getFlashBag()->add('error', 'Le reCAPTCHA est invalide.');
+     
+                 return new Passport(
+                     new UserBadge(''), // Prevent authentication
+                     new PasswordCredentials(''), 
+                     []
+                 );
+             }
+         }
+     
+         // Proceed with normal authentication if reCAPTCHA is either valid or absent
+         $email = $request->getPayload()->getString('email');
+         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
+     
+         return new Passport(
+             new UserBadge($email),
+             new PasswordCredentials($request->getPayload()->getString('password')),
+             [
+                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+             ]
+         );
+     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
     {
@@ -76,6 +82,18 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
                     'error' => 'Données invalides. Veuillez confirmer votre compte avant de vous connecter.'
                 ])
             );
+        }
+
+         // Vérifie si l'utilisateur est banni
+         if (in_array('ROLE_CLIENT', $user->getRoles()) && $user->getIsBanned()) {
+            // Déconnecte l'utilisateur
+            $this->security->logout(false);
+
+            // Ajoute un message flash pour l'alerte
+            $request->getSession()->getFlashBag()->add('error', 'Votre compte est banni,vous recevez un mail lorsque votre compte sera actif.');
+
+            // Redirige vers la page de connexion
+            return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
         }
 
         // Redirection en fonction des rôles

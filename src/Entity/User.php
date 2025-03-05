@@ -49,7 +49,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     private ?\DateTimeInterface $dateNaissance;
 
 
-
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $imageUrl = null;
 
 
     #[ORM\Column(type: 'string', length: 8, unique: true)]
@@ -64,6 +65,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isBanned = false;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -281,7 +285,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): static
     {
         $this->nom = $nom;
         return $this;
@@ -292,7 +296,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(?string $prenom): static
     {
         $this->prenom = $prenom;
         return $this;
@@ -318,7 +322,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->tel;
     }
 
-    public function setTel(string $tel): static
+    public function setTel(?string $tel): static
     {
         $this->tel = $tel;
         return $this;
@@ -537,6 +541,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             }
         }
 
+        return $this;
+    }
+
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
+        return $this;
+    }
+
+    public function getIsBanned(): ?bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned(bool $isBanned): self
+    {
+        $this->isBanned = $isBanned;
         return $this;
     }
 }
