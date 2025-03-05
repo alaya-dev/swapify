@@ -196,7 +196,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
             <!-- Product Card 1 -->
              {% if annonces | length>0 %}
-              {% for annonce in annonces %}
+              {% for annonce in annonces | slice(0, 3) %}
                 <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
                   <div class="relative aspect-square">
                     <img 
