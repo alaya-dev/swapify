@@ -1,19 +1,29 @@
-{{ form_start(form, {'attr': {'class': 'space-y-6' ,'novalidate': 'novalidate' }}) }}
+{{ form_start(form, {'attr': {'class': 'space-y-6', 'novalidate': 'novalidate'}}) }}
     <div class="space-y-6">
+        {# Objet Field #}
         <div class="space-y-2">
-            {{ form_label(form.objet, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
-            {{ form_widget(form.objet, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200', 'placeholder': 'Objet de la réclamation'}}) }}
+            {{ form_label(form.objet, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-900'}}) }}
+            {{ form_widget(form.objet, {'attr': {
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 focus:outline-none',
+                'placeholder': 'Objet de la réclamation'
+            }}) }}
             {{ form_errors(form.objet, {'attr': {'class': 'text-sm text-red-600 mt-1'}}) }}
         </div>
 
+        {# Contenu Field #}
         <div class="space-y-2">
-            {{ form_label(form.contenu, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
-            {{ form_widget(form.contenu, {'attr': {'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200', 'placeholder': 'Contenu...', 'rows': 5}}) }}
+            {{ form_label(form.contenu, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-900'}}) }}
+            {{ form_widget(form.contenu, {'attr': {
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 focus:outline-none',
+                'placeholder': 'Contenu...',
+                'rows': 5
+            }}) }}
             {{ form_errors(form.contenu, {'attr': {'class': 'text-sm text-red-600 mt-1'}}) }}
         </div>
     </div>
 
-    <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+    {# Submit Button #}
+    <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-300 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none">
         {{ button_label|default('Envoyer') }}
     </button>
 {{ form_end(form) }}

@@ -1,157 +1,108 @@
-<nav class="bg-white">
+<nav class="bg-gradient-to-r from-green-200 to-white shadow-lg">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-  <a href="{{path('app_home')}}" data-turbo="false" class="flex items-center space-x-3 rtl:space-x-reverse">
+    <a href="{{path('app_home')}}" data-turbo="false" class="flex items-center space-x-3 rtl:space-x-reverse">
       <img src="{{ asset('assets/images/logo.png') }}" class="h-11 w-11" alt="swapify Logo" />
-  </a>
-  <div class="relative flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-      <button type="button" class="flex text-sm bg-gray-600 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+    </a>
+    <div class="relative flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+      <button type="button" class="flex text-sm bg-white rounded-full md:me-0 focus:ring-4 focus:ring-blue-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
         <span class="sr-only">Open user menu</span>
         <img class="w-8 h-8 rounded-full" src="{{ asset('assets/images/contact.png') }}" alt="user photo">
       </button>
       <!-- Dropdown menu -->
-      <div class="z-999 absolute top-[18px] right-[18px] w-64 hidden my-4 text-white list-none bg-gray-800 divide-y divide-gray-100  rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown" style="z-index: 100;"> 
-        <div class="px-4 py-3">
-          <span class="block text-sm text-white">{{ app.user.nom}} {{app.user.prenom}}</span>
-          <span class="block text-sm  text-white truncate dark:text-gray-400">{{app.user.email}}</span>
+      <div class="z-999 absolute top-[18px] right-[18px] w-64 hidden my-4 text-white list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg" id="user-dropdown" style="z-index: 100;">
+        <div class="px-4 py-3 bg-blue-600 rounded-t-lg">
+          <span class="block text-sm font-semibold text-white">{{ app.user.nom}} {{app.user.prenom}}</span>
+          <span class="block text-sm text-gray-200 truncate">{{app.user.email}}</span>
         </div>
-        <ul class="py-2" aria-labelledby="user-menu-button">
-          <li class="text-white">
-
+        <ul class="py-2 bg-white rounded-b-lg" aria-labelledby="user-menu-button">
+          <li>
             {% if 'ROLE_ADMIN' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard') }}" data-turbo="false" class=" block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Profile</a>
+              <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Profile</a>
             {% elseif 'ROLE_SUPER_ADMIN' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard') }}" data-turbo="false"  class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Profile</a>
+              <a href="{{ path('app_dashboard') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Profile</a>
             {% elseif 'ROLE_CLIENT' in app.user.getRoles() %}
-              <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Profile</a>
+              <a href="{{ path('app_dashboard_client') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Profile</a>
             {% endif %}
           </li>
           <li>
-            <a href="{{path('mesAnnonces')}}"  data-turbo="false" class=" block px-4 py-2 text-sm text-white  hover:bg-gray-500   "> Mes Annonces</a>
+            <a href="{{path('mesAnnonces')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Mes Annonces</a>
           </li>
-          <li class="relative group">
-            <a href="{{ path('wishlist_show') }}" data-turbo="false" class="flex px-4 py-2 text-sm text-white  hover:bg-gray-500    justify-between items-center">
-              favoris annonce
+          <li>
+            <a href="{{ path('wishlist_show') }}" data-turbo="false" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 justify-between items-center">
+              Favoris Annonce
               <span class="ml-2 bg-teal-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
                 {{ app.user ? app.user.getFavoris().count : 0 }}
               </span>
             </a>
           </li>
-
-       <li>
-            <a href="{{path('app_blog_all')}}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Mes Blogs</a>
-          </li>
-
           <li>
-            <a href="{{path('my_events')}}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Mes Evenements</a>
-          </li>
-  <li class="relative">
-    <a href="#" id="dropdownToggle" 
-       class="block px-4 py-2 text-sm text-white hover:bg-gray-500  dark:hover:text-black">
-        Mes Contrats ▼
-    </a>
-    <ul id="dropdownMenu" class="absolute left-0 hidden w-48 bg-white shadow-md">
-        <li>
-            <a href="{{ path('app_mesContratsPret') }}" 
-               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-white hover:text-black">
-                Mes contrats prêt 
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('app_mesContratsAsignee') }}" 
-               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-white hover:text-black">
-                Contrat à signer
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('app_mesContratsSigned') }}" 
-               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-white hover:text-black">
-                Contrat déjà signé
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('app_contrat_new') }}" data-turbo="false"
-               class="block py-3 pl-4 pr-4 hover:bg-gray-800 transition-colors duration-200 no-underline text-white hover:text-black">
-                Créer contrat
-            </a>
-        </li>
-    </ul>
-</li>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const dropdownToggle = document.getElementById("dropdownToggle");
-        const dropdownMenu = document.getElementById("dropdownMenu");
-
-        dropdownToggle.addEventListener("click", function (event) {
-            event.preventDefault();
-            dropdownMenu.classList.toggle("hidden");
-        });
-
-        // Cacher le menu si on clique en dehors
-        document.addEventListener("click", function (event) {
-            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                dropdownMenu.classList.add("hidden");
-            }
-        });
-    });
-</script>
-
-
-           <li>
-            <a href="{{ path('livraison_list') }}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Livraisons</a>
-          </li>
-
-             <li>
-         <a href="{{ path('conversation') }}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Conversations</a>
-       </li>
-         
-           <li>
-            <a href="{{path('app_reclamation_new')}}" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Envoyer réclamation</a>
+            <a href="{{path('app_blog_all')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Mes Blogs</a>
           </li>
           <li>
-            <a href="/logout" data-turbo="false" class="block px-4 py-2 text-sm text-white hover:bg-gray-500  ">Logout</a>
+            <a href="{{path('my_events')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Mes Evenements</a>
+          </li>
+          <li class="relative">
+            <a href="#" id="dropdownToggle" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 flex justify-between items-center">
+              Mes Contrats ▼
+            </a>
+            <ul id="dropdownMenu" class="absolute left-0 hidden w-48 bg-white shadow-md rounded-lg mt-1">
+              <li>
+                <a href="{{ path('app_mesContratsPret') }}" class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Mes contrats prêt</a>
+              </li>
+              <li>
+                <a href="{{ path('app_mesContratsAsignee') }}" class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Contrat à signer</a>
+              </li>
+              <li>
+                <a href="{{ path('app_mesContratsSigned') }}" class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Contrat déjà signé</a>
+              </li>
+              <li>
+                <a href="{{ path('app_contrat_new') }}" data-turbo="false" class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Créer contrat</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="{{ path('livraison_list') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Livraisons</a>
+          </li>
+          <li>
+            <a href="{{ path('conversation') }}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Conversations</a>
+          </li>
+          <li>
+            <a href="{{path('app_reclamation_new')}}" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Envoyer réclamation</a>
+          </li>
+          <li>
+            <a href="/logout" data-turbo="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">Logout</a>
           </li>
         </ul>
       </div>
-      <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden  " aria-controls="navbar-user" aria-expanded="false">
+      <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-controls="navbar-user" aria-expanded="false">
         <span class="sr-only">Open main menu</span>
         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
         </svg>
-    </button>
-  </div>
-  <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-    <ul class="flex flex-col font-medium  md:p-0 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
-      <li>
-        <a href="{{path('app_home')}}" data-turbo="false" class="block py-2 px-3 text-gray-900  rounded-sm md:bg-transparent md:p-0" aria-current="page">Acceuil</a>
-      </li>
- 
-      <li>
-        <a href="{{path('app_annonce_index')}}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Annonces</a>
-      </li>
-      <li>
-        <a href="{{path('app_event_index')}}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Evenements</a>
-      </li>
-      <li>
-        
-        <a href="{{ path('app_blog_index') }}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Blog</a>
-      </li>
-
-      <li>
-        <a href="{{path('souk')}}" data-turbo="false" class="block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0">Souk</a>
-      </li>
-
-
-     
-
-
-      <li>
-          <a href="{{path('all_souk')}}" data-turbo="false" class="block py-2 px-3 text-red-500 rounded-sm md:bg-transparent md:p-0 animate-bounce">
-            Live
-          </a>
-      </li>
-    </ul>
-  </div>
+      </button>
+    </div>
+    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+      <ul class="flex flex-col font-medium md:p-0 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+        <li>
+          <a href="{{path('app_home')}}" data-turbo="false" class="block py-2 px-3 text-black  rounded-md transition-colors duration-200">Acceuil</a>
+        </li>
+        <li>
+          <a href="{{path('app_annonce_index')}}" data-turbo="false" class="block py-2 px-3 text-black rounded-md transition-colors duration-200">Annonces</a>
+        </li>
+        <li>
+          <a href="{{path('app_event_index')}}" data-turbo="false" class="block py-2 px-3 text-black  rounded-md transition-colors duration-200">Evenements</a>
+        </li>
+        <li>
+          <a href="{{ path('app_blog_index') }}" data-turbo="false" class="block py-2 px-3 text-black rounded-md transition-colors duration-200">Blog</a>
+        </li>
+        <li>
+          <a href="{{path('souk')}}" data-turbo="false" class="block py-2 px-3 text-black rounded-md transition-colors duration-200">Souk</a>
+        </li>
+        <li>
+          <a href="{{path('all_souk')}}" data-turbo="false" class="block py-2 px-3 text-yellow-400  rounded-md animate-pulse">Live</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
 
@@ -162,37 +113,31 @@
     userDropdown.classList.add("hidden");
 
     userMenuButton.addEventListener("click", function () {
-        userDropdown.classList.toggle("hidden");
+      userDropdown.classList.toggle("hidden");
     });
 
     document.addEventListener("click", function (event) {
-        if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
-            userDropdown.classList.add("hidden");
-        }
+      if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
+        userDropdown.classList.add("hidden");
+      }
     });
 
     window.addEventListener('popstate', function () {
-        userDropdown.classList.add("hidden");
+      userDropdown.classList.add("hidden");
     });
-  });
 
+    const dropdownToggle = document.getElementById("dropdownToggle");
+    const dropdownMenu = document.getElementById("dropdownMenu");
 
- document.addEventListener("DOMContentLoaded", function () {
-    const soukButton = document.querySelector("li.group button");
-    const soukDropdown = soukButton.nextElementSibling;
-
-    soukButton.addEventListener("click", function (event) {
+    dropdownToggle.addEventListener("click", function (event) {
       event.preventDefault();
-      soukDropdown.classList.toggle("hidden");
+      dropdownMenu.classList.toggle("hidden");
     });
 
     document.addEventListener("click", function (event) {
-      if (!soukButton.contains(event.target) && !soukDropdown.contains(event.target)) {
-        soukDropdown.classList.add("hidden");
+      if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+        dropdownMenu.classList.add("hidden");
       }
     });
   });
-
 </script>
-
-
