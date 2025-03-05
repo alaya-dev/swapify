@@ -338,7 +338,7 @@ class Event
             }
     
             // Check if session end time is within the event's date range
-            if ($session->getEndHour() >= $this->dateFin) {
+            if ($session->getEndHour() > $this->dateFin) {
                 $context->buildViolation('La session ne peut pas se terminer après la date de fin de l\'événement.')
                     ->atPath("sessions[$index].endHour")
                     ->addViolation();
