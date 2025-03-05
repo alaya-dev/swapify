@@ -16,17 +16,58 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DashboardClientController extends AbstractController
 {
     public function __construct(private readonly ConversationRepository $conversationRepository) {}
 
     #[Route('/dashboard/client', name: 'app_dashboard_client')]
-    public function rendre(OffreRepository $offerRepository, RatingRepository $ratingRepo, Request $request, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
+    public function rendre(OffreRepository $offerRepository, RatingRepository $ratingRepo, Request $request, EntityManagerInterface $entityManager, ProductRepository $productRepository,UserPasswordHasherInterface $passwordHasher): Response
     {
-        $current_user = $this->getUser();
-        $form = $this->createForm(ProfileType::class, $current_user);
+
+        $user = $this->getUser();
+
+        $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+    
+                    /** @var UploadedFile|null $imageFile */
+                    $imageFile = $form->get('imageUrl')->getData();
+                    if ($imageFile) {
+                        $imageFileName = md5(uniqid()) . '.' . $imageFile->guessExtension();
+                        try {
+                            $imageFile->move(
+                                $this->getParameter('images_directory'),
+                                $imageFileName
+                            );
+                            $user->setImageUrl('/uploads/images/' . $imageFileName);
+                        } catch (FileException $e) {
+                            $this->addFlash('error', 'Erreur lors du téléchargement de l’image : ' . $e->getMessage());
+                            return $this->render('dashboard/accueil_client.twig', [
+                                'form' => $form->createView(),
+                            ]);
+                        }
+                    }
+            
+            $newPassword = $form->get('password')->getData();
+            
+            if (!empty($newPassword)) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                $user->setPassword($hashedPassword);
+            }
+    
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');
+    
+            return $this->redirectToRoute('app_dashboard_client');
+        }
+
+        $current_user = $this->getUser();
         $conversations = $entityManager->getRepository(Conversation::class)->findConversationsForUser($current_user);
         $my_offers = $offerRepository->findBy(['offerMaker' => $current_user]);
         $other_offers = $offerRepository->findBy([

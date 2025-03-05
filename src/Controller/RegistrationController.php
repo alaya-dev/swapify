@@ -17,6 +17,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+
 
 class RegistrationController extends AbstractController
 {
@@ -35,8 +37,6 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-
-    /*
     // Route pour l'enregistrement d'un utilisateur
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
@@ -57,6 +57,22 @@ class RegistrationController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
+
+        // Gestion de l'image (si présente)
+        $imageFile = $form->get('imageUrl')->getData();
+        if ($imageFile) {
+            // Générez un nom unique pour l'image
+            $imageFileName = md5(uniqid()) . '.' . $imageFile->guessExtension();
+
+            // Déplacez l'image dans le répertoire 'public/uploads/images'
+            $imageFile->move(
+                $this->getParameter('images_directory'), // Définir 'images_directory' dans config/services.yaml
+                $imageFileName
+            );
+
+            // Enregistrez l'URL de l'image dans le champ imageUrl de l'utilisateur
+            $user->setImageUrl('/uploads/images/' . $imageFileName);
+        }
 
             // Attribution du rôle par défaut
             $user->setRoles(['ROLE_CLIENT']);
@@ -83,56 +99,7 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
-    }*/
-
-    //register with mailJet confirmation
-    // Route pour l'enregistrement d'un utilisateur
-#[Route('/register', name: 'app_register')]
-public function register(
-    Request $request,
-    UserPasswordHasherInterface $userPasswordHasher,
-    UserAuthenticatorInterface $userAuthenticator,
-    AppAuthenticator $authenticator,
-    EntityManagerInterface $entityManager,  
-      EmailVerifier $ev // Inject the new service
-): Response {
-    // Si un utilisateur est déjà connecté, rediriger vers la page d'accueil
-    if ($this->getUser()) {
-        return $this->redirectToRoute('app_login');
     }
-
-    $user = new User();
-    // Création du formulaire d'inscription
-    $form = $this->createForm(RegistrationFormType::class, $user);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                $user,
-                $form->get('password')->getData()
-            )
-        );
-
-        // Attribution du rôle par défaut
-        $user->setRoles(['ROLE_CLIENT']);
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        // Envoi de l'email de confirmation avec MailJet
-        $ev->sendEmailConfirmation('app_verify_email', $user);
-
-        $this->addFlash('success', 'Un email de vérification a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception (et éventuellement votre dossier spam) pour confirmer votre adresse email.');
-
-        // Redirection vers la page de connexion
-        return $this->redirectToRoute('app_login');
-    }
-
-    return $this->render('registration/register.html.twig', [
-        'registrationForm' => $form->createView(),
-    ]);
-}
-
 
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(
@@ -166,7 +133,13 @@ public function register(
             return $this->redirectToRoute('app_login');
       } catch (VerifyEmailExceptionInterface $exception) {
              // Lien expiré → afficher un message et proposer le renvoi
-            $this->addFlash('warning', 'Le lien de vérification a expiré. Renvoyez un nouvel email.');
+             $this->addFlash(
+                'warning', 
+                [
+                    'message' => 'Le lien de vérification a expiré.',
+                    'url' => $this->generateUrl('app_resend_verification_email', ['id' => $userId]),
+                ]
+            );
             return $this->redirectToRoute('app_login', ['id' => $userId]);
 
         }}

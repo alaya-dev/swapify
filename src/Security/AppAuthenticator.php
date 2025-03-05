@@ -15,8 +15,13 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use ReCaptcha\ReCaptcha;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+
+
 
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
@@ -27,6 +32,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function __construct(private  UrlGeneratorInterface $urlGenerator,
      private UserRepository $userRepository,
+     private Security $security,
      private RequestStack $requestStack,
      #[Autowire('%env(GOOGLE_RECAPTCHA_SECRET_KEY)%')] private string $recaptchaSecretKey) {}
 
@@ -76,6 +82,18 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
                     'error' => 'Données invalides. Veuillez confirmer votre compte avant de vous connecter.'
                 ])
             );
+        }
+
+         // Vérifie si l'utilisateur est banni
+         if (in_array('ROLE_CLIENT', $user->getRoles()) && $user->getIsBanned()) {
+            // Déconnecte l'utilisateur
+            $this->security->logout(false);
+
+            // Ajoute un message flash pour l'alerte
+            $request->getSession()->getFlashBag()->add('error', 'Votre compte est banni,vous recevez un mail lorsque votre compte sera actif.');
+
+            // Redirige vers la page de connexion
+            return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
         }
 
         // Redirection en fonction des rôles

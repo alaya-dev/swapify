@@ -20,6 +20,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 
 
 
@@ -88,6 +90,19 @@ class RegistrationFormType extends AbstractType
                 'constraints' => [
                     new \Symfony\Component\Validator\Constraints\IsTrue([
                         'message' => 'Vous devez accepter les conditions.'
+                    ])
+                ]
+            ])
+            ->add('imageUrl', FileType::class, [
+                'label' => 'Image de profil (optionnel)',
+                'required' => false,  
+                'multiple' => false,  
+                'attr' => ['class' => 'input-field'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',  
+                        'mimeTypes' => ['image/jpeg', 'image/png'],  
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG)',
                     ])
                 ]
             ]);

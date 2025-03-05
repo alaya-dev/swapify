@@ -288,6 +288,39 @@ public function listAdmins(UserRepository $userRepository,Request $request): Res
         return $this->redirectToRoute('app_admin_annonces');
     }
     
+
+
+
+    #[Route('/client/toggle-ban/{id}', name: 'client_toggle_ban')]
+    public function toggleBanClient(int $id, EntityManagerInterface $em): Response
+    {
+        $user = $em->getRepository(User::class)->find($id);
+    
+        if (!$user) {
+            $this->addFlash('error', 'Client introuvable.');
+            return $this->redirectToRoute('client_list');
+        }
+    
+        if (!in_array('ROLE_CLIENT', $user->getRoles())) {
+            $this->addFlash('error', 'Action non autorisée.');
+            return $this->redirectToRoute('client_list');
+        }
+    
+        // Bascule entre banni et non banni
+        $user->setIsBanned(!$user->getIsBanned());
+        $em->flush();
+    
+        $this->addFlash('success', sprintf(
+            'Le client %s a été %s.',
+            $user->getEmail(),
+            $user->getIsBanned() ? 'banni' : 'débanni'
+        ));
+    
+        return $this->redirectToRoute('client_list');
+    }
+
+
+
     #[Route('/admin/event/{id}/reject', name: 'admin_event_reject')]
     //#[IsGranted('ROLE_ADMIN')]
     #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]

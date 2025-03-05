@@ -173,8 +173,11 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="/assets/images/users/"
-                                    alt="Header Avatar">
+                                <img class="rounded-circle" 
+                           src="{{ app.user.imageUrl ?: '/uploads/images/admin.jpg' }}" 
+
+                                style="width: 50px; height: 50px; object-fit: cover;" 
+                                alt="Profil Admin">
                                 <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{app.user.email}}</span>
                                 <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                             </button>
