@@ -6,7 +6,11 @@
     <div class="relative flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
       <button type="button" class="flex text-sm bg-white rounded-full md:me-0 focus:ring-4 focus:ring-blue-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
         <span class="sr-only">Open user menu</span>
-        <img class="w-8 h-8 rounded-full" src="{{ asset('assets/images/contact.png') }}" alt="user photo">
+
+<img class="w-8 h-8 rounded-full" 
+             src="{{ app.user.imageUrl ?: '/uploads/images/admin.jpg' }}" 
+             alt="Profil Admin">
+
       </button>
       <!-- Dropdown menu -->
       <div class="z-999 absolute top-[18px] right-[18px] w-64 hidden my-4 text-white list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg" id="user-dropdown" style="z-index: 100;">

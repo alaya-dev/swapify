@@ -23,6 +23,7 @@ use Firebase\JWT\Key;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/session')]
@@ -118,9 +119,9 @@ private function scheduleAttendanceEmail(Session $session,Attendance $attendance
     {
         $delay = $session->getEndHour()->getTimestamp() - (new \DateTime('+15 minutes'))->getTimestamp();
         $code =$attendance->getCode();
-        $user=$attendance->getParticipantEvent()->getUser();
-
-        if ($delay > 0) {
+    
+        if ($delay > 0 && $attendance->getParticipantEvent()!=null ) {
+            $user=$attendance->getParticipantEvent()->getUser();
             $htmlContent='
                 <!DOCTYPE html>
     <html lang="fr">
@@ -246,7 +247,7 @@ public function joinSessions(
     
 
     if (!$participantEvent && $session->getEvent()->getOrgniser() != $user) {
-        throw $this->createNotFoundException('Vous n\'êtes pas inscrit à cet événement.');
+        $this->addFlash('error','l\evenement doit avoir au moin un particpant ');
     }
 
     // Find existing attendance record
