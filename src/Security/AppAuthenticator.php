@@ -36,40 +36,40 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
      private RequestStack $requestStack,
      #[Autowire('%env(GOOGLE_RECAPTCHA_SECRET_KEY)%')] private string $recaptchaSecretKey) {}
 
-     public function authenticate(Request $request): Passport
-     {
-         $recaptchaResponse = $request->request->get('g-recaptcha-response');
-     
-         // If reCAPTCHA response is provided, verify it
-         if (!empty($recaptchaResponse)) {
-             $recaptcha = new ReCaptcha($this->recaptchaSecretKey);
-             $resp = $recaptcha->verify($recaptchaResponse, $request->getClientIp());
-     
-             if (!$resp->isSuccess()) {
-                 // If reCAPTCHA is provided but invalid, show an error and deny authentication
-                 $session = $this->requestStack->getSession();
-                 $session->getFlashBag()->add('error', 'Le reCAPTCHA est invalide.');
-     
-                 return new Passport(
-                     new UserBadge(''), // Prevent authentication
-                     new PasswordCredentials(''), 
-                     []
-                 );
-             }
-         }
-     
-         // Proceed with normal authentication if reCAPTCHA is either valid or absent
-         $email = $request->getPayload()->getString('email');
-         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
-     
-         return new Passport(
-             new UserBadge($email),
-             new PasswordCredentials($request->getPayload()->getString('password')),
-             [
-                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
-             ]
-         );
-     }
+        public function authenticate(Request $request): Passport
+        {
+
+            $recaptchaResponse = $request->request->get('g-recaptcha-response');
+
+            // Valider reCAPTCHA
+            $recaptcha = new ReCaptcha($this->recaptchaSecretKey);
+            $resp = $recaptcha->verify($recaptchaResponse, $request->getClientIp());
+
+            if (!$resp->isSuccess()) {
+                // Si reCAPTCHA n'est pas valide, ajouter un message flash
+                $session = $this->requestStack->getSession();
+                $session->getFlashBag()->add('error', 'Veuillez cocher le reCAPTCHA.');
+        
+                
+                return new Passport(
+                    new UserBadge(''), // L'utilisateur ne sera pas authentifié
+                    new PasswordCredentials(''), // Aucun mot de passe
+                    [] // Aucune autre information
+                );
+            }
+
+            
+            $email = $request->getPayload()->getString('email');
+            $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
+
+            return new Passport(
+                new UserBadge($email),
+                new PasswordCredentials($request->getPayload()->getString('password')),
+                [
+                    new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+                ]
+            );
+        }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
     {
