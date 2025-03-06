@@ -90,7 +90,7 @@ class LivraisonController extends AbstractController
     #[Route('/livraison/{id}/qr/destinataire', name: 'livraison_qr_destinataire')]
     public function generateQrCode(Livraison $livraison): Response
     {
-        $url = 'http://192.168.1.17:8000/livraison/' . $livraison->getId() . '/confirmer/destinataire';
+        $url = 'http://192.168.189.44:8000/livraison/' . $livraison->getId() . '/confirmer/destinataire';
 
         $qrCode = new QrCode($url);
         $writer = new PngWriter();
@@ -101,7 +101,7 @@ class LivraisonController extends AbstractController
     #[Route('/livraison/{id}/qr/expediteur', name: 'livraison_qr_expediteur')]
     public function generateQrCode2(Livraison $livraison): Response
     {
-        $url = 'http://192.168.1.17:8000/livraison/' . $livraison->getId() . '/confirmer/expediteur';
+        $url = 'http://192.168.189.44:8000/livraison/' . $livraison->getId() . '/confirmer/expediteur';
 
         $qrCode = new QrCode($url);
         $writer = new PngWriter();
