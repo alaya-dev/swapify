@@ -30,20 +30,18 @@
                     {{product.description}}
                 </p>
 
-                <!-- Buttons -->
-                <div class="flex space-x-4 mb-6">
-                    <button
-                        class="bg-gray-200 flex gap-2 items-center text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                        <i class="fa fa-credit-card" aria-hidden="true"></i>
-                        passe Commande
-                    </button>
-                </div>
+                
 
                 <!-- Key Features -->
                 <div>
                     <div class="flex items-center gap-3">
                         <div class="relative">
-                            <img class="h-16 w-16 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/87.jpg" alt="Avatar">
+                           
+
+                           
+<img class="w-8 h-8 rounded-full" 
+             src="{{ app.user.imageUrl ?: '/uploads/images/admin.jpg' }}" 
+             alt="Profil Admin">
                             <div class="absolute inset-0 rounded-full shadow-inner"></div>
                         </div>
                         <div class="ml-4">
