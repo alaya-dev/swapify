@@ -232,7 +232,7 @@ if ($mailer instanceof \App\Service\MailerMailJetService) {
 
 
     #[Route('/contrat/signeeOM/{id}', name: 'app_signeMonContratOM', methods: ['POST'])]
-    public function app_signeMonContratOM(Contrat $contrat, EntityManagerInterface $entityManager): Response
+    public function app_signeMonContratOM( MailerMailJetService $mailer,Contrat $contrat, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         if ($user !== $contrat->getOffre()->getOfferMaker()) {
@@ -246,6 +246,31 @@ if ($mailer instanceof \App\Service\MailerMailJetService) {
         $entityManager->flush();
     
         $this->addFlash('success', 'Contrat signé avec succès.');
+
+        $offre = $contrat->getOffre();
+
+         // Construct email content MailJet
+$subject = 'Vous avez un contrat prêt !';
+
+$content = sprintf(
+    "Bonjour %s,\n\n".
+    "Nous vous informons qu'un contrat a été prêt en lien avec une annonce. " .
+    "Nous vous invitons à vous rendre dans votre espace personnel sur notre plateforme pour consulter ce contrat et vous pouvez le télécharger .\n\n" .
+    "Nous restons à votre disposition pour toute question.\n\n" .
+    "Cordialement,\n" .
+    "L’équipe de la swapify",
+    'https://127.0.0.1:8000/' 
+);
+
+if ($mailer instanceof \App\Service\MailerMailJetService) {
+    $mailer->sendEmail($offre->getOfferMaker()->getEmail(), $subject, $content);
+    $mailer->sendEmail($offre->getAnnonceOwner()->getEmail(), $subject, $content);
+
+} else {
+    throw new \LogicException('Expected MailerMailJetService as MailerInterface implementation.');
+}
+
+
         return $this->redirectToRoute('app_mesContratsPret');
     }
  
