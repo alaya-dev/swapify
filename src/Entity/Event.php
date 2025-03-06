@@ -70,7 +70,7 @@ class Event
     /**
      * @var Collection<int, ParticipantEvent>
      */
-    #[ORM\OneToMany(targetEntity: ParticipantEvent::class, mappedBy: 'event')]
+    #[ORM\OneToMany(targetEntity: ParticipantEvent::class, mappedBy: 'event',orphanRemoval: true)]
     private Collection $participantEvents;
 
     /**

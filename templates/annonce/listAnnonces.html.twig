@@ -138,6 +138,12 @@
                             </div>
                         </div>
                     {% endfor %}
+
+                           
+                             <div class="mt-12 flex justify-center">
+                              {{ knp_pagination_render(annonces, 'annonce/pagination.html.twig') }}
+                          </div>
+
                 {% else %}
                     <div class="text-center text-gray-500 py-6">Aucune annonce disponible.</div>
                 {% endif %}

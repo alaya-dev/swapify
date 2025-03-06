@@ -17,6 +17,7 @@ use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
 use App\Service\MailerMailJetService;
 use App\Service\RecommandationService;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
@@ -41,7 +42,8 @@ final class AnnonceController extends AbstractController
         AnnonceRepository $annonceRepository, 
         ImageRepository $imageRepository, 
         FavorisRepository $favorisRepository,
-        CategorieRepository $categorieRepository
+        CategorieRepository $categorieRepository,
+        PaginatorInterface $paginator
     ) {
         $user = $this->getUser();
         $form = $this->createForm(AnnoncesFilterType::class);
@@ -56,23 +58,30 @@ final class AnnonceController extends AbstractController
         $dateCreation = $request->query->get('date');
 
         if ($titre || $categorie || $region || $dateCreation) {
-            $annonces = $annonceRepository->findFilteredAnnonces($titre, $categorie, $region, $dateCreation);
+            $annoncesQuery = $annonceRepository->findFilteredAnnonces($titre, $categorie, $region, $dateCreation);
         } else {
-            $annonces = $annonceRepository->findValiderAnnonces(); 
+            $annoncesQuery = $annonceRepository->findValiderAnnonces(); 
         }
 
         $categories = $categorieRepository->findAll();
+
+        // Paginate the results
+        $annoncesPag = $paginator->paginate(
+            $annoncesQuery, 
+            $request->query->getInt('page', 1), 
+            4 
+        );
     
         // Render the template
         return $this->render('annonce/listAnnonces.html.twig', [
             'form' => $form->createView(),
-            'annonces' => $annonces,
+            'annonces' => $annoncesPag,
             'images' => $images,
             'favoris' => array_map(fn($f) => $f->getAnnonces(), $favoris),
             'categories' => $categories,
             'regions' => [
                 'Tunis',
-              'Ariana','Ben Arous','Manouba','Sousse','Sfax','Nabeul','Kairouan','Monastir','Kasserine','Gabès','Medenine','Tozeur','Béja','Jendouba','Le Kef','Siliana','Mahdia','Zaghouan','Tataouine','Gafsa','Sidi Bouzid','Nefta','Douz'
+                'Ariana','Ben Arous','Manouba','Sousse','Sfax','Nabeul','Kairouan','Monastir','Kasserine','Gabès','Medenine','Tozeur','Béja','Jendouba','Le Kef','Siliana','Mahdia','Zaghouan','Tataouine','Gafsa','Sidi Bouzid','Nefta','Douz'
             ]
         ]);
     }

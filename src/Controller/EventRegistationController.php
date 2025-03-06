@@ -50,13 +50,13 @@ final class EventRegistationController extends AbstractController
         
         foreach ($sessions as $session) {
 
-            $now = new \DateTime('now', new \DateTimeZone('UTC'));
-            $now->modify('+1 hour');
+            $now = new \DateTime('now', new \DateTimeZone('Europe/Berlin'));
+            // $now->modify('+1 hour');
             $startHour =$session->getStartHour();
             
             $endHour =$session->getEndHour();
             $status="";
-
+            // dd($startHour,$now,$endHour);
         
             if ($session->getTypeSession() === "En ligne") {
                 if ($startHour <= $now && $endHour >= $now) {
