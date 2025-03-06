@@ -6,6 +6,7 @@ use App\Entity\Commentaire;
 use App\Form\CommentaireType;
 use App\Repository\BlogRepository;
 use App\Repository\CommentaireRepository;
+use App\Service\BadWordFilter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ final class CommentaireController extends AbstractController
     }
 
     #[Route('/commentaire/new/{blogId}', name: 'app_commentaire_new', methods: ['POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, int $blogId, BlogRepository $blogRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, int $blogId, BlogRepository $blogRepository, BadWordFilter $badWordFilter): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER'); // Ensure only logged-in users can comment
     
@@ -38,6 +39,11 @@ final class CommentaireController extends AbstractController
         $commentaire->setBlog($blog);
         $commentaire->setUser($this->getUser()); // Associate the comment with the logged-in user
     
+            // Check for bad words in the comment content
+        if ($badWordFilter->containsBadWords($commentaire->getContenuCmt())) {
+            $this->addFlash('error', 'Your comment contains inappropriate language and cannot be published.');
+            return $this->redirectToRoute('app_blog_show', ['id' => $blogId]);
+        }
         $entityManager->persist($commentaire);
         $entityManager->flush();
     

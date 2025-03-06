@@ -24,27 +24,27 @@ in app.flashes %}
 
 <div class="mb-5 flex space-x-2">
   <a
-    href="{{ path('app_user_blogs', { filter: 'all' }) }}"
+    href="{{ path('app_blog_all', { filter: 'all' }) }}"
     class="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-semibold py-2 px-4 rounded"
     >Toutes</a
   >
   <a
-    href="{{ path('app_user_blogs', { filter: 'pending' }) }}"
+    href="{{ path('app_blog_all', { filter: 'pending' }) }}"
     class="border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white font-semibold py-2 px-4 rounded"
     >En attente</a
   >
   <a
-  href="{{ path('app_user_blogs', { filter: 'draft' }) }}"
+  href="{{ path('app_blog_all', { filter: 'draft' }) }}"
   class="border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white font-semibold py-2 px-4 rounded"
   >Draft</a
 >
   <a
-    href="{{ path('app_user_blogs', { filter: 'active' }) }}"
+    href="{{ path('app_blog_all', { filter: 'active' }) }}"
     class="border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white font-semibold py-2 px-4 rounded"
     >Acceptées</a
   >
   <a
-    href="{{ path('app_user_blogs', { filter: 'inactive' }) }}"
+    href="{{ path('app_blog_all', { filter: 'inactive' }) }}"
     class="border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-semibold py-2 px-4 rounded"
     >Rejetées</a
   >
