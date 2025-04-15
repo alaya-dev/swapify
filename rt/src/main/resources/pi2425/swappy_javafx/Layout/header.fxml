@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+
+<?import javafx.geometry.Insets?>
+<VBox styleClass="app-bar-container" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pi2425.swappy_javafx.controllers.HeaderController" stylesheets="@../styles/header.css">
+    <HBox xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1"
+        styleClass="app-bar" alignment="CENTER" spacing="20" >
+        <padding><Insets top="15" right="40" bottom="15" left="40"/></padding>
+
+        <!-- Logo -->
+        <ImageView fx:id="logo" fitHeight="48" fitWidth="48" styleClass="logo" />
+
+        <!-- Navigation Links -->
+        <HBox fx:id="navLinks" alignment="CENTER" spacing="32" HBox.hgrow="ALWAYS">
+            <Label styleClass="nav-link" text="Acceuil" />
+            <Label styleClass="nav-link" text="Annonces" />
+            <Label styleClass="nav-link" text="Evenements" />
+            <Label styleClass="nav-link" text="Blogs" />
+            <Label styleClass="nav-link" text="Contact" />
+            <Label styleClass="nav-link" text="live" />
+        </HBox>
+
+        <!-- User Actions - Will be populated dynamically -->
+        <HBox fx:id="userActions" alignment="CENTER" spacing="24" />
+    </HBox>
+</VBox>

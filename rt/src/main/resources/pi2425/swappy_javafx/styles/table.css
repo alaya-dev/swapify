@@ -1,0 +1,15 @@
+.table-cell {
+    -fx-padding: 8;
+    -fx-alignment: center-left;
+}
+
+
+.table-row-cell:empty {
+   -fx-background-color: transparent;
+    -fx-border-width: 0px;
+}
+.table-row-cell:empty .table-cell {
+    -fx-border-width: 0px;
+}
+
+

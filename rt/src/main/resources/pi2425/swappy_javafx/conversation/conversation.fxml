@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="pi2425.swappy_javafx.controllers.ChatController"
+            stylesheets="@../styles/chat.css">
+    <top>
+        <fx:include fx:id="header" source="../Layout/header.fxml" />
+    </top>
+    <left>
+        <VBox prefWidth="300" styleClass="sidebar">
+            <padding>
+                <Insets top="20" right="15" bottom="20" left="15"/>
+            </padding>
+            
+            <!-- Search Bar -->
+            <HBox spacing="10" alignment="CENTER" styleClass="search-container">
+                <Button fx:id="backButton" styleClass="back-button">
+                    <graphic>
+                        <Text text="←" style="-fx-fill: #4CAF50;"/>
+                    </graphic>
+                </Button>
+                <TextField fx:id="searchBar" promptText="Search conversations..." 
+                          styleClass="search-field" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- Conversations List -->
+            <ScrollPane fitToWidth="true" styleClass="conversation-scroll" VBox.vgrow="ALWAYS">
+                <VBox fx:id="conversationList" spacing="2" styleClass="conversation-list"/>
+            </ScrollPane>
+        </VBox>
+    </left>
+
+    <!-- Main Chat Area -->
+    <center>
+        <VBox styleClass="chat-area">
+            <!-- Chat Header -->
+            <HBox alignment="CENTER_LEFT" spacing="15" styleClass="chat-header">
+                <padding>
+                    <Insets top="15" right="20" bottom="15" left="20"/>
+                </padding>
+                
+                <Circle fx:id="participantAvatar" radius="20" styleClass="participant-avatar"/>
+                <Label fx:id="conversationTitle" styleClass="participant-name"/>
+            </HBox>
+
+            <!-- Messages Area -->
+            <ScrollPane fx:id="messageArea" styleClass="message-scroll" VBox.vgrow="ALWAYS" fitToWidth="true">
+                <VBox fx:id="messagesContainer" styleClass="messages-container">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Input Area -->
+            <HBox styleClass="input-area" alignment="CENTER">
+                <padding>
+                    <Insets top="15" right="20" bottom="15" left="20"/>
+                </padding>
+                
+                <TextField fx:id="messageInput" promptText="Type a message..." 
+                          HBox.hgrow="ALWAYS" styleClass="message-input"/>
+                <Button fx:id="sendButton" styleClass="send-button" onAction="#sendMessage">
+                    <graphic>
+                        <Text text="➤" style="-fx-fill: white;"/>
+                    </graphic>
+                </Button>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

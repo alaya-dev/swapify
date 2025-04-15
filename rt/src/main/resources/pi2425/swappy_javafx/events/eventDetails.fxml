@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pi2425.swappy_javafx.controllers.EventDetails">
+
+
+    <top>
+        <fx:include source="../Layout/header.fxml" fx:id="header"/>
+    </top>
+
+    <left>
+
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox spacing="20.0" style="-fx-background-color: #f3f4f6;">
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
+
+                <HBox spacing="20.0">
+                    <!-- Left Section - Event Details -->
+                    <VBox prefWidth="650.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets bottom="15" />
+                        </padding>
+
+                        <!-- Image Container with Status Badge -->
+                        <StackPane>
+                            <StackPane fx:id="eventImage" minHeight="250.0" />
+
+
+
+                            <HBox alignment="TOP_LEFT" StackPane.alignment="TOP_LEFT">
+                                <Label fx:id="statusBadge" style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-weight: bold;" text="Status">
+                                    <padding>
+                                        <Insets bottom="8" left="12" right="12" top="8" />
+                                    </padding>
+                                </Label>
+                                <padding>
+                                    <Insets left="15" top="15" />
+                                </padding>
+                            </HBox>
+                        </StackPane>
+
+                        <!-- Event Details -->
+                        <VBox spacing="15" style="-fx-background-color: white;">
+                            <padding>
+                                <Insets bottom="10" left="20" right="20" top="10" />
+                            </padding>
+
+                            <!-- Title -->
+                            <Label fx:id="titleLabel" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Event Title" />
+
+                            <!-- Tags -->
+                            <FlowPane fx:id="tagsContainer" hgap="10" vgap="10">
+                                <Label fx:id="statusTag" style="-fx-background-color: #dcfce7; -fx-text-fill: #166534; -fx-background-radius: 15; -fx-font-size: 12; -fx-font-weight: bold;" text="Status">
+                                    <padding>
+                                        <Insets bottom="5" left="10" right="10" top="5" />
+                                    </padding>
+                                </Label>
+                                <Label fx:id="placesTag" style="-fx-background-color: #f3e8ff; -fx-text-fill: #6b21a8; -fx-background-radius: 15; -fx-font-size: 12; -fx-font-weight: bold;" text="Places disponibles">
+                                    <padding>
+                                        <Insets bottom="5" left="10" right="10" top="5" />
+                                    </padding>
+                                </Label>
+                            </FlowPane>
+
+                            <!-- Date Info -->
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <StackPane style="-fx-min-width: 20; -fx-min-height: 20;">
+                                    <SVGPath content="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" style="-fx-stroke: #4b5563; -fx-stroke-width: 2; -fx-fill: transparent;" />
+                                </StackPane>
+                                <Label fx:id="dateLabel" style="-fx-text-fill: #4b5563;" text="01 Jan, 2024 - 07 Jan, 2024" />
+                            </HBox>
+
+                            <!-- Organizer Info -->
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <StackPane style="-fx-min-width: 20; -fx-min-height: 20;">
+                                    <SVGPath content="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" style="-fx-stroke: #4b5563; -fx-stroke-width: 2; -fx-fill: transparent;" />
+                                </StackPane>
+                                <Label fx:id="organizerLabel" style="-fx-text-fill: #4b5563;" text="Organisé par: Nom Prénom" />
+                            </HBox>
+
+                            <!-- Description Section -->
+                            <Separator />
+                            <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Description" />
+                            <TextFlow fx:id="descriptionTextFlow">
+                                <Text fx:id="descriptionText" style="-fx-fill: #4b5563;" text="Event description goes here..." wrappingWidth="600" />
+                            </TextFlow>
+
+                            <!-- Actions Section -->
+                            <Separator />
+                            <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Actions" />
+                            <HBox>
+                                <Hyperlink fx:id="backButton" onAction="#handleBackAction" style="-fx-text-fill: #0d9488;" text="retour" />
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Right Section - Sessions Information -->
+                    <VBox prefWidth="300.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+                        <padding>
+                            <Insets bottom="15" left="15" right="15" top="15" />
+                        </padding>
+
+                        <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Sessions Information" />
+                        <VBox fx:id="sessionsContainer" spacing="15" style="-fx-padding: 10 0 0 0;" />
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+   <stylesheets>
+      <URL value="@../styles/table.css" />
+      <URL value="@../styles/event.css" />
+   </stylesheets>
+</BorderPane>

@@ -1,0 +1,358 @@
+/* Base Styles */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-background-color: #f8f9fa;
+}
+
+/* Hero Banner */
+.hero-banner {
+    -fx-max-width: 100%;
+    -fx-pref-width: 100%;
+    -fx-min-height: 300px;
+}
+
+.hero-overlay {
+    -fx-fill: #2e7d3280;
+    -fx-width: 100%;
+}
+
+.hero-content {
+    -fx-padding: 0 0 40px 40px;
+    -fx-z-index: 1; /* Ensure content appears above overlay */
+}
+
+.hero-title {
+    -fx-text-fill: white;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 2);
+}
+
+.hero-subtitle {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 2);
+}
+
+/* Filter Bar */
+
+
+
+
+/* Event Cards */
+.events-grid {
+    -fx-padding: 20 40;
+}
+
+.event-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-pref-width: 280;
+    -fx-cursor: hand;
+}
+
+.event-image-container {
+    -fx-background-radius: 8 8 0 0;
+    -fx-min-height: 160;
+    -fx-max-height: 160;
+}
+
+.event-content {
+    -fx-background-radius: 0 0 8 8;
+}
+
+.event-title {
+    -fx-text-fill: #1f2937;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+
+
+
+
+
+.hero-banner {
+    -fx-max-width: infinity;
+    -fx-pref-width: 100%;
+}
+
+/* Also check parent containers */
+.content-container {
+    -fx-max-width: infinity;
+    -fx-pref-width: 100%;
+}
+
+/* Enhanced Event Card Styling */
+
+/* Base Styles - Keep existing styles */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-background-color: #f8f9fa;
+}
+
+/* App Bar - Keep existing styles */
+.app-bar-container {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+}
+
+.app-bar {
+    -fx-padding: 15 40;
+    -fx-background-color: white;
+}
+
+.logo {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+
+/* Enhanced Event Cards */
+.events-grid {
+    -fx-padding: 20 40;
+}
+
+.event-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-pref-width: 280;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0.0, 0, 4);
+    -fx-transition: -fx-effect 0.3s;
+}
+
+.event-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(59,130,246,0.25), 15, 0.0, 0, 8);
+}
+
+/* Image Container with Rounded Corners */
+.event-image-container {
+    -fx-background-radius: 12 12 0 0;
+    -fx-min-height: 160;
+    -fx-max-height: 160;
+    -fx-padding: 0;
+    -fx-background-color: #f3f4f6;
+    -fx-alignment: center;
+}
+
+/* Clip the ImageView to match the container radius */
+.event-image-container ImageView {
+    -fx-background-radius: 12 12 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
+}
+
+/* Enhanced Event Content */
+.event-content {
+    -fx-background-radius: 0 0 12 12;
+    -fx-padding: 16;
+    -fx-spacing: 12;
+}
+
+.event-title {
+    -fx-text-fill: #1f2937;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.event-organizer {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+.event-detail {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 13px;
+}
+
+.event-description {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 1.2;
+    -fx-wrap-text: true;
+}
+
+/* Enhanced Buttons */
+.details-button {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 4, 0, 0, 1);
+}
+
+.details-button:hover {
+    -fx-background-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.4), 6, 0, 0, 2);
+}
+
+
+
+
+
+/* Filter Buttons Enhancement */
+.filter-button {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 14px;
+    -fx-padding: 6 16;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-transition: -fx-background-color 0.2s;
+
+}
+
+.filter-button:hover {
+    -fx-background-color: #e5e7eb;
+}
+
+.filter-button:selected {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #2563eb;
+    -fx-border-color: #3b82f6;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 5;
+}
+
+/* No Events Message */
+.no-events-label {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 18px;
+    -fx-padding: 30;
+    -fx-alignment: center;
+}
+
+/* Maintain Hero Banner and Content */
+.hero-banner {
+    -fx-max-width: infinity;
+    -fx-pref-width: 100%;
+    -fx-min-height: 300px;
+}
+
+.hero-overlay {
+    -fx-fill: rgba(46, 125, 50, 0.5); /* Slightly more opaque for better readability */
+}
+
+.hero-content {
+    -fx-padding: 0 0 40px 40px;
+    -fx-spacing: 8;
+}
+
+.hero-title {
+    -fx-text-fill: white;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 2);
+}
+
+.hero-subtitle {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 2);
+}
+
+/* Content Container */
+.content-container {
+    -fx-max-width: infinity;
+    -fx-pref-width: 100%;
+}
+
+/* ScrollPane customization */
+.scroll-pane {
+    -fx-background: #f8f9fa;
+    -fx-border-width: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Auth buttons */
+.auth-button {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #3b82f6;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.auth-button:hover {
+    -fx-background-color: #dbeafe;
+}
+
+
+
+.filter-bar {
+    -fx-padding: 20 40;
+    -fx-background-color: white;
+    -fx-spacing: 10; /* Add spacing to the HBox containing the buttons */
+}
+
+.filter-label {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 0 15 0 0;
+}
+
+.filter-button {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 14px;
+    -fx-padding: 6 16;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-transition: -fx-background-color 0.2s;
+    -fx-margin: 0 8 0 0; /* Right margin for each button */
+}
+
+/* Alternative approach - if the above doesn't work */
+HBox.filter-bar ToggleButton {
+    -fx-margin: 0 10 0 0; /* Right margin for each button */
+}
+.check-planning-button {
+    -fx-background-color: #5e3aff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10 5 10;
+    -fx-background-radius: 5;
+}
+
+.check-planning-button:hover {
+    -fx-background-color: #cfc5ff;
+    -fx-text-fill: #5e3aff;
+}
+
+.disabled-button {
+    -fx-background-color: #cccccc;
+    -fx-text-fill: #666666;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10 5 10;
+    -fx-background-radius: 5;
+    -fx-cursor: default;
+}
+
+
+.register-button {
+    -fx-background-color: white;
+    -fx-text-fill: #3b82f6;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-border-color: #3b82f6;
+    -fx-border-style: solid;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.register-button:hover {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+}
+

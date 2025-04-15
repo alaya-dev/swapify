@@ -1,0 +1,59 @@
+
+
+
+#appBar {
+    -fx-background-color: #5aab4c;
+    -fx-padding: 10px;
+    -fx-alignment: center-left;
+}
+
+.backButton {
+    -fx-background-color: transparent;
+    -fx-font-size: 18px;
+}
+
+.titleLabel {
+    -fx-font-size: 20px;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+.auth-button {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #3b82f6;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.auth-button:hover {
+    -fx-background-color: #dbeafe;
+}
+
+
+/* Form Styling */
+#formContainer {
+    -fx-padding: 20px;
+}
+
+/* Input Fields */
+TextField, TextArea, DatePicker, ComboBox {
+    -fx-pref-width: 300px;
+    -fx-padding: 10px;
+    -fx-border-color: #ddd;
+
+}
+
+/* Buttons */
+Button {
+    -fx-background-color: #5aab4c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+}
+
+Button:hover {
+    -fx-background-color: #488c3c;
+}

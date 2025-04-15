@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pi2425.swappy_javafx.controllers.MarketplaceController"
+      style="-fx-background-color: #f8f9fa;">
+
+    <!-- Modern Header -->
+    <VBox style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <!-- Top Bar -->
+        <HBox alignment="CENTER" style="-fx-padding: 20 30; -fx-spacing: 20;">
+            <!-- Logo/Title -->
+            <Label text="SWAPPY MARKET" 
+                   style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Search Bar -->
+            <HBox alignment="CENTER" style="-fx-background-color: #f8f9fa; -fx-background-radius: 25; 
+                                          -fx-padding: 8 20; -fx-spacing: 10; -fx-min-width: 400;">
+                <TextField fx:id="searchField" promptText="Rechercher des produits..." 
+                          style="-fx-background-color: transparent; -fx-font-size: 14;"/>
+            </HBox>
+            
+            <!-- Add Product Button -->
+            <Button text="+ Ajouter un Produit" onAction="#openAddProductDialog"
+                    style="-fx-background-color: #2E7D32; -fx-text-fill: white; 
+                           -fx-font-weight: bold; -fx-padding: 12 25; 
+                           -fx-background-radius: 25; -fx-font-size: 13;
+                           -fx-cursor: hand;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Main Content Area -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
+                style="-fx-background: transparent; -fx-background-color: transparent;">
+        <VBox spacing="30" style="-fx-padding: 30;">
+            <!-- Featured Section -->
+            <VBox spacing="20">
+                <Label text="Produits Populaires" 
+                       style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #37474F;"/>
+                
+                <FlowPane fx:id="productsTilePane" hgap="25" vgap="25"
+                         style="-fx-background-color: transparent;">
+                </FlowPane>
+            </VBox>
+
+            <!-- Empty State -->
+            <StackPane>
+                <VBox fx:id="emptyPlaceholder" alignment="CENTER" visible="false" 
+                      style="-fx-spacing: 15; -fx-padding: 50 0;">
+                    <Label text="Le marché est vide pour le moment" 
+                           style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #37474F;"/>
+                    <Label text="Soyez le premier à ajouter un produit !" 
+                           style="-fx-font-size: 16; -fx-text-fill: #78909C;"/>
+                    <Button text="Ajouter un Produit" onAction="#openAddProductDialog"
+                            style="-fx-background-color: #2E7D32; -fx-text-fill: white; 
+                                   -fx-padding: 15 30; -fx-font-size: 14;
+                                   -fx-background-radius: 25; -fx-cursor: hand;"/>
+                </VBox>
+            </StackPane>
+        </VBox>
+    </ScrollPane>
+</VBox>

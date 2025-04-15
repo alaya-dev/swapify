@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pi2425.swappy_javafx.controllers.SoukController"
+      style="-fx-background-color: #f8f9fa;">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" style="-fx-padding: 20; -fx-background-color: white;">
+        <Label text="Souks Disponibles"
+               style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+    </HBox>
+
+    <!-- Main Content -->
+    <ScrollPane fitToWidth="true" style="-fx-background: transparent;">
+        <TilePane fx:id="souksTilePane"
+                  hgap="20" vgap="20"
+                  style="-fx-padding: 20;">
+        </TilePane>
+    </ScrollPane>
+
+</VBox>

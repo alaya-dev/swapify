@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pi2425.swappy_javafx.controllers.EditEventController">
+    <top>
+        <!-- White App Bar -->
+        <fx:include source="../Layout/header.fxml" fx:id="header"/>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: #F5F5F5;">
+            <VBox spacing="16" style="-fx-padding: 24;">
+                <!-- Form Container -->
+                <VBox spacing="16" style="-fx-padding: 0 24;">
+                    <!-- Title Field -->
+                    <VBox spacing="4">
+                        <Label style="-fx-text-fill: #323130;" text="Titre de l'événement *">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="titreEvent" promptText="Lorem ipsum" style="-fx-background-radius: 2; -fx-border-radius: 2; -fx-border-color: #8A8886; -fx-padding: 8; -fx-font-size: 14; -fx-min-height: 32;" />
+                        <Label fx:id="titleError" styleClass="error-label" visible="false" />
+                    </VBox>
+
+                    <!-- Description Field -->
+                    <VBox spacing="4">
+                        <Label style="-fx-text-fill: #323130;" text="Description de l'évènement  *">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Label>
+
+                        <TextArea fx:id="descriptionEvent" promptText="Lorem ipsum ..." style="-fx-background-radius: 2; -fx-border-radius: 2; -fx-border-color: #8A8886; -fx-padding: 8; -fx-font-size: 14; -fx-min-height: 120; -fx-pref-height: 120;" />
+                        <Label fx:id="descriptionError" styleClass="error-label" visible="false" />
+                    </VBox>
+
+                    <!-- Date Fields - Styled as shown in your image -->
+                    <GridPane hgap="16" vgap="4">
+                        <columnConstraints>
+                            <ColumnConstraints halignment="LEFT" percentWidth="50" />
+                            <ColumnConstraints halignment="LEFT" percentWidth="50" />
+                        </columnConstraints>
+
+                        <Label style="-fx-text-fill: #323130;" text="Date début *" GridPane.columnIndex="0">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Label>
+
+
+                        <Label style="-fx-text-fill: #323130;" text="Date fin *" GridPane.columnIndex="1">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Label>
+
+                        <DatePicker fx:id="dateDebut" maxWidth="Infinity" prefHeight="32.0" promptText="dd-mm-yyyy" style="-fx-background-radius: 2; -fx-border-radius: 2; -fx-border-color: #8A8886; -fx-font-size: 14; -fx-min-height: 32;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label fx:id="dateDebutError" styleClass="error-label" visible="false" GridPane.rowIndex="2" />
+                        <DatePicker fx:id="dateFin" maxWidth="Infinity" prefHeight="32.0" promptText="dd-mm-yyyy" style="-fx-background-radius: 2; -fx-border-radius: 2; -fx-border-color: #8A8886; -fx-font-size: 14; -fx-min-height: 32;;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="dateFinError" styleClass="error-label" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                        </rowConstraints>
+                    </GridPane>
+
+                    <!-- Participants Field -->
+                    <VBox spacing="4">
+                        <Label style="-fx-text-fill: #323130;" text="Nombre de participant demandé">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="nbParticipantEvent" promptText="0" text="0" />
+                        <Label fx:id="participantsError" styleClass="error-label" visible="false" />
+                    </VBox>
+
+                    <!-- Image Upload - Label left, button text centered -->
+                    <VBox spacing="4">
+                        <Label alignment="TOP_LEFT" style="-fx-text-fill: #323130;" text="Image de l'événement">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-border-color: gray;">
+                            <Button fx:id="uploadImageButton" mnemonicParsing="false" onAction="#handleImageUpload" style="-fx-text-fill: #323130; -fx-font-size: 14; -fx-min-height: 32; -fx-min-width: 120; -fx-alignment: center; -fx-background-color: transparent;" text="Upload image">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="14.0" />
+                                </font>
+                            </Button>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" />
+                            <Label fx:id="imageLabel" style="-fx-text-fill: #605E5C;" text="Aucune image n'est sélectionné">
+                                <font>
+                                    <Font name="Segoe UI" size="14.0" />
+                                </font>
+                            </Label>
+                            <Label fx:id="ImageError" styleClass="error-label" visible="false" />
+                        </HBox>
+                    </VBox>
+
+                    <!-- Sessions Container -->
+                    <VBox fx:id="sessionsContainer" spacing="8" style="-fx-border-color: #E0E0E0; -fx-border-style: dashed; -fx-border-width: 1; -fx-border-radius: 2; -fx-padding: 16;">
+                        <Button fx:id="addSessionButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#addSessionToEvent" prefHeight="33.0" style="-fx-background-color: #0078D4; -fx-text-fill: white; -fx-background-radius: 2; -fx-font-size: 14; -fx-min-height: 32; -fx-alignment: center;" text="Ajouter une session">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Button>
+                    </VBox>
+
+                    <!-- Action Buttons -->
+                    <HBox alignment="CENTER_RIGHT" spacing="8" style="-fx-padding: 8 0 0 0;">
+                        <Button fx:id="cancelAdd" mnemonicParsing="false" style="-fx-background-color: white; -fx-border-radius: 2; -fx-background-radius: 2; -fx-text-fill: #323130; -fx-font-size: 14; -fx-min-height: 32; -fx-min-width: 96;" text="Annuler" onAction="#cancelTransaction">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="saveEventButton" mnemonicParsing="false" onAction="#modifierEvent" style="-fx-background-color: #001e47; -fx-text-fill: white; -fx-background-radius: 2; -fx-font-size: 14; -fx-min-height: 32; -fx-min-width: 96;" text="Enregistrer">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14.0" />
+                            </font>
+                        </Button>
+                    </HBox>
+                </VBox>
+                <padding>
+                    <Insets right="50.0" />
+                </padding>
+            </VBox>
+            <BorderPane.margin>
+                <Insets />
+            </BorderPane.margin>
+        </ScrollPane>
+    </center>
+</BorderPane>
+
