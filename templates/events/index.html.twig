@@ -173,7 +173,7 @@
 {% set hasAcceptedEvents = false %}
 
 {% for event in events %}
-    {% if event.status == 'Acceptee' %}
+    {% if event.status == 'Acceptee' and event.dateDebut >= "now"|date("Y-m-d") %}
         {% set hasAcceptedEvents = true %}
         <div class="container p-2">
                     <div class="max-w-6xl mx-auto space-y-8 mb-5">
