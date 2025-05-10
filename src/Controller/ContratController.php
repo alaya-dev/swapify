@@ -253,13 +253,12 @@ if ($mailer instanceof \App\Service\MailerMailJetService) {
 $subject = 'Vous avez un contrat prêt !';
 
 $content = sprintf(
-    "Bonjour %s,\n\n".
+    "Bonjour ,\n\n".
     "Nous vous informons qu'un contrat a été prêt en lien avec une annonce. " .
     "Nous vous invitons à vous rendre dans votre espace personnel sur notre plateforme pour consulter ce contrat et vous pouvez le télécharger .\n\n" .
     "Nous restons à votre disposition pour toute question.\n\n" .
     "Cordialement,\n" .
-    "L’équipe de la swapify",
-    'https://127.0.0.1:8000/' 
+    "L’équipe de la swapify"
 );
 
 if ($mailer instanceof \App\Service\MailerMailJetService) {
